@@ -111,6 +111,20 @@ spring:
     filters: stat,wall,log4j
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
 
+#配置邮箱信息
+
+  mail:
+     host: smtp.qq.com
+     password: eskpkpfwghuddjgj
+     username: 1959915747@qq.com
+     properties:
+                 mail:
+                     smtp:
+                         auth: true
+                         timeout: 25000
+                         starttls:
+                           enable: true
+
 
 #Mybatis扫描
 mybatis:
