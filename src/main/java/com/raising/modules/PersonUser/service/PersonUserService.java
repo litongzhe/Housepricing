@@ -42,7 +42,7 @@ public class PersonUserService extends CrudService<PersonUserDao, PersonUserEnti
 
     public PersonUserEntity findByUserName(String Name){
         PersonUserEntity puEntity = new PersonUserEntity();
-        puEntity.setName(Name);
+        puEntity.setUsername(Name);
         return personUserDao.getByParam(puEntity);
     }
 

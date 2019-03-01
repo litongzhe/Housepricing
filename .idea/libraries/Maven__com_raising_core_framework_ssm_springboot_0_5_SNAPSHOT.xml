@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.raising.core:framework-ssm-springboot:0.5-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://E:/repository/com/raising/core/framework-ssm-springboot/0.5-SNAPSHOT/framework-ssm-springboot-0.5-20180809.040653-7.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://E:/repository/com/raising/core/framework-ssm-springboot/0.5-SNAPSHOT/framework-ssm-springboot-0.5-20180809.040653-7-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://E:/repository/com/raising/core/framework-ssm-springboot/0.5-SNAPSHOT/framework-ssm-springboot-0.5-20180809.040653-7-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
