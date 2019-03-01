@@ -37,9 +37,9 @@
     <dependencies>
         <!--公司框架-->
         <!--<dependency>-->
-            <!--<groupId>com.raising.core</groupId>-->
-            <!--<artifactId>framework-ssm-springboot</artifactId>-->
-            <!--<version>0.4.5</version>-->
+        <!--<groupId>com.raising.core</groupId>-->
+        <!--<artifactId>framework-ssm-springboot</artifactId>-->
+        <!--<version>0.4.5</version>-->
         <!--</dependency>-->
 
         <dependency>
@@ -77,7 +77,11 @@
             <artifactId>lombok</artifactId>
             <version>1.16.18</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.xbean</groupId>
+            <artifactId>xbean-spring</artifactId>
+            <!--<version>3.7</version>-->
+        </dependency>
         <dependency>
             <groupId>com.chinacaring</groupId>
             <artifactId>utils</artifactId>
@@ -110,14 +114,14 @@
 
     <!-- 从公司远程仓库上下载 -->
     <repositories>
-        <repository>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <id>Public</id>
-            <name>Public Repositories</name>
-            <url>http://192.168.0.240:9099/nexus/content/groups/raising-public/</url>
-        </repository>
+        <!--<repository>-->
+            <!--<snapshots>-->
+                <!--<enabled>true</enabled>-->
+            <!--</snapshots>-->
+            <!--<id>Public</id>-->
+            <!--<name>Public Repositories</name>-->
+            <!--<url>http://192.168.0.240:9099/nexus/content/groups/raising-public/</url>-->
+        <!--</repository>-->
         <repository>
             <id>caring_nexus_106</id>
             <name>Team Nexus Repository</name>
