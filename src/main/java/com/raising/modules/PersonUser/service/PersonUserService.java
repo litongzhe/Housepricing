@@ -1,6 +1,10 @@
 package com.raising.modules.PersonUser.service;
 
+import com.raising.framework.entity.ResultCode;
 import com.raising.framework.entity.ResultVo;
+import com.raising.modules.sys.dao.UserDao;
+import com.raising.utils.PasswordEntity;
+import com.raising.utils.PasswordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +25,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 public class PersonUserService extends CrudService<PersonUserDao, PersonUserEntity> {
     @Autowired
     PersonUserDao personUserDao;
-
+    @Autowired
+    private PasswordUtils passwordUtils;
     /**
      * 按邮箱地址查询是否有用户
      * @param email
@@ -30,6 +35,14 @@ public class PersonUserService extends CrudService<PersonUserDao, PersonUserEnti
     public PersonUserEntity findByUserEmail(String email){
         PersonUserEntity puEntity = new PersonUserEntity();
         puEntity.setEmail(email);
+        return personUserDao.getByParam(puEntity);
+    }
+
+
+
+    public PersonUserEntity findByUserName(String Name){
+        PersonUserEntity puEntity = new PersonUserEntity();
+        puEntity.setName(Name);
         return personUserDao.getByParam(puEntity);
     }
 
@@ -46,11 +59,15 @@ public class PersonUserService extends CrudService<PersonUserDao, PersonUserEnti
 
     /**
      * 插入新的用户
-     * @param peu
+     * @param entity
      * @return
      */
-    public Integer addUser(PersonUserEntity peu){
-        return personUserDao.insert(peu);
+    public ResultVo addUser(PersonUserEntity entity){
+        PasswordEntity passwordEntity = this.passwordUtils.encryptPassword(entity.getPassword());
+        entity.setPassword(passwordEntity.getPassword());
+        entity.setSalt(passwordEntity.getSalt());
+        personUserDao.insert(entity);
+        return new ResultVo(ResultCode.OK, entity.getId());
     }
 
 

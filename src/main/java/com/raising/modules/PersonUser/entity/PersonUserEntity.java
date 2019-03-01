@@ -1,13 +1,16 @@
 package com.raising.modules.PersonUser.entity;
 
 import com.raising.framework.entity.BaseEntity;
+import com.raising.modules.sys.entity.BaseSysEntity;
+
+import java.util.Date;
 
 /**
 * 用户表
 * @author fsd
 * @createTime 2019-02-28 16:06:42
 */
-public class PersonUserEntity extends BaseEntity<PersonUserEntity>{
+public class PersonUserEntity extends BaseEntity<PersonUserEntity> {
 
     /** 主键，自增 */
     private String id;

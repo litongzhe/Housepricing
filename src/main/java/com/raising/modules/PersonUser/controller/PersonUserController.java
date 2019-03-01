@@ -1,9 +1,18 @@
 package com.raising.modules.PersonUser.controller;
 
-import com.raising.modules.PersonUser.dao.PersonUserDao;
+import com.raising.framework.entity.ResultCode;
+import com.raising.framework.shiro.util.JWTUtil;
 import com.raising.modules.PersonUser.service.MailService;
+import com.raising.modules.operationlog.annotation.OperationLog;
+import com.raising.modules.sys.entity.User;
 import com.raising.util.CodeUtil;
+import com.raising.util.PersonUserUtils;
+import com.raising.utils.PasswordUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.UnauthorizedException;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +23,6 @@ import com.raising.framework.mybaits.Page;
 import com.raising.modules.PersonUser.entity.PersonUserEntity;
 import com.raising.modules.PersonUser.service.PersonUserService;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
@@ -33,7 +41,8 @@ public class PersonUserController extends BaseController {
     @Autowired
     private MailService mailService;
 
-
+    @Autowired
+    private PasswordUtils passwordUtils;
     /**
      * 分页 - 查询
      * @author fsd
@@ -170,33 +179,78 @@ public class PersonUserController extends BaseController {
     public ResultVo register(PersonUserEntity personUserEntity) {
         ResultVo resultVo = new ResultVo();
         String email = personUserEntity.getEmail();
+//        String password_view = personUserEntity.getPassword();
+
         if(personUserService.findByUserEmail(email) == null){
             resultVo.setData("email have been registered!");
             return resultVo;
         }
-        String emailEncode = CodeUtil.md5(email);
-        personUserEntity.setId(emailEncode);
+        //编码生成ID 和 密码 并插入
+        String IDFromEmail = CodeUtil.md5(email);
+//        String passwordInDB = CodeUtil.md5(password_view);
+        personUserEntity.setId(IDFromEmail);
+
+//        personUserEntity.setPassword(passwordInDB);
+//        personUserEntity.preInsert(UserUtils.getCurrentUser().getId());
+        //插入新用户数据
         personUserService.addUser(personUserEntity);
-        resultVo.setData("add "+ personUserEntity.getEmail() +" success!");
-        return resultVo;
+        //生成token
+//        String token = JWTUtil.sign(email, password_view);
+        //返回前端信息
+//        resultVo.setCode(200);
+//        resultVo.setMsg("add "+ personUserEntity.getEmail() +" success!");
+//        resultVo.setData(token);
+        return new ResultVo(ResultCode.OK, personUserEntity.getId());
     }
 
-    @PostMapping("/login")
-    public ResultVo userCheckMail(String email, String code) {
-
-        PersonUserEntity pue = personUserService.findByUserId(code);
-        if(pue == null) return null;
-        if(pue.getEmail() != null && pue.getEmail().equals(email)) {
-            pue.setStatus("1");
-            ResultVo resultVo = personUserService.update(pue);
-            resultVo.setData(pue.getId());
-            return resultVo;
-
+    @PostMapping({"/login"})
+    @OperationLog("登录")
+    public Object login(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam(value = "site",required = false) String site) throws Exception {
+        PersonUserEntity personUserEntity = this.personUserService.findByUserName(username);
+        if (personUserEntity == null) {
+            return (new ResultVo(ResultCode.EMPTY_ROW)).desc("用户不存在");
+        } else if (personUserEntity.getPassword().equals(this.passwordUtils.getPassword(password, personUserEntity.getSalt()))) {
+            String tokenKey = username + "-" + personUserEntity.getId() + "-" + personUserEntity.getUserTypeCd();
+            return new ResultVo(ResultCode.OK, JWTUtil.sign(tokenKey, personUserEntity.getPassword()));
+        } else {
+            throw new UnauthorizedException();
         }
-        ResultVo resultVo = new ResultVo();
-        resultVo.setData("邮件验证失败");
-        return resultVo;
     }
+
+    @GetMapping({"check"})
+    @OperationLog("执行检查用户是否登录")
+    public ResultVo check() {
+        this.operationlog("测试log", "{username:123}");
+        Subject subject = SecurityUtils.getSubject();
+        return subject.isAuthenticated() ? new ResultVo(ResultCode.OK) : new ResultVo(ResultCode.USER_NOT_LOGIN);
+    }
+
+    @GetMapping({"/logout"})
+    @OperationLog("退出登录")
+    @RequiresPermissions({"123"})
+    public ResultVo logout() {
+        Subject currentUser = SecurityUtils.getSubject();
+        if (currentUser.isAuthenticated()) {
+            currentUser.logout();
+            return new ResultVo(ResultCode.OK);
+        } else {
+            return new ResultVo(ResultCode.OK);
+        }
+    }
+
+    @GetMapping({"/current_user"})
+    @OperationLog("获取当前用户信息")
+    @RequiresAuthentication
+    public Object currentUser() {
+        if (!PersonUserUtils.isLogin()) {
+            return null;
+        } else {
+            PersonUserEntity pue = PersonUserUtils.getCurrentUser();
+            return new ResultVo(ResultCode.OK, pue);
+        }
+    }
+
+
 
     @RequestMapping("/getCheckCode")
     @ResponseBody
@@ -211,9 +265,7 @@ public class PersonUserController extends BaseController {
             resultVo.setCode(555);
             return resultVo;
         }
-        resultVo.setCode(200);
-        resultVo.setData(checkCode);
-        return resultVo;
+        return new ResultVo(ResultCode.OK, checkCode);
     }
 
 }
