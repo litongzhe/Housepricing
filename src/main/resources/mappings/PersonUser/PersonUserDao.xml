@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.modules.PersonUser.dao.PersonUserDao">
+    <!-- 公共查询字段 @author fsd-->
+    <sql id="PersonUserColumns">
+        a.id as "id",
+        a.no as "no",
+        a.organization_id as "organizationId",
+        a.manage_org_ids as "manageOrgIds",
+        a.username as "username",
+        a.password as "password",
+        a.salt as "salt",
+        a.role_ids as "roleIds",
+        a.name as "name",
+        a.email as "email",
+        a.phone as "phone",
+        a.photo as "photo",
+        a.station_nm as "stationNm",
+        a.login_ip as "loginIp",
+        a.login_date as "loginDate",
+        a.is_off as "isOff",
+        a.locked as "locked",
+        a.is_dept as "isDept",
+        a.phone_device_id as "phoneDeviceId",
+        a.balance as "balance",
+        a.user_type_cd as "userTypeCd",
+        a.sex_cd as "sexCd",
+        a.remarks as "remarks",
+        a.create_by as "createBy",
+        a.create_date as "createDate",
+        a.update_by as "updateBy",
+        a.update_date as "updateDate",
+        a.status as "status"
+    </sql>
+
+    <!-- 公共连表查询语句 @author fsd-->
+    <sql id="PersonUserJoins">
+    </sql>
+
+    <!-- 查询详情 @author fsd-->
+    <select id="get" resultType="com.raising.modules.PersonUser.entity.PersonUserEntity">
+        SELECT <include refid="PersonUserColumns"/>
+          FROM person_user a <include refid="PersonUserJoins"/>
+        <where>
+           AND a.id = #{id}
+        </where>
+    </select>
+
+    <!-- 查询详情 - 根据参数查询 @author fsd-->
+    <select id="getByParam" resultType="com.raising.modules.PersonUser.entity.PersonUserEntity" >
+        SELECT <include refid="PersonUserColumns"/>
+          FROM person_user a <include refid="PersonUserJoins"/>
+        <where>
+        <if test=" id != null and id != '' ">
+           AND a.id = #{id}
+        </if>
+        <if test=" no != null and no != '' ">
+           AND a.no = #{no}
+        </if>
+        <if test=" organizationId != null and organizationId != '' ">
+           AND a.organization_id = #{organizationId}
+        </if>
+        <if test=" manageOrgIds != null and manageOrgIds != '' ">
+           AND a.manage_org_ids = #{manageOrgIds}
+        </if>
+        <if test=" username != null and username != '' ">
+           AND a.username = #{username}
+        </if>
+        <if test=" password != null and password != '' ">
+           AND a.password = #{password}
+        </if>
+        <if test=" salt != null and salt != '' ">
+           AND a.salt = #{salt}
+        </if>
+        <if test=" roleIds != null and roleIds != '' ">
+           AND a.role_ids = #{roleIds}
+        </if>
+        <if test=" name != null and name != '' ">
+           AND a.name = #{name}
+        </if>
+        <if test=" email != null and email != '' ">
+           AND a.email = #{email}
+        </if>
+        <if test=" phone != null and phone != '' ">
+           AND a.phone = #{phone}
+        </if>
+        <if test=" photo != null and photo != '' ">
+           AND a.photo = #{photo}
+        </if>
+        <if test=" stationNm != null and stationNm != '' ">
+           AND a.station_nm = #{stationNm}
+        </if>
+        <if test=" loginIp != null and loginIp != '' ">
+           AND a.login_ip = #{loginIp}
+        </if>
+        <if test=" loginDate != null and loginDate != '' ">
+           AND a.login_date = #{loginDate}
+        </if>
+        <if test=" isOff != null and isOff != '' ">
+           AND a.is_off = #{isOff}
+        </if>
+        <if test=" locked != null and locked != '' ">
+           AND a.locked = #{locked}
+        </if>
+        <if test=" isDept != null and isDept != '' ">
+           AND a.is_dept = #{isDept}
+        </if>
+        <if test=" phoneDeviceId != null and phoneDeviceId != '' ">
+           AND a.phone_device_id = #{phoneDeviceId}
+        </if>
+        <if test=" balance != null and balance != '' ">
+           AND a.balance = #{balance}
+        </if>
+        <if test=" userTypeCd != null and userTypeCd != '' ">
+           AND a.user_type_cd = #{userTypeCd}
+        </if>
+        <if test=" sexCd != null and sexCd != '' ">
+           AND a.sex_cd = #{sexCd}
+        </if>
+        <if test=" remarks != null and remarks != '' ">
+           AND a.remarks = #{remarks}
+        </if>
+        <if test=" createBy != null and createBy != '' ">
+           AND a.create_by = #{createBy}
+        </if>
+        <if test=" createDate != null and createDate != '' ">
+           AND a.create_date = #{createDate}
+        </if>
+        <if test=" updateBy != null and updateBy != '' ">
+           AND a.update_by = #{updateBy}
+        </if>
+        <if test=" updateDate != null and updateDate != '' ">
+           AND a.update_date = #{updateDate}
+        </if>
+        <if test=" status != null and status != '' ">
+           AND a.status = #{status}
+        </if>
+        </where>
+    </select>
+
+    <!-- 获取list列表数据 @author fsd-->
+    <select id="getList" resultType="com.raising.modules.PersonUser.entity.PersonUserEntity">
+        SELECT <include refid="PersonUserColumns"/>
+          FROM person_user a
+        <include refid="PersonUserJoins"/>
+        <where>
+        <if test=" id != null and id != '' ">
+           AND a.id = #{id}
+        </if>
+        <if test=" no != null and no != '' ">
+           AND a.no = #{no}
+        </if>
+        <if test=" organizationId != null and organizationId != '' ">
+           AND a.organization_id = #{organizationId}
+        </if>
+        <if test=" manageOrgIds != null and manageOrgIds != '' ">
+           AND a.manage_org_ids = #{manageOrgIds}
+        </if>
+        <if test=" username != null and username != '' ">
+           AND a.username = #{username}
+        </if>
+        <if test=" password != null and password != '' ">
+           AND a.password = #{password}
+        </if>
+        <if test=" salt != null and salt != '' ">
+           AND a.salt = #{salt}
+        </if>
+        <if test=" roleIds != null and roleIds != '' ">
+           AND a.role_ids = #{roleIds}
+        </if>
+        <if test=" name != null and name != '' ">
+           AND a.name = #{name}
+        </if>
+        <if test=" email != null and email != '' ">
+           AND a.email = #{email}
+        </if>
+        <if test=" phone != null and phone != '' ">
+           AND a.phone = #{phone}
+        </if>
+        <if test=" photo != null and photo != '' ">
+           AND a.photo = #{photo}
+        </if>
+        <if test=" stationNm != null and stationNm != '' ">
+           AND a.station_nm = #{stationNm}
+        </if>
+        <if test=" loginIp != null and loginIp != '' ">
+           AND a.login_ip = #{loginIp}
+        </if>
+        <if test=" loginDate != null and loginDate != '' ">
+           AND a.login_date = #{loginDate}
+        </if>
+        <if test=" isOff != null and isOff != '' ">
+           AND a.is_off = #{isOff}
+        </if>
+        <if test=" locked != null and locked != '' ">
+           AND a.locked = #{locked}
+        </if>
+        <if test=" isDept != null and isDept != '' ">
+           AND a.is_dept = #{isDept}
+        </if>
+        <if test=" phoneDeviceId != null and phoneDeviceId != '' ">
+           AND a.phone_device_id = #{phoneDeviceId}
+        </if>
+        <if test=" balance != null and balance != '' ">
+           AND a.balance = #{balance}
+        </if>
+        <if test=" userTypeCd != null and userTypeCd != '' ">
+           AND a.user_type_cd = #{userTypeCd}
+        </if>
+        <if test=" sexCd != null and sexCd != '' ">
+           AND a.sex_cd = #{sexCd}
+        </if>
+        <if test=" remarks != null and remarks != '' ">
+           AND a.remarks = #{remarks}
+        </if>
+        <if test=" createBy != null and createBy != '' ">
+           AND a.create_by = #{createBy}
+        </if>
+        <if test=" createDate != null and createDate != '' ">
+           AND a.create_date = #{createDate}
+        </if>
+        <if test=" updateBy != null and updateBy != '' ">
+           AND a.update_by = #{updateBy}
+        </if>
+        <if test=" updateDate != null and updateDate != '' ">
+           AND a.update_date = #{updateDate}
+        </if>
+        <if test=" status != null and status != '' ">
+           AND a.status = #{status}
+        </if>
+        </where>
+    </select>
+
+    <!-- 获取分页数据 @author fsd-->
+    <select id="getPage" resultType="com.raising.modules.PersonUser.entity.PersonUserEntity">
+        SELECT <include refid="PersonUserColumns"/>
+          FROM person_user a
+        <include refid="PersonUserJoins"/>
+        <where>
+        <if test=" entity.id != null and entity.id != '' ">
+           AND a.id = #{entity.id}
+        </if>
+        <if test=" entity.no != null and entity.no != '' ">
+           AND a.no = #{entity.no}
+        </if>
+        <if test=" entity.organizationId != null and entity.organizationId != '' ">
+           AND a.organization_id = #{entity.organizationId}
+        </if>
+        <if test=" entity.manageOrgIds != null and entity.manageOrgIds != '' ">
+           AND a.manage_org_ids = #{entity.manageOrgIds}
+        </if>
+        <if test=" entity.username != null and entity.username != '' ">
+           AND a.username = #{entity.username}
+        </if>
+        <if test=" entity.password != null and entity.password != '' ">
+           AND a.password = #{entity.password}
+        </if>
+        <if test=" entity.salt != null and entity.salt != '' ">
+           AND a.salt = #{entity.salt}
+        </if>
+        <if test=" entity.roleIds != null and entity.roleIds != '' ">
+           AND a.role_ids = #{entity.roleIds}
+        </if>
+        <if test=" entity.name != null and entity.name != '' ">
+           AND a.name = #{entity.name}
+        </if>
+        <if test=" entity.email != null and entity.email != '' ">
+           AND a.email = #{entity.email}
+        </if>
+        <if test=" entity.phone != null and entity.phone != '' ">
+           AND a.phone = #{entity.phone}
+        </if>
+        <if test=" entity.photo != null and entity.photo != '' ">
+           AND a.photo = #{entity.photo}
+        </if>
+        <if test=" entity.stationNm != null and entity.stationNm != '' ">
+           AND a.station_nm = #{entity.stationNm}
+        </if>
+        <if test=" entity.loginIp != null and entity.loginIp != '' ">
+           AND a.login_ip = #{entity.loginIp}
+        </if>
+        <if test=" entity.loginDate != null and entity.loginDate != '' ">
+           AND a.login_date = #{entity.loginDate}
+        </if>
+        <if test=" entity.isOff != null and entity.isOff != '' ">
+           AND a.is_off = #{entity.isOff}
+        </if>
+        <if test=" entity.locked != null and entity.locked != '' ">
+           AND a.locked = #{entity.locked}
+        </if>
+        <if test=" entity.isDept != null and entity.isDept != '' ">
+           AND a.is_dept = #{entity.isDept}
+        </if>
+        <if test=" entity.phoneDeviceId != null and entity.phoneDeviceId != '' ">
+           AND a.phone_device_id = #{entity.phoneDeviceId}
+        </if>
+        <if test=" entity.balance != null and entity.balance != '' ">
+           AND a.balance = #{entity.balance}
+        </if>
+        <if test=" entity.userTypeCd != null and entity.userTypeCd != '' ">
+           AND a.user_type_cd = #{entity.userTypeCd}
+        </if>
+        <if test=" entity.sexCd != null and entity.sexCd != '' ">
+           AND a.sex_cd = #{entity.sexCd}
+        </if>
+        <if test=" entity.remarks != null and entity.remarks != '' ">
+           AND a.remarks = #{entity.remarks}
+        </if>
+        <if test=" entity.createBy != null and entity.createBy != '' ">
+           AND a.create_by = #{entity.createBy}
+        </if>
+        <if test=" entity.createDate != null and entity.createDate != '' ">
+           AND a.create_date = #{entity.createDate}
+        </if>
+        <if test=" entity.updateBy != null and entity.updateBy != '' ">
+           AND a.update_by = #{entity.updateBy}
+        </if>
+        <if test=" entity.updateDate != null and entity.updateDate != '' ">
+           AND a.update_date = #{entity.updateDate}
+        </if>
+        <if test=" entity.status != null and entity.status != '' ">
+           AND a.status = #{entity.status}
+        </if>
+        </where>
+        <if test="orderBy != null and orderBy!=''">
+         ORDER BY ${ orderBy}
+        </if>
+    </select>
+
+    <!-- 新增插入 @author fsd-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" >
+        INSERT INTO person_user(
+                no,
+                organization_id,
+                manage_org_ids,
+                username,
+                password,
+                salt,
+                role_ids,
+                name,
+                email,
+                phone,
+                photo,
+                station_nm,
+                login_ip,
+                login_date,
+                is_off,
+                locked,
+                is_dept,
+                phone_device_id,
+                balance,
+                user_type_cd,
+                sex_cd,
+                remarks,
+                create_by,
+                create_date,
+                update_by,
+                update_date,
+                status
+        )
+        VALUES (
+                #{no},
+                #{organizationId},
+                #{manageOrgIds},
+                #{username},
+                #{password},
+                #{salt},
+                #{roleIds},
+                #{name},
+                #{email},
+                #{phone},
+                #{photo},
+                #{stationNm},
+                #{loginIp},
+                #{loginDate},
+                #{isOff},
+                #{locked},
+                #{isDept},
+                #{phoneDeviceId},
+                #{balance},
+                #{userTypeCd},
+                #{sexCd},
+                #{remarks},
+                #{createBy},
+                #{createDate},
+                #{updateBy},
+                #{updateDate},
+                #{status}
+        )
+    </insert>
+
+    <!-- 更新数据 @author fsd-->
+    <update id="update">
+        UPDATE person_user SET
+               no = #{no},
+               organization_id = #{organizationId},
+               manage_org_ids = #{manageOrgIds},
+               username = #{username},
+               password = #{password},
+               salt = #{salt},
+               role_ids = #{roleIds},
+               name = #{name},
+               email = #{email},
+               phone = #{phone},
+               photo = #{photo},
+               station_nm = #{stationNm},
+               login_ip = #{loginIp},
+               login_date = #{loginDate},
+               is_off = #{isOff},
+               locked = #{locked},
+               is_dept = #{isDept},
+               phone_device_id = #{phoneDeviceId},
+               balance = #{balance},
+               user_type_cd = #{userTypeCd},
+               sex_cd = #{sexCd},
+               remarks = #{remarks},
+               create_by = #{createBy},
+               create_date = #{createDate},
+               update_by = #{updateBy},
+               update_date = #{updateDate},
+               status = #{status}
+        <where>
+           AND id = #{id}
+        </where>
+    </update>
+
+    <!-- 删除 根据主键删除 @author fsd-->
+    <delete id="delete">
+        DELETE FROM person_user
+        <where>
+           AND id = #{id}
+        </where>
+    </delete>
+
+    <!-- 删除 根据其他参数删除,切记，此方法慎用，稍有不慎就会删除所有数据 @author fsd-->
+    <delete id="deleteByParam">
+        DELETE FROM person_user
+        <where>
+        <if test=" id != null and id != '' ">
+           AND id = #{id}
+        </if>
+        <if test=" no != null and no != '' ">
+           AND no = #{no}
+        </if>
+        <if test=" organizationId != null and organizationId != '' ">
+           AND organization_id = #{organizationId}
+        </if>
+        <if test=" manageOrgIds != null and manageOrgIds != '' ">
+           AND manage_org_ids = #{manageOrgIds}
+        </if>
+        <if test=" username != null and username != '' ">
+           AND username = #{username}
+        </if>
+        <if test=" password != null and password != '' ">
+           AND password = #{password}
+        </if>
+        <if test=" salt != null and salt != '' ">
+           AND salt = #{salt}
+        </if>
+        <if test=" roleIds != null and roleIds != '' ">
+           AND role_ids = #{roleIds}
+        </if>
+        <if test=" name != null and name != '' ">
+           AND name = #{name}
+        </if>
+        <if test=" email != null and email != '' ">
+           AND email = #{email}
+        </if>
+        <if test=" phone != null and phone != '' ">
+           AND phone = #{phone}
+        </if>
+        <if test=" photo != null and photo != '' ">
+           AND photo = #{photo}
+        </if>
+        <if test=" stationNm != null and stationNm != '' ">
+           AND station_nm = #{stationNm}
+        </if>
+        <if test=" loginIp != null and loginIp != '' ">
+           AND login_ip = #{loginIp}
+        </if>
+        <if test=" loginDate != null and loginDate != '' ">
+           AND login_date = #{loginDate}
+        </if>
+        <if test=" isOff != null and isOff != '' ">
+           AND is_off = #{isOff}
+        </if>
+        <if test=" locked != null and locked != '' ">
+           AND locked = #{locked}
+        </if>
+        <if test=" isDept != null and isDept != '' ">
+           AND is_dept = #{isDept}
+        </if>
+        <if test=" phoneDeviceId != null and phoneDeviceId != '' ">
+           AND phone_device_id = #{phoneDeviceId}
+        </if>
+        <if test=" balance != null and balance != '' ">
+           AND balance = #{balance}
+        </if>
+        <if test=" userTypeCd != null and userTypeCd != '' ">
+           AND user_type_cd = #{userTypeCd}
+        </if>
+        <if test=" sexCd != null and sexCd != '' ">
+           AND sex_cd = #{sexCd}
+        </if>
+        <if test=" remarks != null and remarks != '' ">
+           AND remarks = #{remarks}
+        </if>
+        <if test=" createBy != null and createBy != '' ">
+           AND create_by = #{createBy}
+        </if>
+        <if test=" createDate != null and createDate != '' ">
+           AND create_date = #{createDate}
+        </if>
+        <if test=" updateBy != null and updateBy != '' ">
+           AND update_by = #{updateBy}
+        </if>
+        <if test=" updateDate != null and updateDate != '' ">
+           AND update_date = #{updateDate}
+        </if>
+        <if test=" status != null and status != '' ">
+           AND status = #{status}
+        </if>
+        </where>
+    </delete>
+
+</mapper>
