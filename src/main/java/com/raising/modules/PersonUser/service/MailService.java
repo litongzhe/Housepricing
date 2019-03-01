@@ -12,7 +12,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import javax.mail.internet.MimeMessage;
+//import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.util.List;
 
@@ -21,7 +21,7 @@ import java.util.List;
 public class MailService {
     @Value("${spring.mail.username}")
     private String from;
-   @Autowired
+    @Autowired
     private JavaMailSender mailSender;
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -36,25 +36,25 @@ public class MailService {
         logger.info("邮件发送成功");
     }
 
-    public void sendAttachmentsMail(String to, String title, String cotent, List<File> fileList){
-        MimeMessage message = mailSender.createMimeMessage();
-        try {
-            MimeMessageHelper helper = new MimeMessageHelper(message,true);
-            helper.setFrom(from);
-            helper.setTo(to);
-            helper.setSubject(title);
-            helper.setText(cotent);
-            String fileName = null;
-            for (File file:fileList) {
-                fileName = MimeUtility.encodeText(file.getName(), "GB2312", "B");
-                helper.addAttachment(fileName, file);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        mailSender.send(message);
-        logger.info("邮件发送成功");
-    }
+//    public void sendAttachmentsMail(String to, String title, String cotent, List<File> fileList){
+//        MimeMessage message = mailSender.createMimeMessage();
+//        try {
+//            MimeMessageHelper helper = new MimeMessageHelper(message,true);
+//            helper.setFrom(from);
+//            helper.setTo(to);
+//            helper.setSubject(title);
+//            helper.setText(cotent);
+//            String fileName = null;
+//            for (File file:fileList) {
+//                fileName = MimeUtility.encodeText(file.getName(), "GB2312", "B");
+//                helper.addAttachment(fileName, file);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        mailSender.send(message);
+//        logger.info("邮件发送成功");
+//    }
 
 
 }

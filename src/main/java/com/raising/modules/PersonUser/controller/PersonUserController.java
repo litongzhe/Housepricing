@@ -181,19 +181,22 @@ public class PersonUserController extends BaseController {
         String email = personUserEntity.getEmail();
 //        String password_view = personUserEntity.getPassword();
 
-        if(personUserService.findByUserEmail(email) == null){
+        if(personUserService.findByUserEmail(email) != null){
             resultVo.setData("email have been registered!");
+            resultVo.setCode(ResultVo.FAILURE);
             return resultVo;
         }
         //编码生成ID 和 密码 并插入
         String IDFromEmail = CodeUtil.md5(email);
 //        String passwordInDB = CodeUtil.md5(password_view);
         personUserEntity.setId(IDFromEmail);
+        personUserEntity.setUsername(personUserEntity.getEmail());
 
 //        personUserEntity.setPassword(passwordInDB);
 //        personUserEntity.preInsert(UserUtils.getCurrentUser().getId());
         //插入新用户数据
         personUserService.addUser(personUserEntity);
+
         //生成token
 //        String token = JWTUtil.sign(email, password_view);
         //返回前端信息
