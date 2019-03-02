@@ -1,15 +1,12 @@
 package com.raising.modules.buildingInfo.controller;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.raising.framework.controller.BaseController;
 import com.raising.framework.entity.ResultVo;
 import com.raising.framework.mybaits.Page;
-
 import com.raising.modules.buildingInfo.entity.BuildinginfoEntity;
 import com.raising.modules.buildingInfo.service.BuildinginfoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  *  控制器
@@ -18,13 +15,13 @@ import com.raising.modules.buildingInfo.service.BuildinginfoService;
  */
 @RestController
 @RequestMapping("/buildingInfo/buildinginfo")
-public class BuildinginfoController extends BaseController {
+public class BuildinginfoController11 extends BaseController {
 
     @Autowired
     private BuildinginfoService buildinginfoService;
 
     /**
-     * 分页 - 查询
+     * 分页 - 查询暗示大神大多所
      * @author fsd
      * @datetime 2019-02-26 15:27:23
      * @param page
