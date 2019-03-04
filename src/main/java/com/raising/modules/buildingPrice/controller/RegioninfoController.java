@@ -129,4 +129,10 @@ public class RegioninfoController extends BaseController {
         return regioninfoService.delete(id);
     }
 
+    @GetMapping("/cityavg")
+    public ResultVo cityavg() {
+        return regioninfoService.getCityAvgPrice();
+    }
+
+
 }
