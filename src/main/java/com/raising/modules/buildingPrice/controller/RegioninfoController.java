@@ -1,5 +1,7 @@
 package com.raising.modules.buildingPrice.controller;
 
+import javafx.util.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +12,9 @@ import com.raising.framework.mybaits.Page;
 
 import com.raising.modules.buildingPrice.entity.RegioninfoEntity;
 import com.raising.modules.buildingPrice.service.RegioninfoService;
+
+import javax.swing.plaf.synth.Region;
+import java.util.*;
 
 /**
  *  控制器
@@ -34,8 +39,22 @@ public class RegioninfoController extends BaseController {
     // @RequiresPermissions("buildingPrice:regioninfo:select")
     @GetMapping("/page")
     public ResultVo page(RegioninfoEntity regioninfo,Page<RegioninfoEntity> page) {
+        String CityName = "";
         page.setEntity(regioninfo);
-        ResultVo resultVo = regioninfoService.getPage(page);
+//        Object temp = regioninfoService.getPage(page).getData();
+        List<RegioninfoEntity> entitys = ((Page<RegioninfoEntity>) regioninfoService.getPage(page).getData()).getResults();
+        Double RegionAvgPrice = 0.0;
+        CityName = entitys.get(0).getCityname();
+        for(RegioninfoEntity e : entitys){
+            RegionAvgPrice += Double.valueOf(e.getAvgprice());
+        }
+        RegionAvgPrice /= entitys.size();
+        Map<String,Object> resultMap = new HashMap<>();
+        resultMap.put("cityName",CityName);
+        resultMap.put("avgPrice",RegionAvgPrice);
+        resultMap.put("allRegion",entitys);
+        ResultVo resultVo = new ResultVo();
+        resultVo.setData(resultMap);
         ResultVo.entityNull(resultVo);
         return resultVo;
     }

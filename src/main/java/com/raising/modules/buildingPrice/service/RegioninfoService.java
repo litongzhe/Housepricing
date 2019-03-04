@@ -7,6 +7,8 @@ import com.raising.framework.service.CrudService;
 import com.raising.modules.buildingPrice.dao.RegioninfoDao;
 import com.raising.modules.buildingPrice.entity.RegioninfoEntity;
 
+import java.util.List;
+
 /**
 *  Service层
 * @author fsd
@@ -15,5 +17,6 @@ import com.raising.modules.buildingPrice.entity.RegioninfoEntity;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class RegioninfoService extends CrudService<RegioninfoDao, RegioninfoEntity> {
+
 
 }
