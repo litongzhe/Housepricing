@@ -18,7 +18,7 @@
     <!-- 查询详情 @author fsd-->
     <select id="get" resultType="com.raising.modules.buildingPrice.entity.RegioninfoEntity">
         SELECT <include refid="RegioninfoColumns"/>
-          FROM regionInfo a <include refid="RegioninfoJoins"/>
+          FROM regioninfo a <include refid="RegioninfoJoins"/>
         <where>
            AND a.id = #{id}
         </where>
@@ -27,7 +27,7 @@
     <!-- 查询详情 - 根据参数查询 @author fsd-->
     <select id="getByParam" resultType="com.raising.modules.buildingPrice.entity.RegioninfoEntity">
         SELECT <include refid="RegioninfoColumns"/>
-          FROM regionInfo a <include refid="RegioninfoJoins"/>
+          FROM regioninfo a <include refid="RegioninfoJoins"/>
         <where>
         <if test=" id != null and id != '' ">
            AND a.id = #{id}
@@ -53,7 +53,7 @@
     <!-- 获取list列表数据 @author fsd-->
     <select id="getList" resultType="com.raising.modules.buildingPrice.entity.RegioninfoEntity">
         SELECT <include refid="RegioninfoColumns"/>
-          FROM regionInfo a
+          FROM regioninfo a
         <include refid="RegioninfoJoins"/>
         <where>
         <if test=" id != null and id != '' ">
@@ -80,7 +80,7 @@
     <!-- 获取分页数据 @author fsd-->
     <select id="getPage" resultType="com.raising.modules.buildingPrice.entity.RegioninfoEntity">
         SELECT <include refid="RegioninfoColumns"/>
-          FROM regionInfo a
+          FROM regioninfo a
         <include refid="RegioninfoJoins"/>
         <where>
         <if test=" entity.id != null and entity.id != '' ">
@@ -109,7 +109,7 @@
 
     <!-- 新增插入 @author fsd-->
     <insert id="insert" useGeneratedKeys="true" keyProperty="id" >
-        INSERT INTO regionInfo(
+        INSERT INTO regioninfo(
                 cityname,
                 regionname,
                 avgprice,
@@ -127,7 +127,7 @@
 
     <!-- 更新数据 @author fsd-->
     <update id="update">
-        UPDATE regionInfo SET
+        UPDATE regioninfo SET
                cityname = #{cityname},
                regionname = #{regionname},
                avgprice = #{avgprice},
@@ -140,7 +140,7 @@
 
     <!-- 删除 根据主键删除 @author fsd-->
     <delete id="delete">
-        DELETE FROM regionInfo
+        DELETE FROM regioninfo
         <where>
            AND id = #{id}
         </where>
@@ -148,7 +148,7 @@
 
     <!-- 删除 根据其他参数删除,切记，此方法慎用，稍有不慎就会删除所有数据 @author fsd-->
     <delete id="deleteByParam">
-        DELETE FROM regionInfo
+        DELETE FROM regioninfo
         <where>
         <if test=" id != null and id != '' ">
            AND id = #{id}
