@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.modules.buildingPrice.dao.InfodataDao">
+    <!-- 公共查询字段 @author fsd-->
+    <sql id="InfodataColumns">
+        a.Date as "date",
+        a.city as "city",
+        a.region as "region",
+        a.xiaoqu as "xiaoqu",
+        a.price as "price",
+        a.total as "total",
+        a.url as "url",
+        a.propertyType as "propertytype",
+        a.referencePrice as "referenceprice",
+        a.projectFeatures as "projectfeatures",
+        a.regionallocation as "regionallocation",
+        a.propertyaddress as "propertyaddress",
+        a.salesOfficeAddress as "salesofficeaddress",
+        a.developer as "developer",
+        a.buildingType as "buildingtype",
+        a.landscapingRatio as "landscapingratio",
+        a.siteArea as "sitearea",
+        a.floorAreaRatio as "floorarearatio",
+        a.buildingArea as "buildingarea",
+        a.yearofpropertyRights as "yearofpropertyrights",
+        a.numPlan as "numplan",
+        a.designType as "designtype",
+        a.propertyCompany as "propertycompany",
+        a.parkingRatio as "parkingratio",
+        a.propertycosts as "propertycosts",
+        a.heatingMethod as "heatingmethod",
+        a.waterSupplyMethod as "watersupplymethod",
+        a.powerSupply as "powersupply",
+        a.parkingSpace as "parkingspace",
+        a.nearby as "nearby",
+        a.area as "area",
+        a.id as "id"
+    </sql>
+
+    <!-- 公共连表查询语句 @author fsd-->
+    <sql id="InfodataJoins">
+    </sql>
+
+    <!-- 查询详情 @author fsd-->
+    <select id="get" resultType="com.raising.modules.buildingPrice.entity.InfodataEntity">
+        SELECT <include refid="InfodataColumns"/>
+          FROM infodata a <include refid="InfodataJoins"/>
+        <where>
+           AND a.id = #{id}
+        </where>
+    </select>
+
+    <!-- 查询详情 - 根据参数查询 @author fsd-->
+    <select id="getByParam" resultType="com.raising.modules.buildingPrice.entity.InfodataEntity">
+        SELECT <include refid="InfodataColumns"/>
+          FROM infodata a <include refid="InfodataJoins"/>
+        <where>
+        <if test=" date != null and date != '' ">
+           AND a.Date = #{date}
+        </if>
+        <if test=" city != null and city != '' ">
+           AND a.city = #{city}
+        </if>
+        <if test=" region != null and region != '' ">
+           AND a.region = #{region}
+        </if>
+        <if test=" xiaoqu != null and xiaoqu != '' ">
+           AND a.xiaoqu = #{xiaoqu}
+        </if>
+        <if test=" price != null and price != '' ">
+           AND a.price = #{price}
+        </if>
+        <if test=" total != null and total != '' ">
+           AND a.total = #{total}
+        </if>
+        <if test=" url != null and url != '' ">
+           AND a.url = #{url}
+        </if>
+        <if test=" propertytype != null and propertytype != '' ">
+           AND a.propertyType = #{propertytype}
+        </if>
+        <if test=" referenceprice != null and referenceprice != '' ">
+           AND a.referencePrice = #{referenceprice}
+        </if>
+        <if test=" projectfeatures != null and projectfeatures != '' ">
+           AND a.projectFeatures = #{projectfeatures}
+        </if>
+        <if test=" regionallocation != null and regionallocation != '' ">
+           AND a.regionallocation = #{regionallocation}
+        </if>
+        <if test=" propertyaddress != null and propertyaddress != '' ">
+           AND a.propertyaddress = #{propertyaddress}
+        </if>
+        <if test=" salesofficeaddress != null and salesofficeaddress != '' ">
+           AND a.salesOfficeAddress = #{salesofficeaddress}
+        </if>
+        <if test=" developer != null and developer != '' ">
+           AND a.developer = #{developer}
+        </if>
+        <if test=" buildingtype != null and buildingtype != '' ">
+           AND a.buildingType = #{buildingtype}
+        </if>
+        <if test=" landscapingratio != null and landscapingratio != '' ">
+           AND a.landscapingRatio = #{landscapingratio}
+        </if>
+        <if test=" sitearea != null and sitearea != '' ">
+           AND a.siteArea = #{sitearea}
+        </if>
+        <if test=" floorarearatio != null and floorarearatio != '' ">
+           AND a.floorAreaRatio = #{floorarearatio}
+        </if>
+        <if test=" buildingarea != null and buildingarea != '' ">
+           AND a.buildingArea = #{buildingarea}
+        </if>
+        <if test=" yearofpropertyrights != null and yearofpropertyrights != '' ">
+           AND a.yearofpropertyRights = #{yearofpropertyrights}
+        </if>
+        <if test=" numplan != null and numplan != '' ">
+           AND a.numPlan = #{numplan}
+        </if>
+        <if test=" designtype != null and designtype != '' ">
+           AND a.designType = #{designtype}
+        </if>
+        <if test=" propertycompany != null and propertycompany != '' ">
+           AND a.propertyCompany = #{propertycompany}
+        </if>
+        <if test=" parkingratio != null and parkingratio != '' ">
+           AND a.parkingRatio = #{parkingratio}
+        </if>
+        <if test=" propertycosts != null and propertycosts != '' ">
+           AND a.propertycosts = #{propertycosts}
+        </if>
+        <if test=" heatingmethod != null and heatingmethod != '' ">
+           AND a.heatingMethod = #{heatingmethod}
+        </if>
+        <if test=" watersupplymethod != null and watersupplymethod != '' ">
+           AND a.waterSupplyMethod = #{watersupplymethod}
+        </if>
+        <if test=" powersupply != null and powersupply != '' ">
+           AND a.powerSupply = #{powersupply}
+        </if>
+        <if test=" parkingspace != null and parkingspace != '' ">
+           AND a.parkingSpace = #{parkingspace}
+        </if>
+        <if test=" nearby != null and nearby != '' ">
+           AND a.nearby = #{nearby}
+        </if>
+        <if test=" area != null and area != '' ">
+           AND a.area = #{area}
+        </if>
+        <if test=" id != null and id != '' ">
+           AND a.id = #{id}
+        </if>
+        </where>
+    </select>
+
+    <!-- 获取list列表数据 @author fsd-->
+    <select id="getList" resultType="com.raising.modules.buildingPrice.entity.InfodataEntity">
+        SELECT <include refid="InfodataColumns"/>
+          FROM infodata a
+        <include refid="InfodataJoins"/>
+        <where>
+        <if test=" date != null and date != '' ">
+           AND a.Date = #{date}
+        </if>
+        <if test=" city != null and city != '' ">
+           AND a.city = #{city}
+        </if>
+        <if test=" region != null and region != '' ">
+           AND a.region = #{region}
+        </if>
+        <if test=" xiaoqu != null and xiaoqu != '' ">
+           AND a.xiaoqu = #{xiaoqu}
+        </if>
+        <if test=" price != null and price != '' ">
+           AND a.price = #{price}
+        </if>
+        <if test=" total != null and total != '' ">
+           AND a.total = #{total}
+        </if>
+        <if test=" url != null and url != '' ">
+           AND a.url = #{url}
+        </if>
+        <if test=" propertytype != null and propertytype != '' ">
+           AND a.propertyType = #{propertytype}
+        </if>
+        <if test=" referenceprice != null and referenceprice != '' ">
+           AND a.referencePrice = #{referenceprice}
+        </if>
+        <if test=" projectfeatures != null and projectfeatures != '' ">
+           AND a.projectFeatures = #{projectfeatures}
+        </if>
+        <if test=" regionallocation != null and regionallocation != '' ">
+           AND a.regionallocation = #{regionallocation}
+        </if>
+        <if test=" propertyaddress != null and propertyaddress != '' ">
+           AND a.propertyaddress = #{propertyaddress}
+        </if>
+        <if test=" salesofficeaddress != null and salesofficeaddress != '' ">
+           AND a.salesOfficeAddress = #{salesofficeaddress}
+        </if>
+        <if test=" developer != null and developer != '' ">
+           AND a.developer = #{developer}
+        </if>
+        <if test=" buildingtype != null and buildingtype != '' ">
+           AND a.buildingType = #{buildingtype}
+        </if>
+        <if test=" landscapingratio != null and landscapingratio != '' ">
+           AND a.landscapingRatio = #{landscapingratio}
+        </if>
+        <if test=" sitearea != null and sitearea != '' ">
+           AND a.siteArea = #{sitearea}
+        </if>
+        <if test=" floorarearatio != null and floorarearatio != '' ">
+           AND a.floorAreaRatio = #{floorarearatio}
+        </if>
+        <if test=" buildingarea != null and buildingarea != '' ">
+           AND a.buildingArea = #{buildingarea}
+        </if>
+        <if test=" yearofpropertyrights != null and yearofpropertyrights != '' ">
+           AND a.yearofpropertyRights = #{yearofpropertyrights}
+        </if>
+        <if test=" numplan != null and numplan != '' ">
+           AND a.numPlan = #{numplan}
+        </if>
+        <if test=" designtype != null and designtype != '' ">
+           AND a.designType = #{designtype}
+        </if>
+        <if test=" propertycompany != null and propertycompany != '' ">
+           AND a.propertyCompany = #{propertycompany}
+        </if>
+        <if test=" parkingratio != null and parkingratio != '' ">
+           AND a.parkingRatio = #{parkingratio}
+        </if>
+        <if test=" propertycosts != null and propertycosts != '' ">
+           AND a.propertycosts = #{propertycosts}
+        </if>
+        <if test=" heatingmethod != null and heatingmethod != '' ">
+           AND a.heatingMethod = #{heatingmethod}
+        </if>
+        <if test=" watersupplymethod != null and watersupplymethod != '' ">
+           AND a.waterSupplyMethod = #{watersupplymethod}
+        </if>
+        <if test=" powersupply != null and powersupply != '' ">
+           AND a.powerSupply = #{powersupply}
+        </if>
+        <if test=" parkingspace != null and parkingspace != '' ">
+           AND a.parkingSpace = #{parkingspace}
+        </if>
+        <if test=" nearby != null and nearby != '' ">
+           AND a.nearby = #{nearby}
+        </if>
+        <if test=" area != null and area != '' ">
+           AND a.area = #{area}
+        </if>
+        <if test=" id != null and id != '' ">
+           AND a.id = #{id}
+        </if>
+        </where>
+    </select>
+
+    <!-- 获取分页数据 @author fsd-->
+    <select id="getPage" resultType="com.raising.modules.buildingPrice.entity.InfodataEntity">
+        SELECT <include refid="InfodataColumns"/>
+          FROM infodata a
+        <include refid="InfodataJoins"/>
+        <where>
+        <if test=" entity.date != null and entity.date != '' ">
+           AND a.Date = #{entity.date}
+        </if>
+        <if test=" entity.city != null and entity.city != '' ">
+           AND a.city = #{entity.city}
+        </if>
+        <if test=" entity.region != null and entity.region != '' ">
+           AND a.region = #{entity.region}
+        </if>
+        <if test=" entity.xiaoqu != null and entity.xiaoqu != '' ">
+           AND a.xiaoqu = #{entity.xiaoqu}
+        </if>
+        <if test=" entity.price != null and entity.price != '' ">
+           AND a.price = #{entity.price}
+        </if>
+        <if test=" entity.total != null and entity.total != '' ">
+           AND a.total = #{entity.total}
+        </if>
+        <if test=" entity.url != null and entity.url != '' ">
+           AND a.url = #{entity.url}
+        </if>
+        <if test=" entity.propertytype != null and entity.propertytype != '' ">
+           AND a.propertyType = #{entity.propertytype}
+        </if>
+        <if test=" entity.referenceprice != null and entity.referenceprice != '' ">
+           AND a.referencePrice = #{entity.referenceprice}
+        </if>
+        <if test=" entity.projectfeatures != null and entity.projectfeatures != '' ">
+           AND a.projectFeatures = #{entity.projectfeatures}
+        </if>
+        <if test=" entity.regionallocation != null and entity.regionallocation != '' ">
+           AND a.regionallocation = #{entity.regionallocation}
+        </if>
+        <if test=" entity.propertyaddress != null and entity.propertyaddress != '' ">
+           AND a.propertyaddress = #{entity.propertyaddress}
+        </if>
+        <if test=" entity.salesofficeaddress != null and entity.salesofficeaddress != '' ">
+           AND a.salesOfficeAddress = #{entity.salesofficeaddress}
+        </if>
+        <if test=" entity.developer != null and entity.developer != '' ">
+           AND a.developer = #{entity.developer}
+        </if>
+        <if test=" entity.buildingtype != null and entity.buildingtype != '' ">
+           AND a.buildingType = #{entity.buildingtype}
+        </if>
+        <if test=" entity.landscapingratio != null and entity.landscapingratio != '' ">
+           AND a.landscapingRatio = #{entity.landscapingratio}
+        </if>
+        <if test=" entity.sitearea != null and entity.sitearea != '' ">
+           AND a.siteArea = #{entity.sitearea}
+        </if>
+        <if test=" entity.floorarearatio != null and entity.floorarearatio != '' ">
+           AND a.floorAreaRatio = #{entity.floorarearatio}
+        </if>
+        <if test=" entity.buildingarea != null and entity.buildingarea != '' ">
+           AND a.buildingArea = #{entity.buildingarea}
+        </if>
+        <if test=" entity.yearofpropertyrights != null and entity.yearofpropertyrights != '' ">
+           AND a.yearofpropertyRights = #{entity.yearofpropertyrights}
+        </if>
+        <if test=" entity.numplan != null and entity.numplan != '' ">
+           AND a.numPlan = #{entity.numplan}
+        </if>
+        <if test=" entity.designtype != null and entity.designtype != '' ">
+           AND a.designType = #{entity.designtype}
+        </if>
+        <if test=" entity.propertycompany != null and entity.propertycompany != '' ">
+           AND a.propertyCompany = #{entity.propertycompany}
+        </if>
+        <if test=" entity.parkingratio != null and entity.parkingratio != '' ">
+           AND a.parkingRatio = #{entity.parkingratio}
+        </if>
+        <if test=" entity.propertycosts != null and entity.propertycosts != '' ">
+           AND a.propertycosts = #{entity.propertycosts}
+        </if>
+        <if test=" entity.heatingmethod != null and entity.heatingmethod != '' ">
+           AND a.heatingMethod = #{entity.heatingmethod}
+        </if>
+        <if test=" entity.watersupplymethod != null and entity.watersupplymethod != '' ">
+           AND a.waterSupplyMethod = #{entity.watersupplymethod}
+        </if>
+        <if test=" entity.powersupply != null and entity.powersupply != '' ">
+           AND a.powerSupply = #{entity.powersupply}
+        </if>
+        <if test=" entity.parkingspace != null and entity.parkingspace != '' ">
+           AND a.parkingSpace = #{entity.parkingspace}
+        </if>
+        <if test=" entity.nearby != null and entity.nearby != '' ">
+           AND a.nearby = #{entity.nearby}
+        </if>
+        <if test=" entity.area != null and entity.area != '' ">
+           AND a.area = #{entity.area}
+        </if>
+        <if test=" entity.id != null and entity.id != '' ">
+           AND a.id = #{entity.id}
+        </if>
+        </where>
+        <if test="orderBy != null and orderBy!=''">
+         ORDER BY ${ orderBy}
+        </if>
+    </select>
+
+    <!-- 新增插入 @author fsd-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" >
+        INSERT INTO infodata(
+                Date,
+                city,
+                region,
+                xiaoqu,
+                price,
+                total,
+                url,
+                propertyType,
+                referencePrice,
+                projectFeatures,
+                regionallocation,
+                propertyaddress,
+                salesOfficeAddress,
+                developer,
+                buildingType,
+                landscapingRatio,
+                siteArea,
+                floorAreaRatio,
+                buildingArea,
+                yearofpropertyRights,
+                numPlan,
+                designType,
+                propertyCompany,
+                parkingRatio,
+                propertycosts,
+                heatingMethod,
+                waterSupplyMethod,
+                powerSupply,
+                parkingSpace,
+                nearby,
+                area,
+        )
+        VALUES (
+                #{date},
+                #{city},
+                #{region},
+                #{xiaoqu},
+                #{price},
+                #{total},
+                #{url},
+                #{propertytype},
+                #{referenceprice},
+                #{projectfeatures},
+                #{regionallocation},
+                #{propertyaddress},
+                #{salesofficeaddress},
+                #{developer},
+                #{buildingtype},
+                #{landscapingratio},
+                #{sitearea},
+                #{floorarearatio},
+                #{buildingarea},
+                #{yearofpropertyrights},
+                #{numplan},
+                #{designtype},
+                #{propertycompany},
+                #{parkingratio},
+                #{propertycosts},
+                #{heatingmethod},
+                #{watersupplymethod},
+                #{powersupply},
+                #{parkingspace},
+                #{nearby},
+                #{area},
+        )
+    </insert>
+
+    <!-- 更新数据 @author fsd-->
+    <update id="update">
+        UPDATE infodata SET
+               Date = #{date},
+               city = #{city},
+               region = #{region},
+               xiaoqu = #{xiaoqu},
+               price = #{price},
+               total = #{total},
+               url = #{url},
+               propertyType = #{propertytype},
+               referencePrice = #{referenceprice},
+               projectFeatures = #{projectfeatures},
+               regionallocation = #{regionallocation},
+               propertyaddress = #{propertyaddress},
+               salesOfficeAddress = #{salesofficeaddress},
+               developer = #{developer},
+               buildingType = #{buildingtype},
+               landscapingRatio = #{landscapingratio},
+               siteArea = #{sitearea},
+               floorAreaRatio = #{floorarearatio},
+               buildingArea = #{buildingarea},
+               yearofpropertyRights = #{yearofpropertyrights},
+               numPlan = #{numplan},
+               designType = #{designtype},
+               propertyCompany = #{propertycompany},
+               parkingRatio = #{parkingratio},
+               propertycosts = #{propertycosts},
+               heatingMethod = #{heatingmethod},
+               waterSupplyMethod = #{watersupplymethod},
+               powerSupply = #{powersupply},
+               parkingSpace = #{parkingspace},
+               nearby = #{nearby},
+               area = #{area},
+        <where>
+           AND id = #{id}
+        </where>
+    </update>
+
+    <!-- 删除 根据主键删除 @author fsd-->
+    <delete id="delete">
+        DELETE FROM infodata
+        <where>
+           AND id = #{id}
+        </where>
+    </delete>
+
+    <!-- 删除 根据其他参数删除,切记，此方法慎用，稍有不慎就会删除所有数据 @author fsd-->
+    <delete id="deleteByParam">
+        DELETE FROM infodata
+        <where>
+        <if test=" date != null and date != '' ">
+           AND Date = #{date}
+        </if>
+        <if test=" city != null and city != '' ">
+           AND city = #{city}
+        </if>
+        <if test=" region != null and region != '' ">
+           AND region = #{region}
+        </if>
+        <if test=" xiaoqu != null and xiaoqu != '' ">
+           AND xiaoqu = #{xiaoqu}
+        </if>
+        <if test=" price != null and price != '' ">
+           AND price = #{price}
+        </if>
+        <if test=" total != null and total != '' ">
+           AND total = #{total}
+        </if>
+        <if test=" url != null and url != '' ">
+           AND url = #{url}
+        </if>
+        <if test=" propertytype != null and propertytype != '' ">
+           AND propertyType = #{propertytype}
+        </if>
+        <if test=" referenceprice != null and referenceprice != '' ">
+           AND referencePrice = #{referenceprice}
+        </if>
+        <if test=" projectfeatures != null and projectfeatures != '' ">
+           AND projectFeatures = #{projectfeatures}
+        </if>
+        <if test=" regionallocation != null and regionallocation != '' ">
+           AND regionallocation = #{regionallocation}
+        </if>
+        <if test=" propertyaddress != null and propertyaddress != '' ">
+           AND propertyaddress = #{propertyaddress}
+        </if>
+        <if test=" salesofficeaddress != null and salesofficeaddress != '' ">
+           AND salesOfficeAddress = #{salesofficeaddress}
+        </if>
+        <if test=" developer != null and developer != '' ">
+           AND developer = #{developer}
+        </if>
+        <if test=" buildingtype != null and buildingtype != '' ">
+           AND buildingType = #{buildingtype}
+        </if>
+        <if test=" landscapingratio != null and landscapingratio != '' ">
+           AND landscapingRatio = #{landscapingratio}
+        </if>
+        <if test=" sitearea != null and sitearea != '' ">
+           AND siteArea = #{sitearea}
+        </if>
+        <if test=" floorarearatio != null and floorarearatio != '' ">
+           AND floorAreaRatio = #{floorarearatio}
+        </if>
+        <if test=" buildingarea != null and buildingarea != '' ">
+           AND buildingArea = #{buildingarea}
+        </if>
+        <if test=" yearofpropertyrights != null and yearofpropertyrights != '' ">
+           AND yearofpropertyRights = #{yearofpropertyrights}
+        </if>
+        <if test=" numplan != null and numplan != '' ">
+           AND numPlan = #{numplan}
+        </if>
+        <if test=" designtype != null and designtype != '' ">
+           AND designType = #{designtype}
+        </if>
+        <if test=" propertycompany != null and propertycompany != '' ">
+           AND propertyCompany = #{propertycompany}
+        </if>
+        <if test=" parkingratio != null and parkingratio != '' ">
+           AND parkingRatio = #{parkingratio}
+        </if>
+        <if test=" propertycosts != null and propertycosts != '' ">
+           AND propertycosts = #{propertycosts}
+        </if>
+        <if test=" heatingmethod != null and heatingmethod != '' ">
+           AND heatingMethod = #{heatingmethod}
+        </if>
+        <if test=" watersupplymethod != null and watersupplymethod != '' ">
+           AND waterSupplyMethod = #{watersupplymethod}
+        </if>
+        <if test=" powersupply != null and powersupply != '' ">
+           AND powerSupply = #{powersupply}
+        </if>
+        <if test=" parkingspace != null and parkingspace != '' ">
+           AND parkingSpace = #{parkingspace}
+        </if>
+        <if test=" nearby != null and nearby != '' ">
+           AND nearby = #{nearby}
+        </if>
+        <if test=" area != null and area != '' ">
+           AND area = #{area}
+        </if>
+        <if test=" id != null and id != '' ">
+           AND id = #{id}
+        </if>
+        </where>
+    </delete>
+
+</mapper>
