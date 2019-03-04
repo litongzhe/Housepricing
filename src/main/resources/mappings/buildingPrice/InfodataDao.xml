@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.raising.modules.priceInfo.dao.InfodataDao">
+<mapper namespace="com.raising.modules.buildingPrice.dao.InfodataDao">
     <!-- 公共查询字段 @author fsd-->
     <sql id="InfodataColumns">
         a.Date as "date",
@@ -42,7 +42,7 @@
     </sql>
 
     <!-- 查询详情 @author fsd-->
-    <select id="get" resultType="com.raising.modules.priceInfo.entity.InfodataEntity">
+    <select id="get" resultType="com.raising.modules.buildingPrice.entity.InfodataEntity">
         SELECT <include refid="InfodataColumns"/>
           FROM infodata a <include refid="InfodataJoins"/>
         <where>
@@ -51,7 +51,7 @@
     </select>
 
     <!-- 查询详情 - 根据参数查询 @author fsd-->
-    <select id="getByParam" resultType="com.raising.modules.priceInfo.entity.InfodataEntity">
+    <select id="getByParam" resultType="com.raising.modules.buildingPrice.entity.InfodataEntity">
         SELECT <include refid="InfodataColumns"/>
           FROM infodata a <include refid="InfodataJoins"/>
         <where>
@@ -155,7 +155,7 @@
     </select>
 
     <!-- 获取list列表数据 @author fsd-->
-    <select id="getList" resultType="com.raising.modules.priceInfo.entity.InfodataEntity">
+    <select id="getList" resultType="com.raising.modules.buildingPrice.entity.InfodataEntity">
         SELECT <include refid="InfodataColumns"/>
           FROM infodata a
         <include refid="InfodataJoins"/>
@@ -260,7 +260,7 @@
     </select>
 
     <!-- 获取分页数据 @author fsd-->
-    <select id="getPage" resultType="com.raising.modules.priceInfo.entity.InfodataEntity">
+    <select id="getPage" resultType="com.raising.modules.buildingPrice.entity.InfodataEntity">
         SELECT <include refid="InfodataColumns"/>
           FROM infodata a
         <include refid="InfodataJoins"/>

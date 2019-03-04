@@ -1,4 +1,4 @@
-package com.raising.modules.priceInfo.controller;
+package com.raising.modules.buildingPrice.controller;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,16 +8,16 @@ import com.raising.framework.controller.BaseController;
 import com.raising.framework.entity.ResultVo;
 import com.raising.framework.mybaits.Page;
 
-import com.raising.modules.priceInfo.entity.InfodataEntity;
-import com.raising.modules.priceInfo.service.InfodataService;
+import com.raising.modules.buildingPrice.entity.InfodataEntity;
+import com.raising.modules.buildingPrice.service.InfodataService;
 
 /**
  *  控制器
  * @author fsd
- * @createTime 2019-03-04 11:18:27
+ * @createTime 2019-03-04 14:17:51
  */
 @RestController
-@RequestMapping("/priceInfo/infodata")
+@RequestMapping("/buildingPrice/infodata")
 public class InfodataController extends BaseController {
 
     @Autowired
@@ -26,12 +26,12 @@ public class InfodataController extends BaseController {
     /**
      * 分页 - 查询
      * @author fsd
-     * @datetime 2019-03-04 11:18:27
+     * @datetime 2019-03-04 14:17:51
      * @param page
      * @param infodata
      * @return ResultVo
      */
-    // @RequiresPermissions("priceInfo:infodata:select")
+    // @RequiresPermissions("buildingPrice:infodata:select")
     @GetMapping("/page")
     public ResultVo page(InfodataEntity infodata,Page<InfodataEntity> page) {
         page.setEntity(infodata);
@@ -43,11 +43,11 @@ public class InfodataController extends BaseController {
     /**
      * 详情 - 查询
      * @author fsd
-     * @datetime 2019-03-04 11:18:27
+     * @datetime 2019-03-04 14:17:51
      * @param id 
      * @return ResultVo
      */
-    // @RequiresPermissions("priceInfo:infodata:select")
+    // @RequiresPermissions("buildingPrice:infodata:select")
     @GetMapping("/info")
     public ResultVo info(@RequestParam("id") String id) {
         return infodataService.get(id);
@@ -56,11 +56,11 @@ public class InfodataController extends BaseController {
     /**
      * 新增 - 插入
      * @author fsd
-     * @datetime 2019-03-04 11:18:27
+     * @datetime 2019-03-04 14:17:51
      * @param infodata
      * @return ResultVo
      */
-    // @RequiresPermissions("priceInfo:infodata:insert")
+    // @RequiresPermissions("buildingPrice:infodata:insert")
     @PostMapping("/insert")
     public ResultVo insert(InfodataEntity infodata) {
         InfodataEntity insert = new InfodataEntity();
@@ -105,11 +105,11 @@ public class InfodataController extends BaseController {
     /**
      * 更新
      * @author fsd
-     * @datetime 2019-03-04 11:18:27
+     * @datetime 2019-03-04 14:17:51
      * @param infodata
      * @return ResultVo
      */
-    // @RequiresPermissions("priceInfo:infodata:update")
+    // @RequiresPermissions("buildingPrice:infodata:update")
     @PostMapping("/update")
     public ResultVo update(InfodataEntity infodata) {
         InfodataEntity update = new InfodataEntity();
@@ -152,11 +152,11 @@ public class InfodataController extends BaseController {
     /**
      * 删除
      * @author fsd
-     * @datetime 2019-03-04 11:18:27
+     * @datetime 2019-03-04 14:17:51
      * @param id 
      * @return ResultVo
      */
-    // @RequiresPermissions("priceInfo:infodata:delete")
+    // @RequiresPermissions("buildingPrice:infodata:delete")
     @PostMapping("/delete")
     public ResultVo delete(@RequestParam("id") String id) {
         return infodataService.delete(id);

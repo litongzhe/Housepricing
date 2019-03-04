@@ -1,11 +1,11 @@
-package com.raising.modules.priceInfo.entity;
+package com.raising.modules.buildingPrice.entity;
 
 import com.raising.framework.entity.BaseEntity;
 
 /**
 * 
 * @author fsd
-* @createTime 2019-03-04 11:18:27
+* @createTime 2019-03-04 14:17:51
 */
 public class InfodataEntity extends BaseEntity<InfodataEntity>{
 

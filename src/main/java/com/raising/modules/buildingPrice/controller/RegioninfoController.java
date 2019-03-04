@@ -1,4 +1,4 @@
-package com.raising.modules.priceInfo.controller;
+package com.raising.modules.buildingPrice.controller;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,16 +8,16 @@ import com.raising.framework.controller.BaseController;
 import com.raising.framework.entity.ResultVo;
 import com.raising.framework.mybaits.Page;
 
-import com.raising.modules.priceInfo.entity.RegioninfoEntity;
-import com.raising.modules.priceInfo.service.RegioninfoService;
+import com.raising.modules.buildingPrice.entity.RegioninfoEntity;
+import com.raising.modules.buildingPrice.service.RegioninfoService;
 
 /**
  *  控制器
  * @author fsd
- * @createTime 2019-03-04 11:18:27
+ * @createTime 2019-03-04 14:17:51
  */
 @RestController
-@RequestMapping("/priceInfo/regioninfo")
+@RequestMapping("/buildingPrice/regioninfo")
 public class RegioninfoController extends BaseController {
 
     @Autowired
@@ -26,12 +26,12 @@ public class RegioninfoController extends BaseController {
     /**
      * 分页 - 查询
      * @author fsd
-     * @datetime 2019-03-04 11:18:27
+     * @datetime 2019-03-04 14:17:51
      * @param page
      * @param regioninfo
      * @return ResultVo
      */
-    // @RequiresPermissions("priceInfo:regioninfo:select")
+    // @RequiresPermissions("buildingPrice:regioninfo:select")
     @GetMapping("/page")
     public ResultVo page(RegioninfoEntity regioninfo,Page<RegioninfoEntity> page) {
         page.setEntity(regioninfo);
@@ -43,11 +43,11 @@ public class RegioninfoController extends BaseController {
     /**
      * 详情 - 查询
      * @author fsd
-     * @datetime 2019-03-04 11:18:27
+     * @datetime 2019-03-04 14:17:51
      * @param id 
      * @return ResultVo
      */
-    // @RequiresPermissions("priceInfo:regioninfo:select")
+    // @RequiresPermissions("buildingPrice:regioninfo:select")
     @GetMapping("/info")
     public ResultVo info(@RequestParam("id") String id) {
         return regioninfoService.get(id);
@@ -56,11 +56,11 @@ public class RegioninfoController extends BaseController {
     /**
      * 新增 - 插入
      * @author fsd
-     * @datetime 2019-03-04 11:18:27
+     * @datetime 2019-03-04 14:17:51
      * @param regioninfo
      * @return ResultVo
      */
-    // @RequiresPermissions("priceInfo:regioninfo:insert")
+    // @RequiresPermissions("buildingPrice:regioninfo:insert")
     @PostMapping("/insert")
     public ResultVo insert(RegioninfoEntity regioninfo) {
         RegioninfoEntity insert = new RegioninfoEntity();
@@ -79,11 +79,11 @@ public class RegioninfoController extends BaseController {
     /**
      * 更新
      * @author fsd
-     * @datetime 2019-03-04 11:18:27
+     * @datetime 2019-03-04 14:17:51
      * @param regioninfo
      * @return ResultVo
      */
-    // @RequiresPermissions("priceInfo:regioninfo:update")
+    // @RequiresPermissions("buildingPrice:regioninfo:update")
     @PostMapping("/update")
     public ResultVo update(RegioninfoEntity regioninfo) {
         RegioninfoEntity update = new RegioninfoEntity();
@@ -100,11 +100,11 @@ public class RegioninfoController extends BaseController {
     /**
      * 删除
      * @author fsd
-     * @datetime 2019-03-04 11:18:27
+     * @datetime 2019-03-04 14:17:51
      * @param id 
      * @return ResultVo
      */
-    // @RequiresPermissions("priceInfo:regioninfo:delete")
+    // @RequiresPermissions("buildingPrice:regioninfo:delete")
     @PostMapping("/delete")
     public ResultVo delete(@RequestParam("id") String id) {
         return regioninfoService.delete(id);
