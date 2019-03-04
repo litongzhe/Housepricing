@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.modules.priceInfo.dao.RegioninfoDao">
+    <!-- 公共查询字段 @author fsd-->
+    <sql id="RegioninfoColumns">
+        a.id as "id",
+        a.cityname as "cityname",
+        a.regionname as "regionname",
+        a.avgprice as "avgprice",
+        a.lat as "lat",
+        a.lng as "lng"
+    </sql>
+
+    <!-- 公共连表查询语句 @author fsd-->
+    <sql id="RegioninfoJoins">
+    </sql>
+
+    <!-- 查询详情 @author fsd-->
+    <select id="get" resultType="com.raising.modules.priceInfo.entity.RegioninfoEntity">
+        SELECT <include refid="RegioninfoColumns"/>
+          FROM regionInfo a <include refid="RegioninfoJoins"/>
+        <where>
+           AND a.id = #{id}
+        </where>
+    </select>
+
+    <!-- 查询详情 - 根据参数查询 @author fsd-->
+    <select id="getByParam" resultType="com.raising.modules.priceInfo.entity.RegioninfoEntity">
+        SELECT <include refid="RegioninfoColumns"/>
+          FROM regionInfo a <include refid="RegioninfoJoins"/>
+        <where>
+        <if test=" id != null and id != '' ">
+           AND a.id = #{id}
+        </if>
+        <if test=" cityname != null and cityname != '' ">
+           AND a.cityname = #{cityname}
+        </if>
+        <if test=" regionname != null and regionname != '' ">
+           AND a.regionname = #{regionname}
+        </if>
+        <if test=" avgprice != null and avgprice != '' ">
+           AND a.avgprice = #{avgprice}
+        </if>
+        <if test=" lat != null and lat != '' ">
+           AND a.lat = #{lat}
+        </if>
+        <if test=" lng != null and lng != '' ">
+           AND a.lng = #{lng}
+        </if>
+        </where>
+    </select>
+
+    <!-- 获取list列表数据 @author fsd-->
+    <select id="getList" resultType="com.raising.modules.priceInfo.entity.RegioninfoEntity">
+        SELECT <include refid="RegioninfoColumns"/>
+          FROM regionInfo a
+        <include refid="RegioninfoJoins"/>
+        <where>
+        <if test=" id != null and id != '' ">
+           AND a.id = #{id}
+        </if>
+        <if test=" cityname != null and cityname != '' ">
+           AND a.cityname = #{cityname}
+        </if>
+        <if test=" regionname != null and regionname != '' ">
+           AND a.regionname = #{regionname}
+        </if>
+        <if test=" avgprice != null and avgprice != '' ">
+           AND a.avgprice = #{avgprice}
+        </if>
+        <if test=" lat != null and lat != '' ">
+           AND a.lat = #{lat}
+        </if>
+        <if test=" lng != null and lng != '' ">
+           AND a.lng = #{lng}
+        </if>
+        </where>
+    </select>
+
+    <!-- 获取分页数据 @author fsd-->
+    <select id="getPage" resultType="com.raising.modules.priceInfo.entity.RegioninfoEntity">
+        SELECT <include refid="RegioninfoColumns"/>
+          FROM regionInfo a
+        <include refid="RegioninfoJoins"/>
+        <where>
+        <if test=" entity.id != null and entity.id != '' ">
+           AND a.id = #{entity.id}
+        </if>
+        <if test=" entity.cityname != null and entity.cityname != '' ">
+           AND a.cityname = #{entity.cityname}
+        </if>
+        <if test=" entity.regionname != null and entity.regionname != '' ">
+           AND a.regionname = #{entity.regionname}
+        </if>
+        <if test=" entity.avgprice != null and entity.avgprice != '' ">
+           AND a.avgprice = #{entity.avgprice}
+        </if>
+        <if test=" entity.lat != null and entity.lat != '' ">
+           AND a.lat = #{entity.lat}
+        </if>
+        <if test=" entity.lng != null and entity.lng != '' ">
+           AND a.lng = #{entity.lng}
+        </if>
+        </where>
+        <if test="orderBy != null and orderBy!=''">
+         ORDER BY ${ orderBy}
+        </if>
+    </select>
+
+    <!-- 新增插入 @author fsd-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" >
+        INSERT INTO regionInfo(
+                cityname,
+                regionname,
+                avgprice,
+                lat,
+                lng
+        )
+        VALUES (
+                #{cityname},
+                #{regionname},
+                #{avgprice},
+                #{lat},
+                #{lng}
+        )
+    </insert>
+
+    <!-- 更新数据 @author fsd-->
+    <update id="update">
+        UPDATE regionInfo SET
+               cityname = #{cityname},
+               regionname = #{regionname},
+               avgprice = #{avgprice},
+               lat = #{lat},
+               lng = #{lng}
+        <where>
+           AND id = #{id}
+        </where>
+    </update>
+
+    <!-- 删除 根据主键删除 @author fsd-->
+    <delete id="delete">
+        DELETE FROM regionInfo
+        <where>
+           AND id = #{id}
+        </where>
+    </delete>
+
+    <!-- 删除 根据其他参数删除,切记，此方法慎用，稍有不慎就会删除所有数据 @author fsd-->
+    <delete id="deleteByParam">
+        DELETE FROM regionInfo
+        <where>
+        <if test=" id != null and id != '' ">
+           AND id = #{id}
+        </if>
+        <if test=" cityname != null and cityname != '' ">
+           AND cityname = #{cityname}
+        </if>
+        <if test=" regionname != null and regionname != '' ">
+           AND regionname = #{regionname}
+        </if>
+        <if test=" avgprice != null and avgprice != '' ">
+           AND avgprice = #{avgprice}
+        </if>
+        <if test=" lat != null and lat != '' ">
+           AND lat = #{lat}
+        </if>
+        <if test=" lng != null and lng != '' ">
+           AND lng = #{lng}
+        </if>
+        </where>
+    </delete>
+
+</mapper>
