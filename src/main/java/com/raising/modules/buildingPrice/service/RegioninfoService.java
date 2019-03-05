@@ -1,5 +1,8 @@
 package com.raising.modules.buildingPrice.service;
 
+import com.raising.framework.entity.ResultCode;
+import com.raising.framework.entity.ResultVo;
+import com.raising.modules.buildingPrice.entity.cityAvgPriceEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,5 +21,8 @@ import java.util.List;
 @Transactional(rollbackFor = Exception.class)
 public class RegioninfoService extends CrudService<RegioninfoDao, RegioninfoEntity> {
 
+    public ResultVo getCityAvgPrice(){
+        return new ResultVo(ResultCode.OK, this.dao.getCityAvgPrice());
+    }
 
 }
