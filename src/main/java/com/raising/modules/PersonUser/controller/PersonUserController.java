@@ -8,6 +8,7 @@ import com.raising.modules.sys.entity.User;
 import com.raising.util.CodeUtil;
 import com.raising.util.PersonUserUtils;
 import com.raising.utils.PasswordUtils;
+import org.apache.commons.lang3.tuple.Triple;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;

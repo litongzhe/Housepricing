@@ -1,5 +1,9 @@
 package com.raising.modules.buildingPrice.controller;
 
+import com.raising.modules.buildingPrice.entity.InfodataEntity;
+import com.raising.modules.buildingPrice.entity.RegioninfoEntity;
+import com.raising.modules.buildingPrice.service.InfodataService;
+import com.raising.modules.buildingPrice.service.RegioninfoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +30,10 @@ public class PricehistorynewController extends BaseController {
 
     @Autowired
     private PricehistorynewService pricehistorynewService;
+    @Autowired
+    private RegioninfoService regioninfoService;
+    @Autowired
+    private InfodataService infodataService;
 
     /**
      * 分页 - 查询
@@ -134,7 +142,6 @@ public class PricehistorynewController extends BaseController {
 
         Map<String,Object> resultMap = new HashMap<>();
 
-
         String cityName = entitys.get(0).getCity();
         resultMap.put("cityName",cityName);
         Map<String,Double> priceMap = new HashMap<>();
@@ -148,4 +155,92 @@ public class PricehistorynewController extends BaseController {
         return resultVo;
     }
 
+
+    /**
+     * 城市名，城市等级，城市平均房价，城市供给量，区房价变化率，区房价变化方向，区平均房价，区供给量
+     * @author litongzhe
+     * @datetime 2019-03-05 20:48:22
+     * @param city
+     * @return ResultVo
+     */
+    @GetMapping("/citypriceInfo")
+    public ResultVo citypriceInfo(@RequestParam("city") String city){
+        PricehistorynewEntity historycpi = new PricehistorynewEntity();
+        RegioninfoEntity regioncpi = new RegioninfoEntity();
+        InfodataEntity infocpi = new InfodataEntity();
+
+        historycpi.setCity(city);
+        regioncpi.setCityname(city);
+        infocpi.setCity(city);
+
+        List<PricehistorynewEntity> historyentitys = (List<PricehistorynewEntity>)pricehistorynewService.getList(historycpi).getData();
+        String citylevel = historyentitys.get(0).getCitylevel();
+
+        List<RegioninfoEntity> regionentitys = (List<RegioninfoEntity>)regioninfoService.getList(regioncpi).getData();
+        double avgprice = 0.0;
+        Integer regionnum = 0;
+        for(RegioninfoEntity e:regionentitys){
+            avgprice += Double.valueOf(e.getAvgprice());
+            regionnum++;
+        }
+        avgprice = avgprice/regionnum;
+
+        List<InfodataEntity> infoentitys = (List<InfodataEntity>)infodataService.getList(infocpi).getData();
+        Integer gongginum = 0;
+        for(InfodataEntity e:infoentitys){
+            String num = e.getNumplan();
+            if(num.equals("暂无信息"))
+                continue;
+            gongginum += Integer.valueOf(num);
+        }
+
+        Map<String,Double> proportionMap = new HashMap<>();
+        Map<String,String> changeMap = new HashMap<>();
+        for(PricehistorynewEntity e:historyentitys){
+            String proportion = e.getProportion();
+            if(proportion.equals("--")){
+                proportionMap.put(e.getMouth(),0.0);
+            }
+            else{
+                proportionMap.put(e.getMouth(),Double.valueOf(e.getProportion()));
+            }
+            changeMap.put(e.getMouth(),e.getInc2());
+        }
+
+        Map<String,Integer> regionPriceMap = new HashMap<>();
+        for(RegioninfoEntity e:regionentitys){
+            regionPriceMap.put(e.getRegionname(),Integer.valueOf(e.getAvgprice()));
+        }
+
+        Map<String,Integer> regionSupplyMap = new HashMap<>();
+        for(InfodataEntity e:infoentitys){
+            String region = e.getRegion();
+            String strnum = e.getNumplan();
+            if(strnum.equals("暂无信息"))
+                continue;
+            if(regionSupplyMap.containsKey(region)){
+                Integer num = regionSupplyMap.get(region) + Integer.valueOf(strnum);
+                regionSupplyMap.put(region,num);
+            }
+            else {
+                regionSupplyMap.put(region,Integer.valueOf(strnum));
+            }
+        }
+
+        Map<String,Object> resultMap = new HashMap<>();
+        resultMap.put("cityName",city);
+        resultMap.put("cityLevel",citylevel);
+        resultMap.put("cityAvgPrice",avgprice);
+        resultMap.put("citySupplyNum",gongginum);
+        resultMap.put("proportion",proportionMap);
+        resultMap.put("change",changeMap);
+        resultMap.put("regionPrice",regionPriceMap);
+        resultMap.put("regionSupply",regionSupplyMap);
+
+
+        ResultVo resultVo = new ResultVo();
+        resultVo.setData(resultMap);
+        ResultVo.entityNull(resultVo);
+        return resultVo;
+    }
 }
