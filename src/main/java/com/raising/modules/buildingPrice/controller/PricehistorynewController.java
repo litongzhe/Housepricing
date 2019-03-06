@@ -206,47 +206,58 @@ public class PricehistorynewController extends BaseController {
         List<Map> changeList = new ArrayList<>();
 
         for (PricehistorynewEntity e : historyentitys) {
-            String proportion = e.getProportion();
-            Map<String, Double> proportionMap = Maps.newLinkedHashMap();
-            Map<String, String> changeMap = Maps.newLinkedHashMap();
-            if (proportion.equals("--")) {
-                proportionMap.put(e.getMouth(), 0.0);
+            String strproportion = e.getProportion();
+            String month = e.getMouth();
+            String change = e.getInc2();
+            Map<String, Object> proportionMap = Maps.newLinkedHashMap();
+
+            if (strproportion.equals("--")) {
+                proportionMap.put("time",month);
+                proportionMap.put("proportion", 0.0);
             } else {
-                proportionMap.put(e.getMouth(), Double.valueOf(e.getProportion()));
+                double proportion = Double.valueOf(strproportion);
+                if(change.equals("下降")){
+                    proportion = -1*proportion;
+                }
+//                proportionMap.put(month, proportion);
+                proportionMap.put("time",month);
+                proportionMap.put("proportion", proportion);
             }
-            changeMap.put(e.getMouth(), e.getInc2());
             proportionList.add(proportionMap);
-            changeList.add(changeMap);
         }
-        List<Map> regionList = new ArrayList<>();
+
         Map<String, Integer> regionPriceMap = Maps.newLinkedHashMap();
         for (RegioninfoEntity e : regionentitys) {
-
             regionPriceMap.put(e.getRegionname(), Integer.valueOf(e.getAvgprice()));
 //            regionList.add(regionPriceMap);
         }
-        Map<String, Integer> regionInfoMap = Maps.newLinkedHashMap();
+        Map<String, Integer> regionNumMap = Maps.newLinkedHashMap();
         for (InfodataEntity e : infoentitys) {
-
             String region = e.getRegion();
             String strnum = e.getNumplan();
-
             if (strnum.equals("暂无信息"))
                 continue;
-            if (regionInfoMap.containsKey(region)) {
-
-                Integer num = regionInfoMap.get(region) + Integer.valueOf(strnum);
-                regionInfoMap.put(region, num);
-
-
+            if (regionNumMap.containsKey(region)) {
+                Integer num = regionNumMap.get(region) + Integer.valueOf(strnum);
+                regionNumMap.put(region, num);
             } else {
-//                System.out.println(region);
-//                int regionPrice=regionPriceMap.get(region);
-//                System.out.println(regionPrice);
-                regionInfoMap.put(region, Integer.valueOf(strnum));
-//                regionInfoMap.put(region,regionPrice);
-
+                regionNumMap.put(region, Integer.valueOf(strnum));
             }
+        }
+
+        List<Map> regionList = new ArrayList<>();
+        for(String key:regionPriceMap.keySet()){
+//            Map<String,Integer> num = Maps.newLinkedHashMap();
+//            Map<String,Integer> price = Maps.newLinkedHashMap();
+//            num.put("numPlan",regionNumMap.get(key));
+//            price.put("avgPrice",regionPriceMap.get(key));
+            Map<String,Object> singleRegionInfo = Maps.newLinkedHashMap();
+            singleRegionInfo.put("supply",regionNumMap.get(key));
+            singleRegionInfo.put("price",regionPriceMap.get(key));
+            singleRegionInfo.put("regionName",key);
+//            Map<String,Map> singleRegionMap = Maps.newLinkedHashMap();
+//            singleRegionMap.put(key,singleRegionInfo);
+            regionList.add(singleRegionInfo);
         }
 
         Map<String, Object> resultMap = new HashMap<>();
@@ -255,7 +266,7 @@ public class PricehistorynewController extends BaseController {
         resultMap.put("cityAvgPrice", avgprice);
         resultMap.put("citySupplyNum", gongginum);
         resultMap.put("proportion", proportionList);
-        resultMap.put("change", changeList);
+//        resultMap.put("change", changeList);
 //        resultMap.put("regionPrice", regionPriceMap);
 //        resultMap.put("regionSupply", regionSupplyMap);
         resultMap.put("regionInfo", regionList);
