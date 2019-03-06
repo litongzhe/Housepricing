@@ -152,11 +152,14 @@ public class PricehistorynewController extends BaseController {
 
         String cityName = entitys.get(0).getCity();
         resultMap.put("cityName", cityName);
-        Map<String, Double> priceMap = Maps.newLinkedHashMap();
+        List<Map> priceList=new ArrayList<>();
         for (PricehistorynewEntity e : entitys) {
-            priceMap.put(e.getMouth(), Double.valueOf(e.getHouseprice()));
+            Map<String, Object> priceMap = Maps.newLinkedHashMap();
+            priceMap.put("time",e.getMouth());
+            priceMap.put("price", Double.valueOf(e.getHouseprice()));
+            priceList.add(priceMap);
         }
-        resultMap.put("priceHistory", priceMap);
+        resultMap.put("priceHistory", priceList);
         ResultVo resultVo = new ResultVo();
         resultVo.setData(resultMap);
         ResultVo.entityNull(resultVo);
