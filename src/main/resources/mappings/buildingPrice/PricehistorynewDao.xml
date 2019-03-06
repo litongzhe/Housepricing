@@ -23,152 +23,160 @@
 
     <!-- 查询详情 @author fsd-->
     <select id="get" resultType="com.raising.modules.buildingPrice.entity.PricehistorynewEntity">
-        SELECT <include refid="PricehistorynewColumns"/>
-          FROM pricehistorynew a <include refid="PricehistorynewJoins"/>
+        SELECT
+        <include refid="PricehistorynewColumns"/>
+        FROM pricehistorynew a
+        <include refid="PricehistorynewJoins"/>
         <where>
-           AND a.pricehistoryId = #{pricehistoryid}
+            AND a.pricehistoryId = #{pricehistoryid}
         </where>
     </select>
 
     <!-- 查询详情 - 根据参数查询 @author fsd-->
     <select id="getByParam" resultType="com.raising.modules.buildingPrice.entity.PricehistorynewEntity">
-        SELECT <include refid="PricehistorynewColumns"/>
-          FROM pricehistorynew a <include refid="PricehistorynewJoins"/>
+        SELECT
+        <include refid="PricehistorynewColumns"/>
+        FROM pricehistorynew a
+        <include refid="PricehistorynewJoins"/>
         <where>
-        <if test=" year != null and year != '' ">
-           AND a.year = #{year}
-        </if>
-        <if test=" mouth != null and mouth != '' ">
-           AND a.mouth = #{mouth}
-        </if>
-        <if test=" province != null and province != '' ">
-           AND a.province = #{province}
-        </if>
-        <if test=" city != null and city != '' ">
-           AND a.city = #{city}
-        </if>
-        <if test=" citylevel != null and citylevel != '' ">
-           AND a.citylevel = #{citylevel}
-        </if>
-        <if test=" longitude != null and longitude != '' ">
-           AND a.longitude = #{longitude}
-        </if>
-        <if test=" twist != null and twist != '' ">
-           AND a.twist = #{twist}
-        </if>
-        <if test=" houseprice != null and houseprice != '' ">
-           AND a.houseprice = #{houseprice}
-        </if>
-        <if test=" proportion != null and proportion != '' ">
-           AND a.proportion = #{proportion}
-        </if>
-        <if test=" inc != null and inc != '' ">
-           AND a.inc = #{inc}
-        </if>
-        <if test=" inc2 != null and inc2 != '' ">
-           AND a.inc_2 = #{inc2}
-        </if>
-        <if test=" pricehistoryid != null and pricehistoryid != '' ">
-           AND a.pricehistoryId = #{pricehistoryid}
-        </if>
+            <if test=" year != null and year != '' ">
+                AND a.year = #{year}
+            </if>
+            <if test=" mouth != null and mouth != '' ">
+                AND a.mouth = #{mouth}
+            </if>
+            <if test=" province != null and province != '' ">
+                AND a.province = #{province}
+            </if>
+            <if test=" city != null and city != '' ">
+                AND a.city = #{city}
+            </if>
+            <if test=" citylevel != null and citylevel != '' ">
+                AND a.citylevel = #{citylevel}
+            </if>
+            <if test=" longitude != null and longitude != '' ">
+                AND a.longitude = #{longitude}
+            </if>
+            <if test=" twist != null and twist != '' ">
+                AND a.twist = #{twist}
+            </if>
+            <if test=" houseprice != null and houseprice != '' ">
+                AND a.houseprice = #{houseprice}
+            </if>
+            <if test=" proportion != null and proportion != '' ">
+                AND a.proportion = #{proportion}
+            </if>
+            <if test=" inc != null and inc != '' ">
+                AND a.inc = #{inc}
+            </if>
+            <if test=" inc2 != null and inc2 != '' ">
+                AND a.inc_2 = #{inc2}
+            </if>
+            <if test=" pricehistoryid != null and pricehistoryid != '' ">
+                AND a.pricehistoryId = #{pricehistoryid}
+            </if>
         </where>
     </select>
 
     <!-- 获取list列表数据 @author fsd-->
     <select id="getList" resultType="com.raising.modules.buildingPrice.entity.PricehistorynewEntity">
-        SELECT <include refid="PricehistorynewColumns"/>
-          FROM pricehistorynew a
+        SELECT
+        <include refid="PricehistorynewColumns"/>
+        FROM pricehistorynew a
         <include refid="PricehistorynewJoins"/>
         <where>
-        <if test=" year != null and year != '' ">
-           AND a.year = #{year}
-        </if>
-        <if test=" mouth != null and mouth != '' ">
-           AND a.mouth = #{mouth}
-        </if>
-        <if test=" province != null and province != '' ">
-           AND a.province = #{province}
-        </if>
-        <if test=" city != null and city != '' ">
-           AND a.city = #{city}
-        </if>
-        <if test=" citylevel != null and citylevel != '' ">
-           AND a.citylevel = #{citylevel}
-        </if>
-        <if test=" longitude != null and longitude != '' ">
-           AND a.longitude = #{longitude}
-        </if>
-        <if test=" twist != null and twist != '' ">
-           AND a.twist = #{twist}
-        </if>
-        <if test=" houseprice != null and houseprice != '' ">
-           AND a.houseprice = #{houseprice}
-        </if>
-        <if test=" proportion != null and proportion != '' ">
-           AND a.proportion = #{proportion}
-        </if>
-        <if test=" inc != null and inc != '' ">
-           AND a.inc = #{inc}
-        </if>
-        <if test=" inc2 != null and inc2 != '' ">
-           AND a.inc_2 = #{inc2}
-        </if>
-        <if test=" pricehistoryid != null and pricehistoryid != '' ">
-           AND a.pricehistoryId = #{pricehistoryid}
-        </if>
+            <if test=" year != null and year != '' ">
+                AND a.year = #{year}
+            </if>
+            <if test=" mouth != null and mouth != '' ">
+                AND a.mouth = #{mouth}
+            </if>
+            <if test=" province != null and province != '' ">
+                AND a.province = #{province}
+            </if>
+            <if test=" city != null and city != '' ">
+                AND a.city = #{city}
+            </if>
+            <if test=" citylevel != null and citylevel != '' ">
+                AND a.citylevel = #{citylevel}
+            </if>
+            <if test=" longitude != null and longitude != '' ">
+                AND a.longitude = #{longitude}
+            </if>
+            <if test=" twist != null and twist != '' ">
+                AND a.twist = #{twist}
+            </if>
+            <if test=" houseprice != null and houseprice != '' ">
+                AND a.houseprice = #{houseprice}
+            </if>
+            <if test=" proportion != null and proportion != '' ">
+                AND a.proportion = #{proportion}
+            </if>
+            <if test=" inc != null and inc != '' ">
+                AND a.inc = #{inc}
+            </if>
+            <if test=" inc2 != null and inc2 != '' ">
+                AND a.inc_2 = #{inc2}
+            </if>
+            <if test=" pricehistoryid != null and pricehistoryid != '' ">
+                AND a.pricehistoryId = #{pricehistoryid}
+            </if>
         </where>
+        ORDER BY mouth ASC
+
     </select>
 
     <!-- 获取分页数据 @author fsd-->
     <select id="getPage" resultType="com.raising.modules.buildingPrice.entity.PricehistorynewEntity">
-        SELECT <include refid="PricehistorynewColumns"/>
-          FROM pricehistorynew a
+        SELECT
+        <include refid="PricehistorynewColumns"/>
+        FROM pricehistorynew a
         <include refid="PricehistorynewJoins"/>
         <where>
-        <if test=" entity.year != null and entity.year != '' ">
-           AND a.year = #{entity.year}
-        </if>
-        <if test=" entity.mouth != null and entity.mouth != '' ">
-           AND a.mouth = #{entity.mouth}
-        </if>
-        <if test=" entity.province != null and entity.province != '' ">
-           AND a.province = #{entity.province}
-        </if>
-        <if test=" entity.city != null and entity.city != '' ">
-           AND a.city = #{entity.city}
-        </if>
-        <if test=" entity.citylevel != null and entity.citylevel != '' ">
-           AND a.citylevel = #{entity.citylevel}
-        </if>
-        <if test=" entity.longitude != null and entity.longitude != '' ">
-           AND a.longitude = #{entity.longitude}
-        </if>
-        <if test=" entity.twist != null and entity.twist != '' ">
-           AND a.twist = #{entity.twist}
-        </if>
-        <if test=" entity.houseprice != null and entity.houseprice != '' ">
-           AND a.houseprice = #{entity.houseprice}
-        </if>
-        <if test=" entity.proportion != null and entity.proportion != '' ">
-           AND a.proportion = #{entity.proportion}
-        </if>
-        <if test=" entity.inc != null and entity.inc != '' ">
-           AND a.inc = #{entity.inc}
-        </if>
-        <if test=" entity.inc2 != null and entity.inc2 != '' ">
-           AND a.inc_2 = #{entity.inc2}
-        </if>
-        <if test=" entity.pricehistoryid != null and entity.pricehistoryid != '' ">
-           AND a.pricehistoryId = #{entity.pricehistoryid}
-        </if>
+            <if test=" entity.year != null and entity.year != '' ">
+                AND a.year = #{entity.year}
+            </if>
+            <if test=" entity.mouth != null and entity.mouth != '' ">
+                AND a.mouth = #{entity.mouth}
+            </if>
+            <if test=" entity.province != null and entity.province != '' ">
+                AND a.province = #{entity.province}
+            </if>
+            <if test=" entity.city != null and entity.city != '' ">
+                AND a.city = #{entity.city}
+            </if>
+            <if test=" entity.citylevel != null and entity.citylevel != '' ">
+                AND a.citylevel = #{entity.citylevel}
+            </if>
+            <if test=" entity.longitude != null and entity.longitude != '' ">
+                AND a.longitude = #{entity.longitude}
+            </if>
+            <if test=" entity.twist != null and entity.twist != '' ">
+                AND a.twist = #{entity.twist}
+            </if>
+            <if test=" entity.houseprice != null and entity.houseprice != '' ">
+                AND a.houseprice = #{entity.houseprice}
+            </if>
+            <if test=" entity.proportion != null and entity.proportion != '' ">
+                AND a.proportion = #{entity.proportion}
+            </if>
+            <if test=" entity.inc != null and entity.inc != '' ">
+                AND a.inc = #{entity.inc}
+            </if>
+            <if test=" entity.inc2 != null and entity.inc2 != '' ">
+                AND a.inc_2 = #{entity.inc2}
+            </if>
+            <if test=" entity.pricehistoryid != null and entity.pricehistoryid != '' ">
+                AND a.pricehistoryId = #{entity.pricehistoryid}
+            </if>
         </where>
         <if test="orderBy != null and orderBy!=''">
-         ORDER BY ${ orderBy}
+            ORDER BY ${ orderBy}
         </if>
     </select>
 
     <!-- 新增插入 @author fsd-->
-    <insert id="insert" useGeneratedKeys="true" keyProperty="pricehistoryid" >
+    <insert id="insert" useGeneratedKeys="true" keyProperty="pricehistoryid">
         INSERT INTO pricehistorynew(
                 year,
                 mouth,
@@ -200,19 +208,19 @@
     <!-- 更新数据 @author fsd-->
     <update id="update">
         UPDATE pricehistorynew SET
-               year = #{year},
-               mouth = #{mouth},
-               province = #{province},
-               city = #{city},
-               citylevel = #{citylevel},
-               longitude = #{longitude},
-               twist = #{twist},
-               houseprice = #{houseprice},
-               proportion = #{proportion},
-               inc = #{inc},
-               inc_2 = #{inc2},
+        year = #{year},
+        mouth = #{mouth},
+        province = #{province},
+        city = #{city},
+        citylevel = #{citylevel},
+        longitude = #{longitude},
+        twist = #{twist},
+        houseprice = #{houseprice},
+        proportion = #{proportion},
+        inc = #{inc},
+        inc_2 = #{inc2},
         <where>
-           AND pricehistoryId = #{pricehistoryid}
+            AND pricehistoryId = #{pricehistoryid}
         </where>
     </update>
 
@@ -220,7 +228,7 @@
     <delete id="delete">
         DELETE FROM pricehistorynew
         <where>
-           AND pricehistoryId = #{pricehistoryid}
+            AND pricehistoryId = #{pricehistoryid}
         </where>
     </delete>
 
@@ -228,42 +236,42 @@
     <delete id="deleteByParam">
         DELETE FROM pricehistorynew
         <where>
-        <if test=" year != null and year != '' ">
-           AND year = #{year}
-        </if>
-        <if test=" mouth != null and mouth != '' ">
-           AND mouth = #{mouth}
-        </if>
-        <if test=" province != null and province != '' ">
-           AND province = #{province}
-        </if>
-        <if test=" city != null and city != '' ">
-           AND city = #{city}
-        </if>
-        <if test=" citylevel != null and citylevel != '' ">
-           AND citylevel = #{citylevel}
-        </if>
-        <if test=" longitude != null and longitude != '' ">
-           AND longitude = #{longitude}
-        </if>
-        <if test=" twist != null and twist != '' ">
-           AND twist = #{twist}
-        </if>
-        <if test=" houseprice != null and houseprice != '' ">
-           AND houseprice = #{houseprice}
-        </if>
-        <if test=" proportion != null and proportion != '' ">
-           AND proportion = #{proportion}
-        </if>
-        <if test=" inc != null and inc != '' ">
-           AND inc = #{inc}
-        </if>
-        <if test=" inc2 != null and inc2 != '' ">
-           AND inc_2 = #{inc2}
-        </if>
-        <if test=" pricehistoryid != null and pricehistoryid != '' ">
-           AND pricehistoryId = #{pricehistoryid}
-        </if>
+            <if test=" year != null and year != '' ">
+                AND year = #{year}
+            </if>
+            <if test=" mouth != null and mouth != '' ">
+                AND mouth = #{mouth}
+            </if>
+            <if test=" province != null and province != '' ">
+                AND province = #{province}
+            </if>
+            <if test=" city != null and city != '' ">
+                AND city = #{city}
+            </if>
+            <if test=" citylevel != null and citylevel != '' ">
+                AND citylevel = #{citylevel}
+            </if>
+            <if test=" longitude != null and longitude != '' ">
+                AND longitude = #{longitude}
+            </if>
+            <if test=" twist != null and twist != '' ">
+                AND twist = #{twist}
+            </if>
+            <if test=" houseprice != null and houseprice != '' ">
+                AND houseprice = #{houseprice}
+            </if>
+            <if test=" proportion != null and proportion != '' ">
+                AND proportion = #{proportion}
+            </if>
+            <if test=" inc != null and inc != '' ">
+                AND inc = #{inc}
+            </if>
+            <if test=" inc2 != null and inc2 != '' ">
+                AND inc_2 = #{inc2}
+            </if>
+            <if test=" pricehistoryid != null and pricehistoryid != '' ">
+                AND pricehistoryId = #{pricehistoryid}
+            </if>
         </where>
     </delete>
 
