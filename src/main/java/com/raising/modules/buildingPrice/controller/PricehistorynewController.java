@@ -185,13 +185,16 @@ public class PricehistorynewController extends BaseController {
         List<String> regionName = new ArrayList<>();
         for(RegioninfoEntity e:regionentitys){
             regionName.add(e.getRegionname());
+            System.out.println(e.getRegionname());
         }
         String properType[] = {"住宅","商业","写字楼","别墅","底商","酒店式公寓","公寓","商铺"};
-        Map<String,Object> regionInfo = Maps.newLinkedHashMap();//info：信息
+
         infopt.setCity(city);
         List<InfodataEntity> infoentitys0 = (List<InfodataEntity>) infodataService.getList(infopt).getData();
         List<Map> list = new ArrayList<>();
         for(String region:regionName){//不同区域
+            Map<String,Object> regionInfo = Maps.newLinkedHashMap();//info：信息
+            System.out.println(region);
 //            infopt.setRegion(region);
             List<InfodataEntity> infoentitys1 = new ArrayList<>();
             for(InfodataEntity e:infoentitys0){
