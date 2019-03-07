@@ -186,21 +186,34 @@ public class PricehistorynewController extends BaseController {
         for(RegioninfoEntity e:regionentitys){
             regionName.add(e.getRegionname());
         }
-        Map<String,Object> propertyTypeMap = Maps.newLinkedHashMap();
         String properType[] = {"住宅","商业","写字楼","别墅","底商","酒店式公寓","公寓","商铺"};
         Map<String,List<Map>> regionInfo = Maps.newLinkedHashMap();//区域：信息
+        infopt.setCity(city);
+        List<InfodataEntity> infoentitys0 = (List<InfodataEntity>) infodataService.getList(infopt).getData();
         for(String region:regionName){//不同区域
-            infopt.setCity(city);
-            infopt.setRegion(region);
+//            infopt.setRegion(region);
+            List<InfodataEntity> infoentitys1 = new ArrayList<>();
+            for(InfodataEntity e:infoentitys0){
+                if(e.getRegion().equals(region)){
+                    infoentitys1.add(e);//同一区域
+//                    infoentitys0.remove(e);
+                }
+            }
             List<Map> info = new ArrayList<>();
             for(int i = 0; i < 8; i++){//同一区域不同房型
-                infopt.setPropertytype(properType[i]);
-                List<InfodataEntity> infoentitys = (List<InfodataEntity>) infodataService.getList(infopt).getData();
+//                infopt.setPropertytype(properType[i]);
+                List<InfodataEntity> infoentitys2 = new ArrayList<>();//同一区域同一房型
+                for(InfodataEntity e:infoentitys1){
+                    if(e.getPropertytype().equals(properType[i])){
+                        infoentitys2.add(e);
+//                        infoentitys1.remove(e);
+                    }
+                }
                 int num = 0;
                 int price = 0;
                 int numPlan = 0;
                 Map<String,Object> typeInfo = Maps.newLinkedHashMap();
-                for(InfodataEntity e:infoentitys){
+                for(InfodataEntity e:infoentitys2){
                     String strprice = e.getPrice();
                     String strnum = e.getNumplan();
                     if(strprice.equals("价格待定")){
