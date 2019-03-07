@@ -16,6 +16,7 @@ import com.raising.framework.mybaits.Page;
 import com.raising.modules.buildingPrice.entity.PricehistorynewEntity;
 import com.raising.modules.buildingPrice.service.PricehistorynewService;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -163,6 +164,71 @@ public class PricehistorynewController extends BaseController {
         return resultVo;
     }
 
+    /**
+     * 房型
+     *
+     * @param city
+     * @return ResultVo
+     * @author litongzhe
+     * @datetime 2019年3月6日16点26分
+     */
+    @GetMapping("/propertyType")
+    public ResultVo propertyType(@RequestParam("city") String city){
+        InfodataEntity infopt = new InfodataEntity();
+        RegioninfoEntity regionpt = new RegioninfoEntity();
+        regionpt.setCityname(city);
+
+        List<RegioninfoEntity> regionentitys = (List<RegioninfoEntity>) regioninfoService.getList(regionpt).getData();
+        List<String> regionName = new ArrayList<>();
+        for(RegioninfoEntity e:regionentitys){
+            regionName.add(e.getRegionname());
+        }
+        Map<String,Object> propertyTypeMap = Maps.newLinkedHashMap();
+        String properType[] = {"住宅","商业","写字楼","别墅","底商","酒店式公寓","公寓","商铺"};
+        Map<String,List<Map>> regionInfo = Maps.newLinkedHashMap();//区域：信息
+        for(String region:regionName){//不同区域
+            infopt.setCity(city);
+            infopt.setRegion(region);
+            List<Map> info = new ArrayList<>();
+            for(int i = 0; i < 8; i++){//同一区域不同房型
+                infopt.setPropertytype(properType[i]);
+                List<InfodataEntity> infoentitys = (List<InfodataEntity>) infodataService.getList(infopt).getData();
+                int num = 0;
+                int price = 0;
+                int numPlan = 0;
+                Map<String,Object> typeInfo = Maps.newLinkedHashMap();
+                for(InfodataEntity e:infoentitys){
+                    String strprice = e.getPrice();
+                    String strnum = e.getNumplan();
+                    if(strprice.equals("价格待定")){
+                        price += 0;
+                        num += 0;
+                    }
+                    else{
+                        price += Double.valueOf(strprice);
+                        num += 1;
+                    }
+                    if(strnum.equals("暂无信息")){
+                        numPlan += 0;
+                    }
+                    else{
+                        numPlan += Integer.valueOf(strnum);
+                    }
+                }
+                if(num != 0)
+                    price /= num;//平均房价
+                typeInfo.put("Type",properType[i]);
+                typeInfo.put("AvgPrice",price);
+                typeInfo.put("numPlan",numPlan);
+                info.add(typeInfo);
+            }
+            regionInfo.put(region,info);
+        }
+        ResultVo resultVo = new ResultVo();
+        resultVo.setData(regionInfo);
+        ResultVo.entityNull(resultVo);
+        return resultVo;
+    }
 
     /**
      * 城市名，城市等级，城市平均房价，城市供给量，区房价变化率，区房价变化方向，区平均房价，区供给量
@@ -219,7 +285,6 @@ public class PricehistorynewController extends BaseController {
                 if(change.equals("下降")){
                     proportion = -1*proportion;
                 }
-//                proportionMap.put(month, proportion);
                 proportionMap.put("time",month);
                 proportionMap.put("proportion", proportion);
             }
@@ -229,7 +294,6 @@ public class PricehistorynewController extends BaseController {
         Map<String, Integer> regionPriceMap = Maps.newLinkedHashMap();
         for (RegioninfoEntity e : regionentitys) {
             regionPriceMap.put(e.getRegionname(), Integer.valueOf(e.getAvgprice()));
-//            regionList.add(regionPriceMap);
         }
         Map<String, Integer> regionNumMap = Maps.newLinkedHashMap();
         for (InfodataEntity e : infoentitys) {
@@ -247,16 +311,10 @@ public class PricehistorynewController extends BaseController {
 
         List<Map> regionList = new ArrayList<>();
         for(String key:regionPriceMap.keySet()){
-//            Map<String,Integer> num = Maps.newLinkedHashMap();
-//            Map<String,Integer> price = Maps.newLinkedHashMap();
-//            num.put("numPlan",regionNumMap.get(key));
-//            price.put("avgPrice",regionPriceMap.get(key));
             Map<String,Object> singleRegionInfo = Maps.newLinkedHashMap();
             singleRegionInfo.put("supply",regionNumMap.get(key));
             singleRegionInfo.put("price",regionPriceMap.get(key));
             singleRegionInfo.put("regionName",key);
-//            Map<String,Map> singleRegionMap = Maps.newLinkedHashMap();
-//            singleRegionMap.put(key,singleRegionInfo);
             regionList.add(singleRegionInfo);
         }
 
@@ -266,9 +324,6 @@ public class PricehistorynewController extends BaseController {
         resultMap.put("cityAvgPrice", avgprice);
         resultMap.put("citySupplyNum", gongginum);
         resultMap.put("proportion", proportionList);
-//        resultMap.put("change", changeList);
-//        resultMap.put("regionPrice", regionPriceMap);
-//        resultMap.put("regionSupply", regionSupplyMap);
         resultMap.put("regionInfo", regionList);
 
         ResultVo resultVo = new ResultVo();
