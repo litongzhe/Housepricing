@@ -187,9 +187,10 @@ public class PricehistorynewController extends BaseController {
             regionName.add(e.getRegionname());
         }
         String properType[] = {"住宅","商业","写字楼","别墅","底商","酒店式公寓","公寓","商铺"};
-        Map<String,List<Map>> regionInfo = Maps.newLinkedHashMap();//区域：信息
+        Map<String,Object> regionInfo = Maps.newLinkedHashMap();//info：信息
         infopt.setCity(city);
         List<InfodataEntity> infoentitys0 = (List<InfodataEntity>) infodataService.getList(infopt).getData();
+        List<Map> list = new ArrayList<>();
         for(String region:regionName){//不同区域
 //            infopt.setRegion(region);
             List<InfodataEntity> infoentitys1 = new ArrayList<>();
@@ -233,15 +234,17 @@ public class PricehistorynewController extends BaseController {
                 }
                 if(num != 0)
                     price /= num;//平均房价
-                typeInfo.put("Type",properType[i]);
-                typeInfo.put("AvgPrice",price);
+                typeInfo.put("type",properType[i]);
+                typeInfo.put("avgPrice",price);
                 typeInfo.put("numPlan",numPlan);
                 info.add(typeInfo);
             }
-            regionInfo.put(region,info);
+            regionInfo.put("regionName",region);
+            regionInfo.put("info",info);
+            list.add(regionInfo);
         }
         ResultVo resultVo = new ResultVo();
-        resultVo.setData(regionInfo);
+        resultVo.setData(list);
         ResultVo.entityNull(resultVo);
         return resultVo;
     }
