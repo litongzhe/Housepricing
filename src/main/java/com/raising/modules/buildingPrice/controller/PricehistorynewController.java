@@ -143,21 +143,32 @@ public class PricehistorynewController extends BaseController {
         return pricehistorynewService.delete(pricehistoryid);
     }
 
+
     @GetMapping("/citypricehistory")
-    public ResultVo priceHistoryByCity(@RequestParam("city") String city) {
+    public ResultVo priceHistoryByCity(@RequestParam("city") String city, @RequestParam("regionName") String regionName) {
         PricehistorynewEntity phe = new PricehistorynewEntity();
         phe.setCity(city);
+        phe.setCitylevel(regionName);
         List<PricehistorynewEntity> entitys = (List<PricehistorynewEntity>) pricehistorynewService.getList(phe).getData();
 
         Map<String, Object> resultMap = new HashMap<>();
 
-        String cityName = entitys.get(0).getCity();
-        resultMap.put("cityName", cityName);
-        List<Map> priceList=new ArrayList<>();
+//        String cityName = entitys.get(0).getCity();
+        if (regionName.equals("无")) {
+            resultMap.put("cityName", city);
+        } else if (!regionName.equals("")) {
+            resultMap.put("cityName", regionName);
+        }
+
+        List<Map> priceList = new ArrayList<>();
         for (PricehistorynewEntity e : entitys) {
             Map<String, Object> priceMap = Maps.newLinkedHashMap();
-            priceMap.put("time",e.getMouth());
+            priceMap.put("time", e.getMouth());
             priceMap.put("price", Double.valueOf(e.getHouseprice()));
+            Double pro = Double.valueOf(e.getProportion());
+            if (e.getInc2().equals("下降"))
+                pro = -1 * pro;
+            priceMap.put("proportion", pro);
             priceList.add(priceMap);
         }
         resultMap.put("priceHistory", priceList);
@@ -166,6 +177,7 @@ public class PricehistorynewController extends BaseController {
         ResultVo.entityNull(resultVo);
         return resultVo;
     }
+
 
     /**
      * 房型
@@ -176,39 +188,39 @@ public class PricehistorynewController extends BaseController {
      * @datetime 2019年3月6日16点26分
      */
     @GetMapping("/propertyType")
-    public ResultVo propertyType(@RequestParam("city") String city){
+    public ResultVo propertyType(@RequestParam("city") String city) {
         InfodataEntity infopt = new InfodataEntity();
         RegioninfoEntity regionpt = new RegioninfoEntity();
         regionpt.setCityname(city);
 
         List<RegioninfoEntity> regionentitys = (List<RegioninfoEntity>) regioninfoService.getList(regionpt).getData();
         List<String> regionName = new ArrayList<>();
-        for(RegioninfoEntity e:regionentitys){
+        for (RegioninfoEntity e : regionentitys) {
             regionName.add(e.getRegionname());
             System.out.println(e.getRegionname());
         }
-        String properType[] = {"住宅","商业","写字楼","别墅","底商","酒店式公寓","公寓","商铺"};
+        String properType[] = {"住宅", "商业", "写字楼", "别墅", "底商", "酒店式公寓", "公寓", "商铺"};
 
         infopt.setCity(city);
         List<InfodataEntity> infoentitys0 = (List<InfodataEntity>) infodataService.getList(infopt).getData();
         List<Map> list = new ArrayList<>();
-        for(String region:regionName){//不同区域
-            Map<String,Object> regionInfo = Maps.newLinkedHashMap();//info：信息
+        for (String region : regionName) {//不同区域
+            Map<String, Object> regionInfo = Maps.newLinkedHashMap();//info：信息
             System.out.println(region);
 //            infopt.setRegion(region);
             List<InfodataEntity> infoentitys1 = new ArrayList<>();
-            for(InfodataEntity e:infoentitys0){
-                if(e.getRegion().equals(region)){
+            for (InfodataEntity e : infoentitys0) {
+                if (e.getRegion().equals(region)) {
                     infoentitys1.add(e);//同一区域
 //                    infoentitys0.remove(e);
                 }
             }
             List<Map> info = new ArrayList<>();
-            for(int i = 0; i < 8; i++){//同一区域不同房型
+            for (int i = 0; i < 8; i++) {//同一区域不同房型
 //                infopt.setPropertytype(properType[i]);
                 List<InfodataEntity> infoentitys2 = new ArrayList<>();//同一区域同一房型
-                for(InfodataEntity e:infoentitys1){
-                    if(e.getPropertytype().equals(properType[i])){
+                for (InfodataEntity e : infoentitys1) {
+                    if (e.getPropertytype().equals(properType[i])) {
                         infoentitys2.add(e);
 //                        infoentitys1.remove(e);
                     }
@@ -216,34 +228,32 @@ public class PricehistorynewController extends BaseController {
                 int num = 0;
                 int price = 0;
                 int numPlan = 0;
-                Map<String,Object> typeInfo = Maps.newLinkedHashMap();
-                for(InfodataEntity e:infoentitys2){
+                Map<String, Object> typeInfo = Maps.newLinkedHashMap();
+                for (InfodataEntity e : infoentitys2) {
                     String strprice = e.getPrice();
                     String strnum = e.getNumplan();
-                    if(strprice.equals("价格待定")){
+                    if (strprice.equals("价格待定")) {
                         price += 0;
                         num += 0;
-                    }
-                    else{
+                    } else {
                         price += Double.valueOf(strprice);
                         num += 1;
                     }
-                    if(strnum.equals("暂无信息")){
+                    if (strnum.equals("暂无信息")) {
                         numPlan += 0;
-                    }
-                    else{
+                    } else {
                         numPlan += Integer.valueOf(strnum);
                     }
                 }
-                if(num != 0)
+                if (num != 0)
                     price /= num;//平均房价
-                typeInfo.put("type",properType[i]);
-                typeInfo.put("avgPrice",price);
-                typeInfo.put("numPlan",numPlan);
+                typeInfo.put("type", properType[i]);
+                typeInfo.put("avgPrice", price);
+                typeInfo.put("numPlan", numPlan);
                 info.add(typeInfo);
             }
-            regionInfo.put("regionName",region);
-            regionInfo.put("info",info);
+            regionInfo.put("regionName", region);
+            regionInfo.put("info", info);
             list.add(regionInfo);
         }
         ResultVo resultVo = new ResultVo();
@@ -300,14 +310,14 @@ public class PricehistorynewController extends BaseController {
             Map<String, Object> proportionMap = Maps.newLinkedHashMap();
 
             if (strproportion.equals("--")) {
-                proportionMap.put("time",month);
+                proportionMap.put("time", month);
                 proportionMap.put("proportion", 0.0);
             } else {
                 double proportion = Double.valueOf(strproportion);
-                if(change.equals("下降")){
-                    proportion = -1*proportion;
+                if (change.equals("下降")) {
+                    proportion = -1 * proportion;
                 }
-                proportionMap.put("time",month);
+                proportionMap.put("time", month);
                 proportionMap.put("proportion", proportion);
             }
             proportionList.add(proportionMap);
@@ -332,11 +342,11 @@ public class PricehistorynewController extends BaseController {
         }
 
         List<Map> regionList = new ArrayList<>();
-        for(String key:regionPriceMap.keySet()){
-            Map<String,Object> singleRegionInfo = Maps.newLinkedHashMap();
-            singleRegionInfo.put("supply",regionNumMap.get(key));
-            singleRegionInfo.put("price",regionPriceMap.get(key));
-            singleRegionInfo.put("regionName",key);
+        for (String key : regionPriceMap.keySet()) {
+            Map<String, Object> singleRegionInfo = Maps.newLinkedHashMap();
+            singleRegionInfo.put("supply", regionNumMap.get(key));
+            singleRegionInfo.put("price", regionPriceMap.get(key));
+            singleRegionInfo.put("regionName", key);
             regionList.add(singleRegionInfo);
         }
 
