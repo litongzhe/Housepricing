@@ -5,6 +5,7 @@ import com.raising.modules.buildingPrice.entity.InfodataEntity;
 import com.raising.modules.buildingPrice.entity.RegioninfoEntity;
 import com.raising.modules.buildingPrice.service.InfodataService;
 import com.raising.modules.buildingPrice.service.RegioninfoService;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -145,6 +146,7 @@ public class PricehistorynewController extends BaseController {
 
 
     @GetMapping("/citypricehistory")
+//    @RequiresAuthentication
     public ResultVo priceHistoryByCity(@RequestParam("city") String city, @RequestParam("regionName") String regionName) {
         PricehistorynewEntity phe = new PricehistorynewEntity();
         phe.setCity(city);
@@ -270,19 +272,111 @@ public class PricehistorynewController extends BaseController {
      * @author litongzhe
      * @datetime 2019-03-05 20:48:22
      */
-    @GetMapping("/citypriceInfo")
-    public ResultVo citypriceInfo(@RequestParam("city") String city) {
-        PricehistorynewEntity historycpi = new PricehistorynewEntity();
+//    @GetMapping("/citypriceInfo")
+//    public ResultVo citypriceInfo(@RequestParam("city") String city) {
+//        PricehistorynewEntity historycpi = new PricehistorynewEntity();
+//        RegioninfoEntity regioncpi = new RegioninfoEntity();
+//        InfodataEntity infocpi = new InfodataEntity();
+//
+//        historycpi.setCity(city);
+//        regioncpi.setCityname(city);
+//        infocpi.setCity(city);
+//
+//        List<PricehistorynewEntity> historyentitys = (List<PricehistorynewEntity>) pricehistorynewService.getList(historycpi).getData();
+//        String citylevel = historyentitys.get(0).getCitylevel();
+//
+//        List<RegioninfoEntity> regionentitys = (List<RegioninfoEntity>) regioninfoService.getList(regioncpi).getData();
+//        double avgprice = 0.0;
+//        Integer regionnum = 0;
+//        for (RegioninfoEntity e : regionentitys) {
+//            avgprice += Double.valueOf(e.getAvgprice());
+//            regionnum++;
+//        }
+//        avgprice = avgprice / regionnum;
+//
+//        List<InfodataEntity> infoentitys = (List<InfodataEntity>) infodataService.getList(infocpi).getData();
+//        Integer gongginum = 0;
+//        for (InfodataEntity e : infoentitys) {
+//            String num = e.getNumplan();
+//            if (num.equals("暂无信息"))
+//                continue;
+//            gongginum += Integer.valueOf(num);
+//        }
+//        List<Map> proportionList = new ArrayList<>();
+//        List<Map> changeList = new ArrayList<>();
+//
+//        for (PricehistorynewEntity e : historyentitys) {
+//            String strproportion = e.getProportion();
+//            String month = e.getMouth();
+//            String change = e.getInc2();
+//            Map<String, Object> proportionMap = Maps.newLinkedHashMap();
+//
+//            if (strproportion.equals("--")) {
+//                proportionMap.put("time", month);
+//                proportionMap.put("proportion", 0.0);
+//            } else {
+//                double proportion = Double.valueOf(strproportion);
+//                if (change.equals("下降")) {
+//                    proportion = -1 * proportion;
+//                }
+//                proportionMap.put("time", month);
+//                proportionMap.put("proportion", proportion);
+//            }
+//            proportionList.add(proportionMap);
+//        }
+//
+//        Map<String, Integer> regionPriceMap = Maps.newLinkedHashMap();
+//        for (RegioninfoEntity e : regionentitys) {
+//            regionPriceMap.put(e.getRegionname(), Integer.valueOf(e.getAvgprice()));
+//        }
+//        Map<String, Integer> regionNumMap = Maps.newLinkedHashMap();
+//        for (InfodataEntity e : infoentitys) {
+//            String region = e.getRegion();
+//            String strnum = e.getNumplan();
+//            if (strnum.equals("暂无信息"))
+//                continue;
+//            if (regionNumMap.containsKey(region)) {
+//                Integer num = regionNumMap.get(region) + Integer.valueOf(strnum);
+//                regionNumMap.put(region, num);
+//            } else {
+//                regionNumMap.put(region, Integer.valueOf(strnum));
+//            }
+//        }
+//
+//        List<Map> regionList = new ArrayList<>();
+//        for (String key : regionPriceMap.keySet()) {
+//            Map<String, Object> singleRegionInfo = Maps.newLinkedHashMap();
+//            singleRegionInfo.put("supply", regionNumMap.get(key));
+//            singleRegionInfo.put("price", regionPriceMap.get(key));
+//            singleRegionInfo.put("regionName", key);
+//            regionList.add(singleRegionInfo);
+//        }
+//
+//        Map<String, Object> resultMap = new HashMap<>();
+//        resultMap.put("cityName", city);
+//        resultMap.put("cityLevel", citylevel);
+//        resultMap.put("cityAvgPrice", avgprice);
+//        resultMap.put("citySupplyNum", gongginum);
+//        resultMap.put("proportion", proportionList);
+//        resultMap.put("regionInfo", regionList);
+//
+//        ResultVo resultVo = new ResultVo();
+//        resultVo.setData(resultMap);
+//        ResultVo.entityNull(resultVo);
+//        return resultVo;
+//    }
+    /**
+     * 城市名，城市平均房价
+     *
+     * @param city
+     * @return ResultVo
+     * @author litongzhe
+     * @datetime 2019年3月14日13点36分
+     */
+    @GetMapping("/cityAvgPrice")
+    public ResultVo cityAvgPrice(@RequestParam("city") String city){
         RegioninfoEntity regioncpi = new RegioninfoEntity();
-        InfodataEntity infocpi = new InfodataEntity();
-
-        historycpi.setCity(city);
         regioncpi.setCityname(city);
-        infocpi.setCity(city);
-
-        List<PricehistorynewEntity> historyentitys = (List<PricehistorynewEntity>) pricehistorynewService.getList(historycpi).getData();
-        String citylevel = historyentitys.get(0).getCitylevel();
-
         List<RegioninfoEntity> regionentitys = (List<RegioninfoEntity>) regioninfoService.getList(regioncpi).getData();
         double avgprice = 0.0;
         Integer regionnum = 0;
@@ -291,7 +385,27 @@ public class PricehistorynewController extends BaseController {
             regionnum++;
         }
         avgprice = avgprice / regionnum;
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("cityName", city);
+        resultMap.put("cityAvgPrice", avgprice);
+        ResultVo resultVo = new ResultVo();
+        resultVo.setData(resultMap);
+        ResultVo.entityNull(resultVo);
+        return resultVo;
+    }
 
+    /**
+     * 城市名，城市供给量
+     *
+     * @param city
+     * @return ResultVo
+     * @author litongzhe
+     * @datetime 2019年3月14日13点36分
+     */
+    @GetMapping("/citySupplyNum")
+    public ResultVo citySupplyNum(@RequestParam("city") String city) {
+        InfodataEntity infocpi = new InfodataEntity();
+        infocpi.setCity(city);
         List<InfodataEntity> infoentitys = (List<InfodataEntity>) infodataService.getList(infocpi).getData();
         Integer gongginum = 0;
         for (InfodataEntity e : infoentitys) {
@@ -300,33 +414,65 @@ public class PricehistorynewController extends BaseController {
                 continue;
             gongginum += Integer.valueOf(num);
         }
-        List<Map> proportionList = new ArrayList<>();
-        List<Map> changeList = new ArrayList<>();
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("cityName", city);
+        resultMap.put("citySupplyNum", gongginum);
+        ResultVo resultVo = new ResultVo();
+        resultVo.setData(resultMap);
+        ResultVo.entityNull(resultVo);
+        return resultVo;
+    }
 
-        for (PricehistorynewEntity e : historyentitys) {
-            String strproportion = e.getProportion();
-            String month = e.getMouth();
-            String change = e.getInc2();
-            Map<String, Object> proportionMap = Maps.newLinkedHashMap();
 
-            if (strproportion.equals("--")) {
-                proportionMap.put("time", month);
-                proportionMap.put("proportion", 0.0);
-            } else {
-                double proportion = Double.valueOf(strproportion);
-                if (change.equals("下降")) {
-                    proportion = -1 * proportion;
-                }
-                proportionMap.put("time", month);
-                proportionMap.put("proportion", proportion);
-            }
-            proportionList.add(proportionMap);
-        }
+    /**
+     * 城市名，区平均房价
+     *
+     * @param city
+     * @return ResultVo
+     * @author litongzhe
+     * @datetime 2019-03-05 20:48:22
+     */
+    @GetMapping("/regionPriceInfo")
+    public ResultVo regionPriceInfo(@RequestParam("city") String city) {
+        RegioninfoEntity regioncpi = new RegioninfoEntity();
+        regioncpi.setCityname(city);
+        List<RegioninfoEntity> regionentitys = (List<RegioninfoEntity>) regioninfoService.getList(regioncpi).getData();
 
         Map<String, Integer> regionPriceMap = Maps.newLinkedHashMap();
         for (RegioninfoEntity e : regionentitys) {
             regionPriceMap.put(e.getRegionname(), Integer.valueOf(e.getAvgprice()));
         }
+        List<Map> regionList = new ArrayList<>();
+        for(String key:regionPriceMap.keySet()){
+            Map<String,Object> singleRegionInfo = Maps.newLinkedHashMap();
+            singleRegionInfo.put("regionName",key);
+            singleRegionInfo.put("price",regionPriceMap.get(key));
+            regionList.add(singleRegionInfo);
+        }
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("cityName", city);
+        resultMap.put("regionPriceInfo", regionList);
+
+        ResultVo resultVo = new ResultVo();
+        resultVo.setData(resultMap);
+        ResultVo.entityNull(resultVo);
+        return resultVo;
+    }
+
+    /**
+     * 城市名，区供给量
+     *
+     * @param city
+     * @return ResultVo
+     * @author litongzhe
+     * @datetime 2019-03-05 20:48:22
+     */
+    @GetMapping("/regionSupplyInfo")
+    public ResultVo regionSupplyInfo(@RequestParam("city") String city) {
+        InfodataEntity infocpi = new InfodataEntity();
+        infocpi.setCity(city);
+        List<InfodataEntity> infoentitys = (List<InfodataEntity>) infodataService.getList(infocpi).getData();
+
         Map<String, Integer> regionNumMap = Maps.newLinkedHashMap();
         for (InfodataEntity e : infoentitys) {
             String region = e.getRegion();
@@ -340,23 +486,16 @@ public class PricehistorynewController extends BaseController {
                 regionNumMap.put(region, Integer.valueOf(strnum));
             }
         }
-
         List<Map> regionList = new ArrayList<>();
-        for (String key : regionPriceMap.keySet()) {
-            Map<String, Object> singleRegionInfo = Maps.newLinkedHashMap();
-            singleRegionInfo.put("supply", regionNumMap.get(key));
-            singleRegionInfo.put("price", regionPriceMap.get(key));
-            singleRegionInfo.put("regionName", key);
+        for(String key:regionNumMap.keySet()){
+            Map<String,Object> singleRegionInfo = Maps.newLinkedHashMap();
+            singleRegionInfo.put("regionName",key);
+            singleRegionInfo.put("supply",regionNumMap.get(key));
             regionList.add(singleRegionInfo);
         }
-
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("cityName", city);
-        resultMap.put("cityLevel", citylevel);
-        resultMap.put("cityAvgPrice", avgprice);
-        resultMap.put("citySupplyNum", gongginum);
-        resultMap.put("proportion", proportionList);
-        resultMap.put("regionInfo", regionList);
+        resultMap.put("regionSupplyInfo", regionList);
 
         ResultVo resultVo = new ResultVo();
         resultVo.setData(resultMap);
