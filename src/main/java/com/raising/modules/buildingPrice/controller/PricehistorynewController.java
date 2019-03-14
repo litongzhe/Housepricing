@@ -270,14 +270,14 @@ public class PricehistorynewController extends BaseController {
         return resultVo;
     }
 
-    /**
-     * 城市名，城市等级，城市平均房价，城市供给量，区房价变化率，区房价变化方向，区平均房价，区供给量
-     *
-     * @param city
-     * @return ResultVo
-     * @author litongzhe
-     * @datetime 2019-03-05 20:48:22
-     */
+//    /**
+//     * 城市名，城市等级，城市平均房价，城市供给量，区房价变化率，区房价变化方向，区平均房价，区供给量
+//     *
+//     * @param city
+//     * @return ResultVo
+//     * @author litongzhe
+//     * @datetime 2019-03-05 20:48:22
+//     */
 //    @GetMapping("/citypriceInfo")
 //    public ResultVo citypriceInfo(@RequestParam("city") String city) {
 //        PricehistorynewEntity historycpi = new PricehistorynewEntity();
