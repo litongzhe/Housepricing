@@ -17,7 +17,8 @@ import javax.swing.plaf.synth.Region;
 import java.util.*;
 
 /**
- *  控制器
+ * 控制器
+ *
  * @author fsd
  * @createTime 2019-03-04 14:17:51
  */
@@ -30,29 +31,30 @@ public class RegioninfoController extends BaseController {
 
     /**
      * 分页 - 查询
-     * @author fsd
-     * @datetime 2019-03-04 14:17:51
+     *
      * @param page
      * @param regioninfo
      * @return ResultVo
+     * @author fsd
+     * @datetime 2019-03-04 14:17:51
      */
     // @RequiresPermissions("buildingPrice:regioninfo:select")
     @GetMapping("/page")
-    public ResultVo page(RegioninfoEntity regioninfo,Page<RegioninfoEntity> page) {
+    public ResultVo page(RegioninfoEntity regioninfo, Page<RegioninfoEntity> page) {
         String CityName = "";
         page.setEntity(regioninfo);
 //        Object temp = regioninfoService.getPage(page).getData();
         List<RegioninfoEntity> entitys = ((Page<RegioninfoEntity>) regioninfoService.getPage(page).getData()).getResults();
         Double RegionAvgPrice = 0.0;
         CityName = entitys.get(0).getCityname();
-        for(RegioninfoEntity e : entitys){
+        for (RegioninfoEntity e : entitys) {
             RegionAvgPrice += Double.valueOf(e.getAvgprice());
         }
         RegionAvgPrice /= entitys.size();
-        Map<String,Object> resultMap = new HashMap<>();
-        resultMap.put("cityName",CityName);
-        resultMap.put("avgPrice",RegionAvgPrice);
-        resultMap.put("allRegion",entitys);
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("cityName", CityName);
+        resultMap.put("avgPrice", RegionAvgPrice);
+        resultMap.put("allRegion", entitys);
         ResultVo resultVo = new ResultVo();
         resultVo.setData(resultMap);
         ResultVo.entityNull(resultVo);
@@ -61,10 +63,11 @@ public class RegioninfoController extends BaseController {
 
     /**
      * 详情 - 查询
+     *
+     * @param id
+     * @return ResultVo
      * @author fsd
      * @datetime 2019-03-04 14:17:51
-     * @param id 
-     * @return ResultVo
      */
     // @RequiresPermissions("buildingPrice:regioninfo:select")
     @GetMapping("/info")
@@ -74,10 +77,11 @@ public class RegioninfoController extends BaseController {
 
     /**
      * 新增 - 插入
-     * @author fsd
-     * @datetime 2019-03-04 14:17:51
+     *
      * @param regioninfo
      * @return ResultVo
+     * @author fsd
+     * @datetime 2019-03-04 14:17:51
      */
     // @RequiresPermissions("buildingPrice:regioninfo:insert")
     @PostMapping("/insert")
@@ -97,10 +101,11 @@ public class RegioninfoController extends BaseController {
 
     /**
      * 更新
-     * @author fsd
-     * @datetime 2019-03-04 14:17:51
+     *
      * @param regioninfo
      * @return ResultVo
+     * @author fsd
+     * @datetime 2019-03-04 14:17:51
      */
     // @RequiresPermissions("buildingPrice:regioninfo:update")
     @PostMapping("/update")
@@ -118,10 +123,11 @@ public class RegioninfoController extends BaseController {
 
     /**
      * 删除
+     *
+     * @param id
+     * @return ResultVo
      * @author fsd
      * @datetime 2019-03-04 14:17:51
-     * @param id 
-     * @return ResultVo
      */
     // @RequiresPermissions("buildingPrice:regioninfo:delete")
     @PostMapping("/delete")

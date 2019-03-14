@@ -13,7 +13,7 @@ import com.raising.framework.service.CrudService;
 import com.raising.modules.PersonUser.dao.PersonUserDao;
 import com.raising.modules.PersonUser.entity.PersonUserEntity;
 
-import javax.persistence.criteria.CriteriaBuilder;
+//import javax.persistence.criteria.CriteriaBuilder;
 
 /**
 * 用户表 Service层
