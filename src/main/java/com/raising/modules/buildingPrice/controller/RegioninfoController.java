@@ -129,6 +129,12 @@ public class RegioninfoController extends BaseController {
         return regioninfoService.delete(id);
     }
 
+
+    /**
+     * 获取所有城市的平均房价
+     * @fsd
+     * @return
+     */
     @GetMapping("/cityavg")
     public ResultVo cityavg() {
         return regioninfoService.getCityAvgPrice();

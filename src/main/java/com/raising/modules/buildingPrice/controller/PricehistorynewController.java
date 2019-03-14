@@ -126,6 +126,12 @@ public class PricehistorynewController extends BaseController {
         return pricehistorynewService.delete(pricehistoryid);
     }
 
+    /**
+     * 获取city的历史记录
+     * @author fsd
+     * @param city
+     * @return
+     */
     @GetMapping("/citypricehistory")
     public ResultVo priceHistoryByCity(@RequestParam("city") String city) {
         PricehistorynewEntity phe = new PricehistorynewEntity();

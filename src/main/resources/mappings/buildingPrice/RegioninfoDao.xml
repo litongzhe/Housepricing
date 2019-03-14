@@ -172,7 +172,7 @@
         </where>
     </delete>
 
-    <!-- 获取城市均价 @author fsd-->
+    <!-- 获取所有城市均价 @author fsd-->
     <select id="getCityAvgPrice" resultType="com.raising.modules.buildingPrice.entity.cityAvgPriceEntity">
         SELECT cityname, AVG (avgprice) as avgPrice
         FROM regioninfo a group by a.cityname
