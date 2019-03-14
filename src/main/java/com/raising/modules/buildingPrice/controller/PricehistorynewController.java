@@ -144,6 +144,12 @@ public class PricehistorynewController extends BaseController {
     }
 
 
+    /**
+     * 获取city的历史记录
+     * @author fsd
+     * @param city
+     * @return
+     */
     @GetMapping("/citypricehistory")
     public ResultVo priceHistoryByCity(@RequestParam("city") String city, @RequestParam("regionName") String regionName) {
         PricehistorynewEntity phe = new PricehistorynewEntity();
