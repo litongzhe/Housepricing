@@ -436,7 +436,7 @@ public class PricehistorynewController extends BaseController {
      * @param city
      * @return ResultVo
      * @author litongzhe
-     * @datetime 2019-03-05 20:48:22
+     * @datetime 2019年3月14日 15点27分
      */
     @GetMapping("/regionPriceInfo")
     public ResultVo regionPriceInfo(@RequestParam("city") String city) {
@@ -471,7 +471,7 @@ public class PricehistorynewController extends BaseController {
      * @param city
      * @return ResultVo
      * @author litongzhe
-     * @datetime 2019-03-05 20:48:22
+     * @datetime 2019年3月14日 15点27分
      */
     @GetMapping("/regionSupplyInfo")
     public ResultVo regionSupplyInfo(@RequestParam("city") String city) {
