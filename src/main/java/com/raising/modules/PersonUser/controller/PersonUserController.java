@@ -29,6 +29,7 @@ import java.util.Random;
 
 /**
  * 用户表 控制器
+ *
  * @author fsd
  * @createTime 2019-02-28 16:06:42
  */
@@ -44,17 +45,19 @@ public class PersonUserController extends BaseController {
 
     @Autowired
     private PasswordUtils passwordUtils;
+
     /**
      * 分页 - 查询
-     * @author fsd
-     * @datetime 2019-02-28 16:06:42
+     *
      * @param page
      * @param personUser
      * @return ResultVo
+     * @author fsd
+     * @datetime 2019-02-28 16:06:42
      */
     // @RequiresPermissions("PersonUser:personUser:select")
     @GetMapping("/page")
-    public ResultVo page(PersonUserEntity personUser,Page<PersonUserEntity> page) {
+    public ResultVo page(PersonUserEntity personUser, Page<PersonUserEntity> page) {
         page.setEntity(personUser);
         ResultVo resultVo = personUserService.getPage(page);
         ResultVo.entityNull(resultVo);
@@ -63,10 +66,11 @@ public class PersonUserController extends BaseController {
 
     /**
      * 详情 - 查询
-     * @author fsd
-     * @datetime 2019-02-28 16:06:42
+     *
      * @param id 主键，自增
      * @return ResultVo
+     * @author fsd
+     * @datetime 2019-02-28 16:06:42
      */
     // @RequiresPermissions("PersonUser:personUser:select")
     @GetMapping("/info")
@@ -76,10 +80,11 @@ public class PersonUserController extends BaseController {
 
     /**
      * 新增 - 插入
-     * @author fsd
-     * @datetime 2019-02-28 16:06:42
+     *
      * @param personUser
      * @return ResultVo
+     * @author fsd
+     * @datetime 2019-02-28 16:06:42
      */
     // @RequiresPermissions("PersonUser:personUser:insert")
     @PostMapping("/insert")
@@ -121,10 +126,11 @@ public class PersonUserController extends BaseController {
 
     /**
      * 更新
-     * @author fsd
-     * @datetime 2019-02-28 16:06:42
+     *
      * @param personUser
      * @return ResultVo
+     * @author fsd
+     * @datetime 2019-02-28 16:06:42
      */
     // @RequiresPermissions("PersonUser:personUser:update")
     @PostMapping("/update")
@@ -164,10 +170,11 @@ public class PersonUserController extends BaseController {
 
     /**
      * 删除
-     * @author fsd
-     * @datetime 2019-02-28 16:06:42
+     *
      * @param id 主键，自增
      * @return ResultVo
+     * @author fsd
+     * @datetime 2019-02-28 16:06:42
      */
     // @RequiresPermissions("PersonUser:personUser:delete")
     @PostMapping("/delete")
@@ -182,8 +189,8 @@ public class PersonUserController extends BaseController {
         String email = personUserEntity.getEmail();
 //        String password_view = personUserEntity.getPassword();
 
-        if(personUserService.findByUserEmail(email) != null){
-            resultVo.setData("email have been registered!");
+        if (personUserService.findByUserEmail(email) != null) {
+            resultVo.setDesc("email have been registered!");
             resultVo.setCode(ResultVo.FAILURE);
             return resultVo;
         }
@@ -209,7 +216,7 @@ public class PersonUserController extends BaseController {
 
     @PostMapping({"/login"})
     @OperationLog("登录")
-    public Object login(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam(value = "site",required = false) String site) throws Exception {
+    public Object login(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam(value = "site", required = false) String site) throws Exception {
         PersonUserEntity personUserEntity = this.personUserService.findByUserName(username);
         if (personUserEntity == null) {
             return (new ResultVo(ResultCode.EMPTY_ROW)).desc("用户不存在");
@@ -231,7 +238,7 @@ public class PersonUserController extends BaseController {
 
     @GetMapping({"/logout"})
     @OperationLog("退出登录")
-    @RequiresPermissions({"123"})
+//    @RequiresPermissions({"123"})
     public ResultVo logout() {
         Subject currentUser = SecurityUtils.getSubject();
         if (currentUser.isAuthenticated()) {
@@ -244,7 +251,7 @@ public class PersonUserController extends BaseController {
 
     @GetMapping({"/current_user"})
     @OperationLog("获取当前用户信息")
-    @RequiresAuthentication
+//    @RequiresAuthentication
     public Object currentUser() {
         if (!PersonUserUtils.isLogin()) {
             return null;
@@ -255,21 +262,31 @@ public class PersonUserController extends BaseController {
     }
 
 
-
     @RequestMapping("/getCheckCode")
     @ResponseBody
-    public ResultVo getCheckCode(@RequestParam("email") String email){
+    public ResultVo getCheckCode(@RequestParam("email") String email) {
         ResultVo resultVo = new ResultVo();
         String checkCode = String.valueOf(new Random().nextInt(899999) + 100000);
-        String message = "您的注册验证码为："+checkCode;
+        String message = "您的注册验证码为：" + checkCode;
+        Boolean msg = true;
         try {
-            mailService.sendSimpleMail(email, "GDK房价预测系统注册验证码", message);
-        }catch (Exception e){
+            msg = mailService.sendSimpleMail(email, "GDK房价预测系统注册验证码", message);
+
+        } catch (Exception e) {
             System.out.println(e);
-            resultVo.setCode(555);
+            resultVo.setCode(ResultCode.SMS_SEND_FAILED.getCode());
+            resultVo.desc("邮件发送错误，请稍后重试");
             return resultVo;
         }
-        return new ResultVo(ResultCode.OK, checkCode);
+        if (!msg) {
+            resultVo.setCode(ResultCode.SMS_SEND_FAILED.getCode());
+            resultVo.desc("邮件发送错误，请稍后重试");
+            return resultVo;
+        } else {
+            resultVo.setCode(ResultCode.OK.getCode());
+            resultVo.setData(checkCode);
+        }
+        return resultVo;
     }
 
 }
