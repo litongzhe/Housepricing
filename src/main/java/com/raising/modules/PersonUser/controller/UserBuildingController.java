@@ -128,7 +128,8 @@ public class UserBuildingController extends BaseController {
     }
 
     /**
-     * @author 返回用户的历史记录
+     * 返回用户的历史记录
+     * @author fsd
      * @param token
      * @return
      */
