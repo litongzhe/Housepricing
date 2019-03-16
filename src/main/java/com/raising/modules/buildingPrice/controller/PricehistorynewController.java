@@ -1,8 +1,8 @@
 package com.raising.modules.buildingPrice.controller;
 
 import com.google.common.collect.Maps;
-import com.raising.modules.buildingPrice.entity.InfodataEntity;
-import com.raising.modules.buildingPrice.entity.RegioninfoEntity;
+import com.raising.modules.buildingPrice.entity.*;
+import com.raising.modules.buildingPrice.service.CountrypcrService;
 import com.raising.modules.buildingPrice.service.InfodataService;
 import com.raising.modules.buildingPrice.service.RegioninfoService;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -14,14 +14,10 @@ import com.raising.framework.controller.BaseController;
 import com.raising.framework.entity.ResultVo;
 import com.raising.framework.mybaits.Page;
 
-import com.raising.modules.buildingPrice.entity.PricehistorynewEntity;
 import com.raising.modules.buildingPrice.service.PricehistorynewService;
 
 //import javax.persistence.criteria.CriteriaBuilder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 控制器
@@ -39,6 +35,8 @@ public class PricehistorynewController extends BaseController {
     private RegioninfoService regioninfoService;
     @Autowired
     private InfodataService infodataService;
+    @Autowired
+    private CountrypcrService countrypcrService;
 
     /**
      * 分页 - 查询
@@ -508,4 +506,7 @@ public class PricehistorynewController extends BaseController {
         ResultVo.entityNull(resultVo);
         return resultVo;
     }
+
+
+
 }
