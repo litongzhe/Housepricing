@@ -292,4 +292,32 @@
         </where>
     </delete>
 
+    <!--查询省历史房价信息 时间递增的顺序 @author fsd-->
+    <select id="getHistoryByProvince" resultType="com.raising.modules.buildingPrice.entity.PricehistorynewEntity">
+        SELECT <include refid="PricehistorynewColumns"/>
+        FROM pricehistorynew a
+        <include refid="PricehistorynewJoins"/>
+        <where>
+            <if test=" province != null and province != '' ">
+                AND a.province = #{province}
+            </if>
+        </where>
+        ORDER BY mouth ASC
+    </select>
+
+
+
+    <!--查询区历史房价信息 时间递增的顺序 @author fsd-->
+    <select id="getHistoryByCity" resultType="com.raising.modules.buildingPrice.entity.PricehistorynewEntity">
+        SELECT <include refid="PricehistorynewColumns"/>
+        FROM pricehistorynew a
+        <include refid="PricehistorynewJoins"/>
+        <where>
+            <if test=" city != null and city != '' ">
+                AND a.city = #{city}
+            </if>
+            ANd a.citylevel = "无"
+        </where>
+        ORDER BY mouth ASC
+    </select>
 </mapper>
