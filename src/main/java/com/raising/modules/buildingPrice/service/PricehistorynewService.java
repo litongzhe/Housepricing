@@ -1,5 +1,8 @@
 package com.raising.modules.buildingPrice.service;
 
+import com.raising.framework.entity.ResultCode;
+import com.raising.framework.entity.ResultVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,5 +18,15 @@ import com.raising.modules.buildingPrice.entity.PricehistorynewEntity;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class PricehistorynewService extends CrudService<PricehistorynewDao, PricehistorynewEntity> {
+    @Autowired
+    PricehistorynewDao pricehistorynewDao;
+    public ResultVo getHistoryByProvince(PricehistorynewEntity entity) {
+        return new ResultVo(ResultCode.OK, pricehistorynewDao.getHistoryByProvince(entity));
+    }
+
+    public ResultVo getHistoryByCity(PricehistorynewEntity entity) {
+        return new ResultVo(ResultCode.OK, pricehistorynewDao.getHistoryByCity(entity));
+    }
+
 
 }

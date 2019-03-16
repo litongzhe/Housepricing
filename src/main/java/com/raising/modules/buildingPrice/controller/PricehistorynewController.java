@@ -1,10 +1,12 @@
 package com.raising.modules.buildingPrice.controller;
 
 import com.google.common.collect.Maps;
+import com.raising.framework.entity.ResultCode;
 import com.raising.modules.buildingPrice.entity.InfodataEntity;
 import com.raising.modules.buildingPrice.entity.RegioninfoEntity;
 import com.raising.modules.buildingPrice.service.InfodataService;
 import com.raising.modules.buildingPrice.service.RegioninfoService;
+import model.PredicatePriceModel;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -506,6 +508,56 @@ public class PricehistorynewController extends BaseController {
         ResultVo resultVo = new ResultVo();
         resultVo.setData(resultMap);
         ResultVo.entityNull(resultVo);
+        return resultVo;
+    }
+
+
+    /**
+     * 按照城市名字 获取其历史房价信息，调用训练好的模型，按照map格式输出到前端
+     * @author fsd
+     * @param cityName
+     * @return
+     */
+    @GetMapping("/predicate")
+    public ResultVo getPredicatePrice(@RequestParam("cityName") String cityName){
+        //将其作为城市名字搜索
+        PricehistorynewEntity phecity = new PricehistorynewEntity();
+        phecity.setCity(cityName);
+        List<PricehistorynewEntity> cityResult = (List<PricehistorynewEntity>)pricehistorynewService.getHistoryByCity(phecity).getData();
+        //将其作为省名字搜索
+        PricehistorynewEntity pheprovince = new PricehistorynewEntity();
+        pheprovince.setProvince(cityName);
+        List<PricehistorynewEntity> provinceRsult = (List<PricehistorynewEntity>)pricehistorynewService.getHistoryByProvince(pheprovince).getData();
+        //整合搜索结果
+        List<PricehistorynewEntity> allResult = new ArrayList<>();
+        if(cityResult != null || cityResult.size() != 0)
+            allResult.addAll(cityResult);
+        if(provinceRsult != null || provinceRsult.size() != 0)
+            allResult.addAll(provinceRsult);
+        //获取历史房价
+        List<Float> ph = new ArrayList<>();
+        for(int i = 0; i < allResult.size();i++){
+//            prices[i] = (Float.valueOf(allResult.get(i).getHouseprice())).floatValue();
+            String iPrice = allResult.get(i).getHouseprice();
+            if(iPrice != null && !iPrice.equals("0")){
+                ph.add((Float.valueOf(iPrice)));
+            }
+        }
+        float[] prices = new float[ph.size()];
+        for(int i = 0; i < ph.size();i++){
+            prices[i] = ph.get(i);
+        }
+        //预测下一个月房价 并放入map中返回
+        PredicatePriceModel model = new PredicatePriceModel();
+        Float nextMonthPrice = model.predicateByTime(prices);
+        ph.add(nextMonthPrice);
+        HashMap<String,Object> result2view = new HashMap<>();
+        result2view.put("cityName",cityName);
+        result2view.put("hispre",ph);
+        //将结果封装入ResultVo 返回
+        ResultVo resultVo = new ResultVo();
+        resultVo.setCode(ResultCode.OK.getCode());
+        resultVo.setData(result2view);
         return resultVo;
     }
 }

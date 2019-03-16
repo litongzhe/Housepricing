@@ -5,6 +5,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import com.raising.modules.buildingPrice.entity.PricehistorynewEntity;
 
+import java.util.List;
+
 /**
 *  DAO接口
 * @author fsd
@@ -13,5 +15,6 @@ import com.raising.modules.buildingPrice.entity.PricehistorynewEntity;
 @Mapper
 @Repository
 public interface PricehistorynewDao extends ICrudDao<PricehistorynewEntity> {
-
+    List<PricehistorynewEntity> getHistoryByProvince(PricehistorynewEntity var1);
+    List<PricehistorynewEntity> getHistoryByCity(PricehistorynewEntity var1);
 }

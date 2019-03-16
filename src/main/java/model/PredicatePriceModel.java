@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.List;
 
-public class PredicatePrice {
+public class PredicatePriceModel {
 
     public static String PB_FILE_PATH = "test_model.pb";
     public static String INPUT_TENSOR_NAME = "lstm_1_input";
@@ -44,9 +44,13 @@ public class PredicatePrice {
                 len += Math.pow(item,2);
             }
             len = Math.sqrt(len);
+            float[] normHistoryPrice = new float[historyPrice.length];
+            for(int i =0 ; i < historyPrice.length; i++){
+                 normHistoryPrice[i] = (float) (historyPrice[i] / len);
+            }
             long[] shape = new long[]{dim_1,dim_2,dim_3};
 
-            Tensor data = Tensor.create(shape, FloatBuffer.wrap(historyPrice));
+            Tensor data = Tensor.create(shape, FloatBuffer.wrap(normHistoryPrice));
 
             //根据图建立Session
             try (Session session = new Session(graph)) {
@@ -66,17 +70,18 @@ public class PredicatePrice {
                 out.copyTo(t);
                 float max = 0f;
                 float[] result = t[dim_1-1];
-
-                int label = 0;
-                for (int i = 0; i < result.length; i++) {
-                    score = result[i];
-                    System.out.println(score*len);
-                    if (score > max) {
-                        max = score;
-                        label = i;
-                    }
-                }
-                System.out.println(label);
+                score = result[0] * len.floatValue();
+                System.out.println(score);
+//                int label = 0;
+//                for (int i = 0; i < result.length; i++) {
+//                    score = result[i] * len.floatValue();
+//                    System.out.println(score*len);
+//                    if (score > max) {
+//                        max = score;
+//                        label = i;
+//                    }
+//                }
+//                System.out.println(label);
             }
 
         } catch (FileNotFoundException e) {
@@ -87,6 +92,18 @@ public class PredicatePrice {
             e.printStackTrace();
         }
         return score;
+    }
+
+
+    public static void main(String[] args) {
+        PredicatePriceModel model = new PredicatePriceModel();
+        float[] data = new float[74];
+        for(int i = 0; i < 74; i++){
+            data[i] = (float) (i * 7.65);
+            System.out.println(data[i]);
+        }
+
+        System.out.println(model.predicateByTime(data));
     }
 
 
