@@ -301,6 +301,13 @@
             <if test=" province != null and province != '' ">
                 AND a.province = #{province}
             </if>
+            <if test=" city != null and city != '' ">
+                AND a.city = #{city}
+            </if>
+            <if test=" citylevel != null and citylevel != '' ">
+                AND a.citylevel = #{citylevel}
+            </if>
+            AND   a.houseprice!='--'
         </where>
         ORDER BY mouth ASC
     </select>

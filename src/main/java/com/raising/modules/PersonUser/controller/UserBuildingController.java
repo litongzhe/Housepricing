@@ -134,18 +134,19 @@ public class UserBuildingController extends BaseController {
      * @return
      */
     @GetMapping("/userhistory")
-    public ResultVo getUserHistory(@RequestParam("token")String token,Page<UserBuildingEntity> page) {
+    public ResultVo getUserHistory(@RequestParam("token")String token,Page<UserBuildingEntity> page2) {
         //获取token中的用户名，并查找用户，得到用户的id号
         String userName = JWTUtil.getUsername(token);
         PersonUserEntity searchPue = new PersonUserEntity();
-        searchPue.setUsername(userName);
+        searchPue.setUsername(userName.split("-")[0]);
         PersonUserEntity pue = (PersonUserEntity) personUserService.getByParam(searchPue).getData();
         String userId = pue.getId();
         //利用用户id,获取访问过的楼盘id
         UserBuildingEntity userBuildingEntity = new UserBuildingEntity();
         userBuildingEntity.setUserid(userId);
-        page.setEntity(userBuildingEntity);
-        List<UserBuildingEntity> userBuildingEntities = (List<UserBuildingEntity>) userBuildingService.getPage(page).getData();
+        page2.setEntity(userBuildingEntity);
+        Page page=(Page) userBuildingService.getPage(page2).getData();
+        List<UserBuildingEntity> userBuildingEntities = (page).getResults();
         //获取历史访问 所有相对应的 楼盘信息
         List<InfodataEntity> userHistoryBuilds = new ArrayList<>();
         InfodataEntity infoe = new InfodataEntity();
@@ -157,14 +158,22 @@ public class UserBuildingController extends BaseController {
         List<Object> structResult = new ArrayList<>();
         for(InfodataEntity e:userHistoryBuilds){
             Map<String,String> oneResult = new HashMap<>();
+            oneResult.put("id",e.getId());
             oneResult.put("xiaoqu",e.getXiaoqu());
             oneResult.put("propertyaddress",e.getPropertyaddress());
-            oneResult.put("siteArea",e.getSitearea());
+            oneResult.put("area",e.getArea());
             oneResult.put("projectFeatures",e.getProjectfeatures());
-            oneResult.put("referencePrice",e.getReferenceprice());
+            oneResult.put("price",e.getPrice());
             oneResult.put("picture",e.getDate());
+            oneResult.put("region",e.getRegion());
             structResult.add(oneResult);
         }
-        return new ResultVo(ResultCode.OK,structResult);
+        Page<Object> page1=new Page<>();
+        page1.setTotalRecord(page.getTotalRecord());
+        page1.setPageNo(page.getPageNo());
+        page1.setPageSize(page.getPageSize());
+        page1.setResults(structResult);
+
+        return new ResultVo(ResultCode.OK,page1);
     }
 }
