@@ -1,31 +1,33 @@
 package com.raising.modules.buildingPrice.controller;
 
-import com.alibaba.fastjson.JSON;
+//import com.alibaba.fastjson.JSON;
+//import com.alibaba.fastjson.JSONArray;
+//import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
-import com.raising.modules.buildingPrice.entity.cityEntity;
-import com.raising.modules.buildingPrice.entity.provinceEntity;
-import com.raising.modules.buildingPrice.entity.regionEntity;
+import com.raising.modules.buildingPrice.entity.*;
 import com.raising.modules.buildingPrice.service.InfodataService;
 import com.raising.modules.buildingPrice.service.PricehistorynewService;
 import com.raising.modules.buildingPrice.service.RegioninfoService;
+import com.sun.javafx.collections.MappingChange;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import net.sf.json.JSONObject;
+import org.apache.commons.io.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.aspectj.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.bind.annotation.*;
 
 import com.raising.framework.controller.BaseController;
 import com.raising.framework.entity.ResultVo;
 import com.raising.framework.mybaits.Page;
 
-import com.raising.modules.buildingPrice.entity.CountrypcrEntity;
 import com.raising.modules.buildingPrice.service.CountrypcrService;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  *  控制器
@@ -218,7 +220,6 @@ public class CountrypcrController extends BaseController {
             provinceInfo.put("children",cities);
             countryInfo.add(provinceInfo);
         }
-        String json = JSON.toJSONString(countryInfo);
         Gson gson = new Gson();
         String str = gson.toJson(countryInfo);
         BufferedWriter writer = null;
@@ -246,5 +247,40 @@ public class CountrypcrController extends BaseController {
         }
     }
 
-
+    /**
+     * 提供全国省市区的json接口
+     *
+     * @return ResultVo
+     * @author litongzhe
+     * @datetime 2019年3月16日18点12分
+     */
+    @GetMapping("countryInfo")
+    public ResultVo countryInfo() throws IOException {
+        File directory = new File("");// 参数为空
+        String courseFile = directory.getCanonicalPath();
+        System.out.println(courseFile);
+        String path =courseFile + "/src/main/resources/model/countryPCR.json";
+        String jsonStr = "";
+        try{
+            File jsonFile = new File(path);
+            FileReader fileReader = new FileReader(jsonFile);
+            Reader reader = new InputStreamReader(new FileInputStream(jsonFile),"UTF-8");
+            int ch = 0;
+            StringBuffer sb = new StringBuffer();
+            while ((ch = reader.read()) != -1){
+                sb.append((char)ch);
+            }
+            fileReader.close();
+            reader.close();
+            jsonStr = sb.toString();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        List<Map> maps = null;
+        maps = (List)JSONArray.fromObject(jsonStr);
+        ResultVo resultVo = new ResultVo();
+        resultVo.setData(maps);
+        ResultVo.entityNull(resultVo);
+        return resultVo;
+    }
 }
