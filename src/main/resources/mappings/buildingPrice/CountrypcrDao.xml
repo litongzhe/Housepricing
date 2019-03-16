@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.modules.buildingPrice.dao.CountrypcrDao">
+    <!-- 公共查询字段 @author litongzhe-->
+    <sql id="CountrypcrColumns">
+        a.province as "province",
+        a.city as "city",
+        a.region as "region",
+        a.id as "id"
+    </sql>
+
+    <!-- 公共连表查询语句 @author litongzhe-->
+    <sql id="CountrypcrJoins">
+    </sql>
+
+    <!-- 查询详情 @author litongzhe-->
+    <select id="get" resultType="com.raising.modules.buildingPrice.entity.CountrypcrEntity">
+        SELECT <include refid="CountrypcrColumns"/>
+          FROM countrypcr a <include refid="CountrypcrJoins"/>
+        <where>
+           AND a.id = #{id}
+        </where>
+    </select>
+
+    <!-- 查询详情 - 根据参数查询 @author litongzhe-->
+    <select id="getByParam" resultType="com.raising.modules.buildingPrice.entity.CountrypcrEntity">
+        SELECT <include refid="CountrypcrColumns"/>
+          FROM countrypcr a <include refid="CountrypcrJoins"/>
+        <where>
+        <if test=" province != null and province != '' ">
+           AND a.province = #{province}
+        </if>
+        <if test=" city != null and city != '' ">
+           AND a.city = #{city}
+        </if>
+        <if test=" region != null and region != '' ">
+           AND a.region = #{region}
+        </if>
+        <if test=" id != null and id != '' ">
+           AND a.id = #{id}
+        </if>
+        </where>
+    </select>
+
+    <!-- 获取list列表数据 @author litongzhe-->
+    <select id="getList" resultType="com.raising.modules.buildingPrice.entity.CountrypcrEntity">
+        SELECT <include refid="CountrypcrColumns"/>
+          FROM countrypcr a
+        <include refid="CountrypcrJoins"/>
+        <where>
+        <if test=" province != null and province != '' ">
+           AND a.province = #{province}
+        </if>
+        <if test=" city != null and city != '' ">
+           AND a.city = #{city}
+        </if>
+        <if test=" region != null and region != '' ">
+           AND a.region = #{region}
+        </if>
+        <if test=" id != null and id != '' ">
+           AND a.id = #{id}
+        </if>
+        </where>
+    </select>
+
+    <!-- 获取分页数据 @author litongzhe-->
+    <select id="getPage" resultType="com.raising.modules.buildingPrice.entity.CountrypcrEntity">
+        SELECT <include refid="CountrypcrColumns"/>
+          FROM countrypcr a
+        <include refid="CountrypcrJoins"/>
+        <where>
+        <if test=" entity.province != null and entity.province != '' ">
+           AND a.province = #{entity.province}
+        </if>
+        <if test=" entity.city != null and entity.city != '' ">
+           AND a.city = #{entity.city}
+        </if>
+        <if test=" entity.region != null and entity.region != '' ">
+           AND a.region = #{entity.region}
+        </if>
+        <if test=" entity.id != null and entity.id != '' ">
+           AND a.id = #{entity.id}
+        </if>
+        </where>
+        <if test="orderBy != null and orderBy!=''">
+         ORDER BY ${ orderBy}
+        </if>
+    </select>
+
+    <!-- 新增插入 @author litongzhe-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" >
+        INSERT INTO countrypcr(
+                province,
+                city,
+                region
+        )
+        VALUES (
+                #{province},
+                #{city},
+                #{region}
+        )
+    </insert>
+
+    <!-- 更新数据 @author litongzhe-->
+    <update id="update">
+        UPDATE countrypcr SET
+               province = #{province},
+               city = #{city},
+               region = #{region},
+        <where>
+           AND id = #{id}
+        </where>
+    </update>
+
+    <!-- 删除 根据主键删除 @author litongzhe-->
+    <delete id="delete">
+        DELETE FROM countrypcr
+        <where>
+           AND id = #{id}
+        </where>
+    </delete>
+
+    <!-- 删除 根据其他参数删除,切记，此方法慎用，稍有不慎就会删除所有数据 @author litongzhe-->
+    <delete id="deleteByParam">
+        DELETE FROM countrypcr
+        <where>
+        <if test=" province != null and province != '' ">
+           AND province = #{province}
+        </if>
+        <if test=" city != null and city != '' ">
+           AND city = #{city}
+        </if>
+        <if test=" region != null and region != '' ">
+           AND region = #{region}
+        </if>
+        <if test=" id != null and id != '' ">
+           AND id = #{id}
+        </if>
+        </where>
+    </delete>
+
+</mapper>

@@ -1,6 +1,9 @@
 package com.raising.modules.buildingPrice.dao;
 
 import com.raising.framework.dao.ICrudDao;
+import com.raising.modules.buildingPrice.entity.provinceEntity;
+import com.raising.modules.buildingPrice.entity.cityEntity;
+import com.raising.modules.buildingPrice.entity.regionEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import com.raising.modules.buildingPrice.entity.PricehistorynewEntity;
@@ -15,6 +18,7 @@ import java.util.List;
 @Mapper
 @Repository
 public interface PricehistorynewDao extends ICrudDao<PricehistorynewEntity> {
-    List<PricehistorynewEntity> getHistoryByProvince(PricehistorynewEntity var1);
-    List<PricehistorynewEntity> getHistoryByCity(PricehistorynewEntity var1);
+    public List<provinceEntity> getProvince();
+    public List<cityEntity> getCity(cityEntity c);
+    public List<regionEntity> getRegion(regionEntity r);
 }

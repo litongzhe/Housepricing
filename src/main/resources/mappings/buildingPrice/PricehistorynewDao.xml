@@ -21,6 +21,23 @@
     <sql id="PricehistorynewJoins">
     </sql>
 
+    <!-- 获取所有省 @author litongzhe-->
+    <select id="getProvince" resultType= "com.raising.modules.buildingPrice.entity.provinceEntity">
+        SELECT DISTINCT province
+        FROM pricehistorynew a
+    </select>
+    <!--获取某省的所有市 @author litongzhe-->
+    <select id="getCity" resultType="com.raising.modules.buildingPrice.entity.cityEntity">
+        SELECT DISTINCT city
+        FROM pricehistorynew a
+        WHERE a.province = #{province}
+    </select>
+    <!--获取某市的所有区 @author litongzhe-->
+    <select id="getRegion" resultType="com.raising.modules.buildingPrice.entity.regionEntity">
+        SELECT DISTINCT citylevel
+        FROM pricehistorynew a
+        WHERE a.province = #{province} AND a.city = #{city}
+    </select>
     <!-- 查询详情 @author fsd-->
     <select id="get" resultType="com.raising.modules.buildingPrice.entity.PricehistorynewEntity">
         SELECT
