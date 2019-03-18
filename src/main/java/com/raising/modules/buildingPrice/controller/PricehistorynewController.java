@@ -144,29 +144,71 @@ public class PricehistorynewController extends BaseController {
         return pricehistorynewService.delete(pricehistoryid);
     }
 
+//
+//    /**
+//     * 获取city的历史记录
+//     *
+//     * @param city
+//     * @return
+//     * @author fsd
+//     */
+//    @GetMapping("/citypricehistory")
+////    @RequiresAuthentication
+//    public ResultVo priceHistoryByCity(@RequestParam("city") String city, @RequestParam("regionName") String regionName) {
+//        PricehistorynewEntity phe = new PricehistorynewEntity();
+//        phe.setCity(city);
+//        phe.setCitylevel(regionName);
+//        List<PricehistorynewEntity> entitys = (List<PricehistorynewEntity>) pricehistorynewService.getList(phe).getData();
+//
+//        Map<String, Object> resultMap = new HashMap<>();
+//
+////        String cityName = entitys.get(0).getCity();
+//        if (regionName.equals("无")) {
+//            resultMap.put("cityName", city);
+//        } else if (!regionName.equals("")) {
+//            resultMap.put("cityName", regionName);
+//        }
+//
+//        List<Map> priceList = new ArrayList<>();
+//        for (PricehistorynewEntity e : entitys) {
+//            Map<String, Object> priceMap = Maps.newLinkedHashMap();
+//            priceMap.put("time", e.getMouth());
+//            priceMap.put("price", Double.valueOf(e.getHouseprice()));
+//            Double pro = Double.valueOf(e.getProportion());
+//            if (e.getInc2().equals("下降"))
+//                pro = -1 * pro;
+//            priceMap.put("proportion", pro);
+//            priceList.add(priceMap);
+//        }
+//        resultMap.put("priceHistory", priceList);
+//        ResultVo resultVo = new ResultVo();
+//        resultVo.setData(resultMap);
+//        ResultVo.entityNull(resultVo);
+//        return resultVo;
+//    }
 
     /**
      * 获取city的历史记录
      *
-     * @param city
+     * @param
      * @return
      * @author fsd
      */
     @GetMapping("/citypricehistory")
 //    @RequiresAuthentication
-    public ResultVo priceHistoryByCity(@RequestParam("city") String city, @RequestParam("regionName") String regionName) {
-        PricehistorynewEntity phe = new PricehistorynewEntity();
-        phe.setCity(city);
-        phe.setCitylevel(regionName);
+    public ResultVo priceHistoryByCity(PricehistorynewEntity phe) {
+
         List<PricehistorynewEntity> entitys = (List<PricehistorynewEntity>) pricehistorynewService.getList(phe).getData();
 
-        Map<String, Object> resultMap = new HashMap<>();
 
-//        String cityName = entitys.get(0).getCity();
-        if (regionName.equals("无")) {
-            resultMap.put("cityName", city);
-        } else if (!regionName.equals("")) {
-            resultMap.put("cityName", regionName);
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("province", phe.getProvince());
+        if (phe.getCity() != null && !phe.getCity().equals('无')) {
+            resultMap.put("city", phe.getCity());
+        }
+        if (phe.getCitylevel() != null && !phe.getCitylevel().equals('无')) {
+            resultMap.put("citylevel", phe.getCitylevel());
+
         }
 
         List<Map> priceList = new ArrayList<>();
@@ -186,7 +228,6 @@ public class PricehistorynewController extends BaseController {
         ResultVo.entityNull(resultVo);
         return resultVo;
     }
-
 
     /**
      * 房型
@@ -603,8 +644,9 @@ public class PricehistorynewController extends BaseController {
         Float nextMonthPrice = model.predicateByTime(prices);
         ph.add(nextMonthPrice);
         HashMap<String, Object> result2view = new HashMap<>();
-//        result2view.put("cityName", cityName);
+        result2view.put("time", "2019-04");
         result2view.put("hispre", ph.get(ph.size() - 1));
+        result2view.put("proportion",(ph.get(ph.size() - 1)-ph.get(ph.size() - 2))/ph.get(ph.size() - 2) );
         //将结果封装入ResultVo 返回
         ResultVo resultVo = new ResultVo();
         resultVo.setCode(ResultCode.OK.getCode());

@@ -22,7 +22,7 @@
     </sql>
 
     <!-- 获取所有省 @author litongzhe-->
-    <select id="getProvince" resultType= "com.raising.modules.buildingPrice.entity.provinceEntity">
+    <select id="getProvince" resultType="com.raising.modules.buildingPrice.entity.provinceEntity">
         SELECT DISTINCT province
         FROM pricehistorynew a
     </select>
@@ -138,6 +138,7 @@
             <if test=" pricehistoryid != null and pricehistoryid != '' ">
                 AND a.pricehistoryId = #{pricehistoryid}
             </if>
+            AND a.houseprice!='--'
         </where>
         ORDER BY mouth ASC
 
@@ -294,7 +295,8 @@
 
     <!--查询省历史房价信息 时间递增的顺序 @author fsd-->
     <select id="getHistoryByProvince" resultType="com.raising.modules.buildingPrice.entity.PricehistorynewEntity">
-        SELECT <include refid="PricehistorynewColumns"/>
+        SELECT
+        <include refid="PricehistorynewColumns"/>
         FROM pricehistorynew a
         <include refid="PricehistorynewJoins"/>
         <where>
@@ -307,16 +309,16 @@
             <if test=" citylevel != null and citylevel != '' ">
                 AND a.citylevel = #{citylevel}
             </if>
-            AND   a.houseprice!='--'
+            AND a.houseprice!='--'
         </where>
         ORDER BY mouth ASC
     </select>
 
 
-
     <!--查询区历史房价信息 时间递增的顺序 @author fsd-->
     <select id="getHistoryByCity" resultType="com.raising.modules.buildingPrice.entity.PricehistorynewEntity">
-        SELECT <include refid="PricehistorynewColumns"/>
+        SELECT
+        <include refid="PricehistorynewColumns"/>
         FROM pricehistorynew a
         <include refid="PricehistorynewJoins"/>
         <where>

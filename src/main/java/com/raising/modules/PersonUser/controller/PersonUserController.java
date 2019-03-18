@@ -270,7 +270,7 @@ public class PersonUserController extends BaseController {
         String message = "您的注册验证码为：" + checkCode;
         Boolean msg = true;
         try {
-            msg = mailService.sendSimpleMail(email, "GDK房价预测系统注册验证码", message);
+            msg = mailService.sendSimpleMail(email, "GKD房价预测系统注册验证码", message);
 
         } catch (Exception e) {
             System.out.println(e);

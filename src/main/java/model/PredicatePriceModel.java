@@ -87,7 +87,7 @@ public class PredicatePriceModel {
         } catch (FileNotFoundException e) {
             System.out.println("未找到模型文件");
             e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }finally {
             return score;
