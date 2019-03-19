@@ -4,7 +4,9 @@ import com.raising.framework.entity.ResultCode;
 import com.raising.framework.shiro.util.JWTUtil;
 import com.raising.modules.PersonUser.entity.PersonUserEntity;
 import com.raising.modules.PersonUser.service.PersonUserService;
+import com.raising.modules.buildingPrice.entity.BuildColBrowEntity;
 import com.raising.modules.buildingPrice.entity.InfodataEntity;
+import com.raising.modules.buildingPrice.service.BuildColBrowService;
 import com.raising.modules.buildingPrice.service.InfodataService;
 import com.raising.modules.cityInfo.entity.CityinfoEntity;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -41,6 +43,8 @@ public class UserBuildingController extends BaseController {
 
     @Autowired
     private InfodataService infodataService;
+    @Autowired
+    private BuildColBrowService buildColBrowService;
 
     /**
      * 分页 - 查询
@@ -112,6 +116,10 @@ public class UserBuildingController extends BaseController {
         insert.setUserid(userId);
         insert.setBuildingid(buildId);
         ResultVo resultVo = userBuildingService.insert(insert);
+        //increase collection num
+        BuildColBrowEntity buildColBrowEntity = new BuildColBrowEntity();
+        buildColBrowEntity.setXiaoquid(buildId);
+        buildColBrowService.increaseCollection(buildColBrowEntity);
         return resultVo;
 
     }
