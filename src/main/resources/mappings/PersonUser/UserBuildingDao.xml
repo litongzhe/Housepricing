@@ -14,76 +14,88 @@
 
     <!-- 查询详情 @author fsd-->
     <select id="get" resultType="com.raising.modules.PersonUser.entity.UserBuildingEntity">
-        SELECT <include refid="UserBuildingColumns"/>
-          FROM user_building a <include refid="UserBuildingJoins"/>
+        SELECT
+        <include refid="UserBuildingColumns"/>
+        FROM user_building a
+        <include refid="UserBuildingJoins"/>
         <where>
-           AND a.id = #{id}
-           AND a.userid = #{userid}
-           AND a.buildingid = #{buildingid}
+            AND a.id = #{id}
+            AND a.userid = #{userid}
+            AND a.buildingid = #{buildingid}
         </where>
     </select>
 
     <!-- 查询详情 - 根据参数查询 @author fsd-->
     <select id="getByParam" resultType="com.raising.modules.PersonUser.entity.UserBuildingEntity">
-        SELECT <include refid="UserBuildingColumns"/>
-          FROM user_building a <include refid="UserBuildingJoins"/>
+        SELECT
+        <include refid="UserBuildingColumns"/>
+        FROM user_building a
+        <include refid="UserBuildingJoins"/>
         <where>
-        <if test=" id != null and id != '' ">
-           AND a.id = #{id}
-        </if>
-        <if test=" userid != null and userid != '' ">
-           AND a.userid = #{userid}
-        </if>
-        <if test=" buildingid != null and buildingid != '' ">
-           AND a.buildingid = #{buildingid}
-        </if>
+            <if test=" id != null and id != '' ">
+                AND a.id = #{id}
+            </if>
+            <if test=" userid != null and userid != '' ">
+                AND a.userid = #{userid}
+            </if>
+            <if test=" buildingid != null and buildingid != '' ">
+                AND a.buildingid = #{buildingid}
+            </if>
         </where>
     </select>
 
     <!-- 获取list列表数据 @author fsd-->
     <select id="getList" resultType="com.raising.modules.PersonUser.entity.UserBuildingEntity">
-        SELECT <include refid="UserBuildingColumns"/>
-          FROM user_building a
+        SELECT
+        <include refid="UserBuildingColumns"/>
+        FROM user_building a
         <include refid="UserBuildingJoins"/>
         <where>
-        <if test=" id != null and id != '' ">
-           AND a.id = #{id}
-        </if>
-        <if test=" userid != null and userid != '' ">
-           AND a.userid = #{userid}
-        </if>
-        <if test=" buildingid != null and buildingid != '' ">
-           AND a.buildingid = #{buildingid}
-        </if>
+            <if test=" id != null and id != '' ">
+                AND a.id = #{id}
+            </if>
+            <if test=" userid != null and userid != '' ">
+                AND a.userid = #{userid}
+            </if>
+            <if test=" buildingid != null and buildingid != '' ">
+                AND a.buildingid = #{buildingid}
+            </if>
         </where>
     </select>
 
     <!-- 获取分页数据 @author fsd-->
     <select id="getPage" resultType="com.raising.modules.PersonUser.entity.UserBuildingEntity">
-        SELECT <include refid="UserBuildingColumns"/>
-          FROM user_building a
+        SELECT
+        <include refid="UserBuildingColumns"/>
+        FROM user_building a
         <include refid="UserBuildingJoins"/>
         <where>
-        <if test=" entity.id != null and entity.id != '' ">
-           AND a.id = #{entity.id}
-        </if>
-        <if test=" entity.userid != null and entity.userid != '' ">
-           AND a.userid = #{entity.userid}
-        </if>
-        <if test=" entity.buildingid != null and entity.buildingid != '' ">
-           AND a.buildingid = #{entity.buildingid}
-        </if>
+            <if test=" entity.id != null and entity.id != '' ">
+                AND a.id = #{entity.id}
+            </if>
+            <if test=" entity.userid != null and entity.userid != '' ">
+                AND a.userid = #{entity.userid}
+            </if>
+            <if test=" entity.buildingid != null and entity.buildingid != '' ">
+                AND a.buildingid = #{entity.buildingid}
+            </if>
         </where>
         <if test="orderBy != null and orderBy!=''">
-         ORDER BY ${ orderBy}
+            ORDER BY ${ orderBy}
         </if>
     </select>
 
     <!-- 新增插入 @author fsd-->
-    <insert id="insert" useGeneratedKeys="true" keyProperty="iduseridbuildingid" >
+    <insert id="insert" useGeneratedKeys="true" >
         INSERT INTO user_building(
+           id,
+           userid,
+           buildingid
         )
         VALUES (
+        #{id},
+        #{userid},
+        #{buildingid}
         )
     </insert>
 
@@ -91,9 +103,9 @@
     <update id="update">
         UPDATE user_building SET
         <where>
-           AND id = #{id}
-           AND userid = #{userid}
-           AND buildingid = #{buildingid}
+            AND id = #{id}
+            AND userid = #{userid}
+            AND buildingid = #{buildingid}
         </where>
     </update>
 
@@ -101,9 +113,9 @@
     <delete id="delete">
         DELETE FROM user_building
         <where>
-           AND id = #{id}
-           AND userid = #{userid}
-           AND buildingid = #{buildingid}
+            AND id = #{id}
+            AND userid = #{userid}
+            AND buildingid = #{buildingid}
         </where>
     </delete>
 
@@ -111,15 +123,15 @@
     <delete id="deleteByParam">
         DELETE FROM user_building
         <where>
-        <if test=" id != null and id != '' ">
-           AND id = #{id}
-        </if>
-        <if test=" userid != null and userid != '' ">
-           AND userid = #{userid}
-        </if>
-        <if test=" buildingid != null and buildingid != '' ">
-           AND buildingid = #{buildingid}
-        </if>
+            <if test=" id != null and id != '' ">
+                AND id = #{id}
+            </if>
+            <if test=" userid != null and userid != '' ">
+                AND userid = #{userid}
+            </if>
+            <if test=" buildingid != null and buildingid != '' ">
+                AND buildingid = #{buildingid}
+            </if>
         </where>
     </delete>
 

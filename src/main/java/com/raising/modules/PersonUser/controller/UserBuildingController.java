@@ -67,8 +67,7 @@ public class UserBuildingController extends BaseController {
     /**
      * 详情 - 查询
      *
-     * @param id
-     * @param userid
+     *
      * @param buildingid
      * @return ResultVo
      * @author fsd
@@ -76,8 +75,18 @@ public class UserBuildingController extends BaseController {
      */
     // @RequiresPermissions("PersonUser:userBuilding:select")
     @GetMapping("/info")
-    public ResultVo info(@RequestParam("id") String id, @RequestParam("userid") String userid, @RequestParam("buildingid") String buildingid) {
-        return userBuildingService.get(id);
+    public ResultVo info(@RequestParam("token") String token, @RequestParam("buildingid") String buildingid) {
+        //获取token中的用户名，并查找用户，得到用户的id号
+        String userName = JWTUtil.getUsername(token);
+        PersonUserEntity searchPue = new PersonUserEntity();
+        searchPue.setUsername(userName.split("-")[0]);
+        PersonUserEntity pue = (PersonUserEntity) personUserService.getByParam(searchPue).getData();
+        String userId = pue.getId();
+        UserBuildingEntity userBuildingEntity = new UserBuildingEntity();
+        userBuildingEntity.setBuildingid(buildingid);
+        userBuildingEntity.setUserid(userId);
+        ResultVo re= userBuildingService.getByParam(userBuildingEntity);
+        return re;
     }
 
     /**
@@ -117,9 +126,12 @@ public class UserBuildingController extends BaseController {
         insert.setBuildingid(buildId);
         ResultVo resultVo = userBuildingService.insert(insert);
         //increase collection num
+        if (resultVo.getCode() != ResultCode.OK.getCode()) {
+            return resultVo;
+        }
         BuildColBrowEntity buildColBrowEntity = new BuildColBrowEntity();
         buildColBrowEntity.setXiaoquid(buildId);
-        buildColBrowService.increaseCollection(buildColBrowEntity);
+        resultVo = buildColBrowService.increaseCollection(buildColBrowEntity);
         return resultVo;
 
     }
@@ -146,17 +158,30 @@ public class UserBuildingController extends BaseController {
     /**
      * 删除
      *
-     * @param id
-     * @param userid
-     * @param buildingid
      * @return ResultVo
      * @author fsd
      * @datetime 2019-03-16 16:06:16
      */
     // @RequiresPermissions("PersonUser:userBuilding:delete")
     @GetMapping("/delete")
-    public ResultVo delete(@RequestParam("id") String id, @RequestParam("userid") String userid, @RequestParam("buildingid") String buildingid) {
-        return userBuildingService.delete(id);
+    public ResultVo delete(@RequestParam("token") String token, @RequestParam("buildId") String buildId) {
+        UserBuildingEntity userBuildingEntity = new UserBuildingEntity();
+        String userName = JWTUtil.getUsername(token);
+        PersonUserEntity searchPue = new PersonUserEntity();
+        searchPue.setUsername(userName.split("-")[0]);
+        PersonUserEntity pue = (PersonUserEntity) personUserService.getByParam(searchPue).getData();
+        String userId = pue.getId();
+        userBuildingEntity.setUserid(userId);
+        userBuildingEntity.setBuildingid(buildId);
+        BuildColBrowEntity buildColBrowEntity = new BuildColBrowEntity();
+        buildColBrowEntity.setXiaoquid(userBuildingEntity.getBuildingid());
+        ResultVo resultVo = buildColBrowService.decreaseCollection(buildColBrowEntity);
+        if (resultVo.getCode() != ResultCode.OK.getCode()) {
+            return resultVo;
+        }
+        resultVo = userBuildingService.deleteByParam(userBuildingEntity);
+        return resultVo;
+
     }
 
     /**

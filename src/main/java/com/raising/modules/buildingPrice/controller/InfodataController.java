@@ -1,5 +1,8 @@
 package com.raising.modules.buildingPrice.controller;
 
+import com.raising.framework.entity.ResultCode;
+import com.raising.modules.buildingPrice.entity.BuildColBrowEntity;
+import com.raising.modules.buildingPrice.service.BuildColBrowService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,8 +14,11 @@ import com.raising.framework.mybaits.Page;
 import com.raising.modules.buildingPrice.entity.InfodataEntity;
 import com.raising.modules.buildingPrice.service.InfodataService;
 
+import java.util.HashMap;
+
 /**
- *  控制器
+ * 控制器
+ *
  * @author fsd
  * @createTime 2019-03-04 14:17:51
  */
@@ -22,18 +28,21 @@ public class InfodataController extends BaseController {
 
     @Autowired
     private InfodataService infodataService;
+    @Autowired
+    private BuildColBrowService buildColBrowService;
 
     /**
      * 分页 - 查询
-     * @author fsd
-     * @datetime 2019-03-04 14:17:51
+     *
      * @param page
      * @param infodata
      * @return ResultVo
+     * @author fsd
+     * @datetime 2019-03-04 14:17:51
      */
     // @RequiresPermissions("buildingPrice:infodata:select")
     @GetMapping("/page")
-    public ResultVo page(InfodataEntity infodata,Page<InfodataEntity> page) {
+    public ResultVo page(InfodataEntity infodata, Page<InfodataEntity> page) {
         page.setEntity(infodata);
         ResultVo resultVo = infodataService.getPage(page);
         ResultVo.entityNull(resultVo);
@@ -42,23 +51,41 @@ public class InfodataController extends BaseController {
 
     /**
      * 详情 - 查询
+     *
+     * @param id
+     * @return ResultVo
      * @author fsd
      * @datetime 2019-03-04 14:17:51
-     * @param id 
-     * @return ResultVo
      */
     // @RequiresPermissions("buildingPrice:infodata:select")
     @GetMapping("/info")
     public ResultVo info(@RequestParam("id") String id) {
-        return infodataService.get(id);
+
+        InfodataEntity info = (InfodataEntity) infodataService.get(id).getData();
+        BuildColBrowEntity buildColBrowEntity = new BuildColBrowEntity();
+        buildColBrowEntity.setXiaoquid(id);
+        ResultVo resultVo = buildColBrowService.increaseBrowse(buildColBrowEntity);
+        if (resultVo.getCode() != ResultCode.OK.getCode()) {
+            return resultVo;
+        } else {
+            BuildColBrowEntity buildColBrowEntity1 = (BuildColBrowEntity) buildColBrowService.get(id).getData();
+            HashMap<String, Object> result2view = new HashMap<>();
+            result2view.put("buildInfo", info);
+            result2view.put("coll", buildColBrowEntity1);
+            resultVo.setData(result2view);
+            return resultVo;
+        }
+
+
     }
 
     /**
      * 新增 - 插入
-     * @author fsd
-     * @datetime 2019-03-04 14:17:51
+     *
      * @param infodata
      * @return ResultVo
+     * @author fsd
+     * @datetime 2019-03-04 14:17:51
      */
     // @RequiresPermissions("buildingPrice:infodata:insert")
     @PostMapping("/insert")
@@ -104,10 +131,11 @@ public class InfodataController extends BaseController {
 
     /**
      * 更新
-     * @author fsd
-     * @datetime 2019-03-04 14:17:51
+     *
      * @param infodata
      * @return ResultVo
+     * @author fsd
+     * @datetime 2019-03-04 14:17:51
      */
     // @RequiresPermissions("buildingPrice:infodata:update")
     @PostMapping("/update")
@@ -151,10 +179,11 @@ public class InfodataController extends BaseController {
 
     /**
      * 删除
+     *
+     * @param id
+     * @return ResultVo
      * @author fsd
      * @datetime 2019-03-04 14:17:51
-     * @param id 
-     * @return ResultVo
      */
     // @RequiresPermissions("buildingPrice:infodata:delete")
     @PostMapping("/delete")

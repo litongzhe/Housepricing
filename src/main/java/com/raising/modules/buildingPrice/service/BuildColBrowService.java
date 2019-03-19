@@ -108,11 +108,12 @@ public class BuildColBrowService extends CrudService<BuildColBrowDao, BuildColBr
         // no this info in dataset,so insert this data
         if(resultVo.getData() == null){
             buildColBrowEntity.setBrowsenum("1");
+            buildColBrowEntity.setCollectnum("0");
             return new ResultVo(ResultCode.OK, buildColBrowDao.insert(buildColBrowEntity));
         }
         buildColBrowEntity = (BuildColBrowEntity) resultVo.getData();
         Integer browseNum = Integer.valueOf(buildColBrowEntity.getBrowsenum());
-        buildColBrowEntity.setCollectnum(String.valueOf(browseNum+1));
+        buildColBrowEntity.setBrowsenum(String.valueOf(browseNum+1));
         return new ResultVo(ResultCode.OK,buildColBrowDao.update(buildColBrowEntity));
     }
 

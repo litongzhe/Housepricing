@@ -81,11 +81,13 @@
     <insert id="insert" useGeneratedKeys="true" keyProperty="xiaoquid" >
         INSERT INTO build_col_brow(
                 collectnum,
-                browsenum
+                browsenum,
+                xiaoquid
         )
         VALUES (
                 #{collectnum},
-                #{browsenum}
+                #{browsenum},
+                #{xiaoquid}
         )
     </insert>
 
