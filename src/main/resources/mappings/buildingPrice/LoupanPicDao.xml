@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.modules.buildingPrice.dao.LoupanPicDao">
+    <!-- 公共查询字段 @author fsd-->
+    <sql id="LoupanPicColumns">
+        a.id as "id",
+        a.num as "num",
+        a.url as "url",
+        a.type as "type",
+        a.pic as "pic"
+    </sql>
+
+    <!-- 公共连表查询语句 @author fsd-->
+    <sql id="LoupanPicJoins">
+    </sql>
+
+    <!-- 查询详情 @author fsd-->
+    <select id="get" resultType="com.raising.modules.buildingPrice.entity.LoupanPicEntity">
+        SELECT <include refid="LoupanPicColumns"/>
+          FROM loupan_pic a <include refid="LoupanPicJoins"/>
+        <where>
+           AND a.id = #{id}
+        </where>
+    </select>
+
+    <!-- 查询详情 - 根据参数查询 @author fsd-->
+    <select id="getByParam" resultType="com.raising.modules.buildingPrice.entity.LoupanPicEntity">
+        SELECT <include refid="LoupanPicColumns"/>
+          FROM loupan_pic a <include refid="LoupanPicJoins"/>
+        <where>
+        <if test=" id != null and id != '' ">
+           AND a.id = #{id}
+        </if>
+        <if test=" num != null and num != '' ">
+           AND a.num = #{num}
+        </if>
+        <if test=" url != null and url != '' ">
+           AND a.url = #{url}
+        </if>
+        <if test=" type != null and type != '' ">
+           AND a.type = #{type}
+        </if>
+        <if test=" pic != null and pic != '' ">
+           AND a.pic = #{pic}
+        </if>
+        </where>
+    </select>
+
+    <!-- 获取list列表数据 @author fsd-->
+    <select id="getList" resultType="com.raising.modules.buildingPrice.entity.LoupanPicEntity">
+        SELECT <include refid="LoupanPicColumns"/>
+          FROM loupan_pic a
+        <include refid="LoupanPicJoins"/>
+        <where>
+        <if test=" id != null and id != '' ">
+           AND a.id = #{id}
+        </if>
+        <if test=" num != null and num != '' ">
+           AND a.num = #{num}
+        </if>
+        <if test=" url != null and url != '' ">
+           AND a.url = #{url}
+        </if>
+        <if test=" type != null and type != '' ">
+           AND a.type = #{type}
+        </if>
+        <if test=" pic != null and pic != '' ">
+           AND a.pic = #{pic}
+        </if>
+        </where>
+    </select>
+
+    <!-- 获取分页数据 @author fsd-->
+    <select id="getPage" resultType="com.raising.modules.buildingPrice.entity.LoupanPicEntity">
+        SELECT <include refid="LoupanPicColumns"/>
+          FROM loupan_pic a
+        <include refid="LoupanPicJoins"/>
+        <where>
+        <if test=" entity.id != null and entity.id != '' ">
+           AND a.id = #{entity.id}
+        </if>
+        <if test=" entity.num != null and entity.num != '' ">
+           AND a.num = #{entity.num}
+        </if>
+        <if test=" entity.url != null and entity.url != '' ">
+           AND a.url = #{entity.url}
+        </if>
+        <if test=" entity.type != null and entity.type != '' ">
+           AND a.type = #{entity.type}
+        </if>
+        <if test=" entity.pic != null and entity.pic != '' ">
+           AND a.pic = #{entity.pic}
+        </if>
+        </where>
+        <if test="orderBy != null and orderBy!=''">
+         ORDER BY ${ orderBy}
+        </if>
+    </select>
+
+    <!-- 新增插入 @author fsd-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" >
+        INSERT INTO loupan_pic(
+                num,
+                url,
+                type,
+                pic
+        )
+        VALUES (
+                #{num},
+                #{url},
+                #{type},
+                #{pic}
+        )
+    </insert>
+
+    <!-- 更新数据 @author fsd-->
+    <update id="update">
+        UPDATE loupan_pic SET
+               num = #{num},
+               url = #{url},
+               type = #{type},
+               pic = #{pic}
+        <where>
+           AND id = #{id}
+        </where>
+    </update>
+
+    <!-- 删除 根据主键删除 @author fsd-->
+    <delete id="delete">
+        DELETE FROM loupan_pic
+        <where>
+           AND id = #{id}
+        </where>
+    </delete>
+
+    <!-- 删除 根据其他参数删除,切记，此方法慎用，稍有不慎就会删除所有数据 @author fsd-->
+    <delete id="deleteByParam">
+        DELETE FROM loupan_pic
+        <where>
+        <if test=" id != null and id != '' ">
+           AND id = #{id}
+        </if>
+        <if test=" num != null and num != '' ">
+           AND num = #{num}
+        </if>
+        <if test=" url != null and url != '' ">
+           AND url = #{url}
+        </if>
+        <if test=" type != null and type != '' ">
+           AND type = #{type}
+        </if>
+        <if test=" pic != null and pic != '' ">
+           AND pic = #{pic}
+        </if>
+        </where>
+    </delete>
+
+
+    <!-- 根据楼盘url 查询出一个图片  @author fsd-->
+    <select id="getOnePicByUrl" resultType="com.raising.modules.buildingPrice.entity.LoupanPicEntity">
+        SELECT <include refid="LoupanPicColumns"/>
+        FROM loupan_pic a <include refid="LoupanPicJoins"/>
+        <where>
+            <if test=" id != null and id != '' ">
+                AND a.id = #{id}
+            </if>
+            <if test=" num != null and num != '' ">
+                AND a.num = #{num}
+            </if>
+            <if test=" url != null and url != '' ">
+                AND a.url = #{url}
+            </if>
+            <if test=" type != null and type != '' ">
+                AND a.type = #{type}
+            </if>
+            <if test=" pic != null and pic != '' ">
+                AND a.pic = #{pic}
+            </if>
+        </where>
+        limit 1
+    </select>
+
+    <!-- 根据楼盘url 查询出所有的  @author fsd-->
+    <select id="getListPicByUrl" resultType="com.raising.modules.buildingPrice.entity.LoupanPicEntity">
+        SELECT <include refid="LoupanPicColumns"/>
+        FROM loupan_pic a
+        <include refid="LoupanPicJoins"/>
+        <where>
+            <if test=" id != null and id != '' ">
+                AND a.id = #{id}
+            </if>
+            <if test=" num != null and num != '' ">
+                AND a.num = #{num}
+            </if>
+            <if test=" url != null and url != '' ">
+                AND a.url = #{url}
+            </if>
+            <if test=" type != null and type != '' ">
+                AND a.type = #{type}
+            </if>
+            <if test=" pic != null and pic != '' ">
+                AND a.pic = #{pic}
+            </if>
+        </where>
+    </select>
+
+</mapper>

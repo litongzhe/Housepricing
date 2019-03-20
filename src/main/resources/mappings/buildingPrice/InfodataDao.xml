@@ -587,4 +587,117 @@
         </where>
     </delete>
 
+
+
+
+    <!-- 按照面积价格范围 获取分页数据 @author fsd-->
+    <select id="getPageByPriceArea" resultType="com.raising.modules.buildingPrice.entity.InfodataEntity" parameterType="java.util.HashMap">
+        SELECT <include refid="InfodataColumns"/>
+        FROM infodata a
+        <include refid="InfodataJoins"/>
+        <where>
+            <if test=" entity.date != null and entity.date != '' ">
+                AND a.Date = #{entity.date}
+            </if>
+            <if test=" entity.city != null and entity.city != '' ">
+                AND a.city = #{entity.city}
+            </if>
+            <if test=" entity.region != null and entity.region != '' ">
+                AND a.region = #{entity.region}
+            </if>
+            <if test=" entity.xiaoqu != null and entity.xiaoqu != '' ">
+                AND a.xiaoqu = #{entity.xiaoqu}
+            </if>
+            <if test=" entity.price != null and entity.price != '' ">
+                AND a.price = #{entity.price}
+            </if>
+            <if test=" entity.total != null and entity.total != '' ">
+                AND a.total = #{entity.total}
+            </if>
+            <if test=" entity.url != null and entity.url != '' ">
+                AND a.url = #{entity.url}
+            </if>
+            <if test=" entity.propertytype != null and entity.propertytype != '' ">
+                AND a.propertyType = #{entity.propertytype}
+            </if>
+            <if test=" entity.referenceprice != null and entity.referenceprice != '' ">
+                AND a.referencePrice = #{entity.referenceprice}
+            </if>
+            <if test=" entity.projectfeatures != null and entity.projectfeatures != '' ">
+                AND a.projectFeatures = #{entity.projectfeatures}
+            </if>
+            <if test=" entity.regionallocation != null and entity.regionallocation != '' ">
+                AND a.regionallocation = #{entity.regionallocation}
+            </if>
+            <if test=" entity.propertyaddress != null and entity.propertyaddress != '' ">
+                AND a.propertyaddress = #{entity.propertyaddress}
+            </if>
+            <if test=" entity.salesofficeaddress != null and entity.salesofficeaddress != '' ">
+                AND a.salesOfficeAddress = #{entity.salesofficeaddress}
+            </if>
+            <if test=" entity.developer != null and entity.developer != '' ">
+                AND a.developer = #{entity.developer}
+            </if>
+            <if test=" entity.buildingtype != null and entity.buildingtype != '' ">
+                AND a.buildingType = #{entity.buildingtype}
+            </if>
+            <if test=" entity.landscapingratio != null and entity.landscapingratio != '' ">
+                AND a.landscapingRatio = #{entity.landscapingratio}
+            </if>
+            <if test=" entity.sitearea != null and entity.sitearea != '' ">
+                AND a.siteArea = #{entity.sitearea}
+            </if>
+            <if test=" entity.floorarearatio != null and entity.floorarearatio != '' ">
+                AND a.floorAreaRatio = #{entity.floorarearatio}
+            </if>
+            <if test=" entity.buildingarea != null and entity.buildingarea != '' ">
+                AND a.buildingArea = #{entity.buildingarea}
+            </if>
+            <if test=" entity.yearofpropertyrights != null and entity.yearofpropertyrights != '' ">
+                AND a.yearofpropertyRights = #{entity.yearofpropertyrights}
+            </if>
+            <if test=" entity.numplan != null and entity.numplan != '' ">
+                AND a.numPlan = #{entity.numplan}
+            </if>
+            <if test=" entity.designtype != null and entity.designtype != '' ">
+                AND a.designType = #{entity.designtype}
+            </if>
+            <if test=" entity.propertycompany != null and entity.propertycompany != '' ">
+                AND a.propertyCompany = #{entity.propertycompany}
+            </if>
+            <if test=" entity.parkingratio != null and entity.parkingratio != '' ">
+                AND a.parkingRatio = #{entity.parkingratio}
+            </if>
+            <if test=" entity.propertycosts != null and entity.propertycosts != '' ">
+                AND a.propertycosts = #{entity.propertycosts}
+            </if>
+            <if test=" entity.heatingmethod != null and entity.heatingmethod != '' ">
+                AND a.heatingMethod = #{entity.heatingmethod}
+            </if>
+            <if test=" entity.watersupplymethod != null and entity.watersupplymethod != '' ">
+                AND a.waterSupplyMethod = #{entity.watersupplymethod}
+            </if>
+            <if test=" entity.powersupply != null and entity.powersupply != '' ">
+                AND a.powerSupply = #{entity.powersupply}
+            </if>
+            <if test=" entity.parkingspace != null and entity.parkingspace != '' ">
+                AND a.parkingSpace = #{entity.parkingspace}
+            </if>
+            <if test=" entity.nearby != null and entity.nearby != '' ">
+                AND a.nearby = #{entity.nearby}
+            </if>
+            <if test=" entity.area != null and entity.area != '' ">
+                AND a.area = #{entity.area}
+            </if>
+            <if test=" entity.id != null and entity.id != '' ">
+                AND a.id = #{entity.id}
+            </if>
+                AND a.price >= #{startPrice} AND  a.price &lt;= #{endPrice}
+                AND a.area >= #{startArea} AND a.area &lt;= #{endArea}
+        </where>
+        <if test="orderBy != null and orderBy!=''">
+            ORDER BY ${ orderBy}
+        </if>
+    </select>
+
 </mapper>
