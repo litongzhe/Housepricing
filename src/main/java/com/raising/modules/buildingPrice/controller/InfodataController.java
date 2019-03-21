@@ -2,6 +2,7 @@ package com.raising.modules.buildingPrice.controller;
 
 import com.raising.framework.entity.ResultCode;
 import com.raising.modules.buildingPrice.entity.BuildColBrowEntity;
+import com.raising.modules.buildingPrice.entity.QueryInfoData;
 import com.raising.modules.buildingPrice.service.BuildColBrowService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import com.raising.modules.buildingPrice.entity.InfodataEntity;
 import com.raising.modules.buildingPrice.service.InfodataService;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 控制器
@@ -42,10 +45,14 @@ public class InfodataController extends BaseController {
      */
     // @RequiresPermissions("buildingPrice:infodata:select")
     @GetMapping("/page")
-    public ResultVo page(InfodataEntity infodata, Page<InfodataEntity> page) {
+    public ResultVo page(QueryInfoData infodata, Page<QueryInfoData> page) {
         page.setEntity(infodata);
-        ResultVo resultVo = infodataService.getPage(page);
-        ResultVo.entityNull(resultVo);
+//        HashMap<String, String> map = new HashMap<>();
+//        map.put("startPrice", startPrice);
+//        map.put("endPrice", endPrice);
+//        map.put("startArea", startArea);
+//        map.put("endArea", endArea);
+        ResultVo resultVo = infodataService.getPageByPriceArea(page);
         return resultVo;
     }
 
