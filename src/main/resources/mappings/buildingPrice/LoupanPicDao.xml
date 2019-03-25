@@ -170,9 +170,9 @@
             <if test=" url != null and url != '' ">
                 AND a.url = #{url}
             </if>
-            <if test=" type != null and type != '' ">
-                AND a.type = #{type}
-            </if>
+
+                AND a.type = '效果图'
+
             <if test=" pic != null and pic != '' ">
                 AND a.pic = #{pic}
             </if>
@@ -195,13 +195,14 @@
             <if test=" url != null and url != '' ">
                 AND a.url = #{url}
             </if>
-            <if test=" type != null and type != '' ">
-                AND a.type = #{type}
-            </if>
+
+                AND a.type = '实景图'
+
             <if test=" pic != null and pic != '' ">
                 AND a.pic = #{pic}
             </if>
         </where>
+        limit 6
     </select>
 
 </mapper>

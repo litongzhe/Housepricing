@@ -2,8 +2,10 @@ package com.raising.modules.buildingPrice.controller;
 
 import com.raising.framework.entity.ResultCode;
 import com.raising.modules.buildingPrice.entity.BuildColBrowEntity;
+import com.raising.modules.buildingPrice.entity.LoupanPicEntity;
 import com.raising.modules.buildingPrice.entity.QueryInfoData;
 import com.raising.modules.buildingPrice.service.BuildColBrowService;
+import com.raising.modules.buildingPrice.service.LoupanPicService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +35,8 @@ public class InfodataController extends BaseController {
     private InfodataService infodataService;
     @Autowired
     private BuildColBrowService buildColBrowService;
+    @Autowired
+    private LoupanPicService loupanPicService;
 
     /**
      * 分页 - 查询
@@ -75,9 +79,16 @@ public class InfodataController extends BaseController {
         if (resultVo.getCode() != ResultCode.OK.getCode()) {
             return resultVo;
         } else {
+            ResultVo re2 = loupanPicService.getListPicByUrl(info.getUrl());
+            if (re2.getCode() == 13) {
+                return re2;
+            }
+            List<LoupanPicEntity> loupanPicEntities = (List<LoupanPicEntity>) re2.getData();
             BuildColBrowEntity buildColBrowEntity1 = (BuildColBrowEntity) buildColBrowService.get(id).getData();
+
             HashMap<String, Object> result2view = new HashMap<>();
             result2view.put("buildInfo", info);
+            result2view.put("picList",loupanPicEntities);
             result2view.put("coll", buildColBrowEntity1);
             resultVo.setData(result2view);
             return resultVo;
