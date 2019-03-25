@@ -13,9 +13,7 @@ import com.raising.framework.service.CrudService;
 import com.raising.modules.buildingPrice.dao.InfodataDao;
 import com.raising.modules.buildingPrice.entity.InfodataEntity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Service层
@@ -39,8 +37,14 @@ public class InfodataService extends CrudService<InfodataDao, InfodataEntity> {
     @Autowired
     LoupanPicService loupanPicService;
 
+    /**
+     * 按照价格和面积 寻找对应的楼盘
+     * @param page
+     * @return
+     */
     public ResultVo getPageByPriceArea(Page<QueryInfoData> page) {
         List<QueryInfoData> list = this.dao.getPageByPriceArea(page);
+
         List<String> urls = new ArrayList<>();
         for (int i=0;i<list.size();i++) {
             urls.add(list.get(i).getUrl());
@@ -56,5 +60,50 @@ public class InfodataService extends CrudService<InfodataDao, InfodataEntity> {
          page.setResults(list);
         return new ResultVo(ResultCode.OK, page);
     }
+
+    /**
+     * 根据一个楼盘的信息 筛选出与之相似的楼盘信息
+     * @param queryInfoData
+     * @param BestNum
+     * @return
+     */
+    public ResultVo getSimilarLoupanByOneLoupan(QueryInfoData queryInfoData, String[] featureList, Integer BestNum) {
+
+        List<QueryInfoData> candidateEntitys = this.dao.getSimilarList(queryInfoData);
+        if(candidateEntitys.size()<=BestNum){
+            return new ResultVo(ResultCode.OK,candidateEntitys);
+        }
+        //3、进一步筛选，按照共有features的数量，进行排序
+        Map<Integer,Integer> entityScore = new HashMap<>();
+        for(Integer index =0 ; index < candidateEntitys.size(); index++){
+            Integer sameFeatureNum = 0;
+            for(String f: featureList){
+                if(candidateEntitys.get(index).getProjectfeatures().indexOf(f) != -1){
+                    sameFeatureNum ++;
+                }
+            }
+            entityScore.put(index,sameFeatureNum);
+        }
+        //4、排序
+        List<Map.Entry<Integer,Integer>> entityScoreList = new ArrayList<Map.Entry<Integer, Integer>>(entityScore.entrySet());
+        Collections.sort(entityScoreList, new Comparator<Map.Entry<Integer, Integer>>() {
+            @Override
+            public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2) {
+                return o2.getValue().compareTo(o1.getValue());
+            }
+        });
+        //5、输出前BestNum个
+        List<InfodataEntity> resultList = new ArrayList<>();
+        Integer num = 0;
+        for(Map.Entry<Integer,Integer> mapping : entityScoreList){
+            if(num >= BestNum){
+                break;
+            }
+            resultList.add(candidateEntitys.get(mapping.getKey()));
+        }
+        return new ResultVo(ResultCode.OK,resultList);
+    }
+
+
 
 }

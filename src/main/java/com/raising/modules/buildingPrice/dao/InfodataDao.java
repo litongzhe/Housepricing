@@ -18,5 +18,16 @@ import java.util.List;
 @Mapper
 @Repository
 public interface InfodataDao extends ICrudDao<InfodataEntity> {
+
     List<QueryInfoData> getPageByPriceArea(Page<QueryInfoData> page);
+
+    /**
+     * 获取queryInfoData 要求的所有数据。返回结果给 相似楼盘函数
+     * @author fsd
+     * @param queryInfoData
+     * @return
+     */
+    List<QueryInfoData> getSimilarList(QueryInfoData queryInfoData);
+
+
 }
