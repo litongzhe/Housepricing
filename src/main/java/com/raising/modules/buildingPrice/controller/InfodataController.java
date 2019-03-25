@@ -198,4 +198,27 @@ public class InfodataController extends BaseController {
         return infodataService.delete(id);
     }
 
+
+    /**
+     * search similar loupans
+     * @param infodata
+     * @param page
+     * @return
+     */
+    @GetMapping("/page")
+    public ResultVo page(InfodataEntity infodata, Page<InfodataEntity> page) {
+        page.setEntity(infodata);
+        String CityName = infodata.getCity();
+        String RegionName = infodata.getRegion();
+        String TypeName = infodata.getPropertytype();
+        List<String> Features = infodata.getProjectfeatures();
+//        HashMap<String, String> map = new HashMap<>();
+//        map.put("startPrice", startPrice);
+//        map.put("endPrice", endPrice);
+//        map.put("startArea", startArea);
+//        map.put("endArea", endArea);
+        ResultVo resultVo = infodataService.getPageByPriceArea(page);
+        return resultVo;
+    }
+
 }
