@@ -70,6 +70,20 @@ public class InfodataService extends CrudService<InfodataDao, InfodataEntity> {
     public ResultVo getSimilarLoupanByOneLoupan(QueryInfoData queryInfoData, String[] featureList, Integer BestNum) {
 
         List<QueryInfoData> candidateEntitys = this.dao.getSimilarList(queryInfoData);
+        //异常处理，没有合适的数据
+        if(candidateEntitys == null){
+            candidateEntitys = new ArrayList<>();
+        }
+        //去除这个楼盘
+        if(candidateEntitys.size()>=1){
+            for(Integer index = 0; index < candidateEntitys.size() ; index++){
+                QueryInfoData item = candidateEntitys.get(index);
+                if(item.getXiaoqu().equals(queryInfoData.getXiaoqu())){
+                    candidateEntitys.remove(item);
+                    break;
+                }
+            }
+        }
         if(candidateEntitys.size()<=BestNum){
             return new ResultVo(ResultCode.OK,candidateEntitys);
         }
@@ -103,7 +117,4 @@ public class InfodataService extends CrudService<InfodataDao, InfodataEntity> {
         }
         return new ResultVo(ResultCode.OK,resultList);
     }
-
-
-
 }
