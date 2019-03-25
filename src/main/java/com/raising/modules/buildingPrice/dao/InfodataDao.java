@@ -1,9 +1,14 @@
 package com.raising.modules.buildingPrice.dao;
 
 import com.raising.framework.dao.ICrudDao;
+import com.raising.framework.mybaits.Page;
+import com.raising.modules.buildingPrice.entity.QueryInfoData;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import com.raising.modules.buildingPrice.entity.InfodataEntity;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
 *  DAO接口
@@ -13,5 +18,5 @@ import com.raising.modules.buildingPrice.entity.InfodataEntity;
 @Mapper
 @Repository
 public interface InfodataDao extends ICrudDao<InfodataEntity> {
-
+    List<QueryInfoData> getPageByPriceArea(Page<QueryInfoData> page);
 }

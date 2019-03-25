@@ -21,6 +21,23 @@
     <sql id="PricehistorynewJoins">
     </sql>
 
+    <!-- 获取所有省 @author litongzhe-->
+    <select id="getProvince" resultType="com.raising.modules.buildingPrice.entity.provinceEntity">
+        SELECT DISTINCT province
+        FROM pricehistorynew a
+    </select>
+    <!--获取某省的所有市 @author litongzhe-->
+    <select id="getCity" resultType="com.raising.modules.buildingPrice.entity.cityEntity">
+        SELECT DISTINCT city
+        FROM pricehistorynew a
+        WHERE a.province = #{province}
+    </select>
+    <!--获取某市的所有区 @author litongzhe-->
+    <select id="getRegion" resultType="com.raising.modules.buildingPrice.entity.regionEntity">
+        SELECT DISTINCT citylevel
+        FROM pricehistorynew a
+        WHERE a.province = #{province} AND a.city = #{city}
+    </select>
     <!-- 查询详情 @author fsd-->
     <select id="get" resultType="com.raising.modules.buildingPrice.entity.PricehistorynewEntity">
         SELECT
@@ -121,6 +138,7 @@
             <if test=" pricehistoryid != null and pricehistoryid != '' ">
                 AND a.pricehistoryId = #{pricehistoryid}
             </if>
+            AND a.houseprice!='--'
         </where>
         ORDER BY mouth ASC
 
@@ -275,4 +293,40 @@
         </where>
     </delete>
 
+    <!--查询省历史房价信息 时间递增的顺序 @author fsd-->
+    <select id="getHistoryByProvince" resultType="com.raising.modules.buildingPrice.entity.PricehistorynewEntity">
+        SELECT
+        <include refid="PricehistorynewColumns"/>
+        FROM pricehistorynew a
+        <include refid="PricehistorynewJoins"/>
+        <where>
+            <if test=" province != null and province != '' ">
+                AND a.province = #{province}
+            </if>
+            <if test=" city != null and city != '' ">
+                AND a.city = #{city}
+            </if>
+            <if test=" citylevel != null and citylevel != '' ">
+                AND a.citylevel = #{citylevel}
+            </if>
+            AND a.houseprice!='--'
+        </where>
+        ORDER BY mouth ASC
+    </select>
+
+
+    <!--查询区历史房价信息 时间递增的顺序 @author fsd-->
+    <select id="getHistoryByCity" resultType="com.raising.modules.buildingPrice.entity.PricehistorynewEntity">
+        SELECT
+        <include refid="PricehistorynewColumns"/>
+        FROM pricehistorynew a
+        <include refid="PricehistorynewJoins"/>
+        <where>
+            <if test=" city != null and city != '' ">
+                AND a.city = #{city}
+            </if>
+            ANd a.citylevel = "无"
+        </where>
+        ORDER BY mouth ASC
+    </select>
 </mapper>
