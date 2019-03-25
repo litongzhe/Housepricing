@@ -70,7 +70,10 @@ public class PersonUserService extends CrudService<PersonUserDao, PersonUserEnti
         return new ResultVo(ResultCode.OK, entity.getId());
     }
 
-
-
-
+    public ResultVo updatePassword(PersonUserEntity entity) {
+        PasswordEntity passwordEntity = this.passwordUtils.encryptPassword(entity.getPassword());
+        entity.setPassword(passwordEntity.getPassword());
+        entity.setSalt(passwordEntity.getSalt());
+        return super.update(entity);
+    }
 }

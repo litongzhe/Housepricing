@@ -67,15 +67,23 @@ public class PersonUserController extends BaseController {
     /**
      * 详情 - 查询
      *
-     * @param id 主键，自增
+     * @param username
      * @return ResultVo
      * @author fsd
      * @datetime 2019-02-28 16:06:42
      */
     // @RequiresPermissions("PersonUser:personUser:select")
     @GetMapping("/info")
-    public ResultVo info(@RequestParam("id") String id) {
-        return personUserService.get(id);
+    public ResultVo info(@RequestParam("username") String username) {
+        PersonUserEntity personUserEntity = this.personUserService.findByUserName(username);
+        ResultVo resultVo=new ResultVo();
+        resultVo.setCode(ResultVo.SUCCESS);
+        if(personUserEntity==null) {
+            resultVo.setDesc("用户不存在");
+            resultVo.setCode(ResultCode.EMPTY_ROW.getCode());
+        }
+
+        return resultVo;
     }
 
     /**
@@ -135,37 +143,14 @@ public class PersonUserController extends BaseController {
     // @RequiresPermissions("PersonUser:personUser:update")
     @PostMapping("/update")
     public ResultVo update(PersonUserEntity personUser) {
-        PersonUserEntity update = new PersonUserEntity();
+        PersonUserEntity personUserEntity=personUserService.findByUserEmail(personUser.getEmail());
+//        PersonUserEntity update = new PersonUserEntity();
         //赋值至 update 对象
-        update.setId(personUser.getId());
-        update.setNo(personUser.getNo());
-        update.setOrganizationId(personUser.getOrganizationId());
-        update.setManageOrgIds(personUser.getManageOrgIds());
-        update.setUsername(personUser.getUsername());
-        update.setPassword(personUser.getPassword());
-        update.setSalt(personUser.getSalt());
-        update.setRoleIds(personUser.getRoleIds());
-        update.setName(personUser.getName());
-        update.setEmail(personUser.getEmail());
-        update.setPhone(personUser.getPhone());
-        update.setPhoto(personUser.getPhoto());
-        update.setStationNm(personUser.getStationNm());
-        update.setLoginIp(personUser.getLoginIp());
-        update.setLoginDate(personUser.getLoginDate());
-        update.setIsOff(personUser.getIsOff());
-        update.setLocked(personUser.getLocked());
-        update.setIsDept(personUser.getIsDept());
-        update.setPhoneDeviceId(personUser.getPhoneDeviceId());
-        update.setBalance(personUser.getBalance());
-        update.setUserTypeCd(personUser.getUserTypeCd());
-        update.setSexCd(personUser.getSexCd());
-        update.setRemarks(personUser.getRemarks());
-        update.setCreateBy(personUser.getCreateBy());
-        update.setCreateDate(personUser.getCreateDate());
-        update.setUpdateBy(personUser.getUpdateBy());
-        update.setUpdateDate(personUser.getUpdateDate());
-        update.setStatus(personUser.getStatus());
-        return personUserService.update(update);
+//        String IDFromEmail = CodeUtil.md5(personUser.getEmail());
+////        String passwordInDB = CodeUtil.md5(password_view);
+//        personUserEntity.setUsername(IDFromEmail);
+        personUserEntity.setPassword(personUser.getPassword());
+        return personUserService.updatePassword(personUserEntity);
     }
 
     /**
@@ -190,7 +175,7 @@ public class PersonUserController extends BaseController {
 //        String password_view = personUserEntity.getPassword();
 
         if (personUserService.findByUserEmail(email) != null) {
-            resultVo.setDesc("email have been registered!");
+            resultVo.setDesc("邮箱已被注册!");
             resultVo.setCode(ResultVo.FAILURE);
             return resultVo;
         }
@@ -224,7 +209,7 @@ public class PersonUserController extends BaseController {
             String tokenKey = username + "-" + personUserEntity.getId() + "-" + personUserEntity.getUserTypeCd();
             return new ResultVo(ResultCode.OK, JWTUtil.sign(tokenKey, personUserEntity.getPassword()));
         } else {
-            throw new UnauthorizedException();
+            return new ResultVo(ResultCode.INVALID_PASSWORD);
         }
     }
 

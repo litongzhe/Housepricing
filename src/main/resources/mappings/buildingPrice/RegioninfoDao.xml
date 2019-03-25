@@ -17,99 +17,105 @@
 
     <!-- 查询详情 @author fsd-->
     <select id="get" resultType="com.raising.modules.buildingPrice.entity.RegioninfoEntity">
-        SELECT <include refid="RegioninfoColumns"/>
-          FROM regioninfo a <include refid="RegioninfoJoins"/>
+        SELECT
+        <include refid="RegioninfoColumns"/>
+        FROM regioninfo a
+        <include refid="RegioninfoJoins"/>
         <where>
-           AND a.id = #{id}
+            AND a.id = #{id}
         </where>
     </select>
 
     <!-- 查询详情 - 根据参数查询 @author fsd-->
     <select id="getByParam" resultType="com.raising.modules.buildingPrice.entity.RegioninfoEntity">
-        SELECT <include refid="RegioninfoColumns"/>
-          FROM regioninfo a <include refid="RegioninfoJoins"/>
+        SELECT
+        <include refid="RegioninfoColumns"/>
+        FROM regioninfo a
+        <include refid="RegioninfoJoins"/>
         <where>
-        <if test=" id != null and id != '' ">
-           AND a.id = #{id}
-        </if>
-        <if test=" cityname != null and cityname != '' ">
-           AND a.cityname = #{cityname}
-        </if>
-        <if test=" regionname != null and regionname != '' ">
-           AND a.regionname = #{regionname}
-        </if>
-        <if test=" avgprice != null and avgprice != '' ">
-           AND a.avgprice = #{avgprice}
-        </if>
-        <if test=" lat != null and lat != '' ">
-           AND a.lat = #{lat}
-        </if>
-        <if test=" lng != null and lng != '' ">
-           AND a.lng = #{lng}
-        </if>
+            <if test=" id != null and id != '' ">
+                AND a.id = #{id}
+            </if>
+            <if test=" cityname != null and cityname != '' ">
+                AND a.cityname = #{cityname}
+            </if>
+            <if test=" regionname != null and regionname != '' ">
+                AND a.regionname = #{regionname}
+            </if>
+            <if test=" avgprice != null and avgprice != '' ">
+                AND a.avgprice = #{avgprice}
+            </if>
+            <if test=" lat != null and lat != '' ">
+                AND a.lat = #{lat}
+            </if>
+            <if test=" lng != null and lng != '' ">
+                AND a.lng = #{lng}
+            </if>
         </where>
     </select>
 
     <!-- 获取list列表数据 @author fsd-->
     <select id="getList" resultType="com.raising.modules.buildingPrice.entity.RegioninfoEntity">
-        SELECT <include refid="RegioninfoColumns"/>
-          FROM regioninfo a
+        SELECT
+        <include refid="RegioninfoColumns"/>
+        FROM regioninfo a
         <include refid="RegioninfoJoins"/>
         <where>
-        <if test=" id != null and id != '' ">
-           AND a.id = #{id}
-        </if>
-        <if test=" cityname != null and cityname != '' ">
-           AND a.cityname = #{cityname}
-        </if>
-        <if test=" regionname != null and regionname != '' ">
-           AND a.regionname = #{regionname}
-        </if>
-        <if test=" avgprice != null and avgprice != '' ">
-           AND a.avgprice = #{avgprice}
-        </if>
-        <if test=" lat != null and lat != '' ">
-           AND a.lat = #{lat}
-        </if>
-        <if test=" lng != null and lng != '' ">
-           AND a.lng = #{lng}
-        </if>
+            <if test=" id != null and id != '' ">
+                AND a.id = #{id}
+            </if>
+            <if test=" cityname != null and cityname != '' ">
+                AND a.cityname = #{cityname}
+            </if>
+            <if test=" regionname != null and regionname != '' ">
+                AND a.regionname = #{regionname}
+            </if>
+            <if test=" avgprice != null and avgprice != '' ">
+                AND a.avgprice = #{avgprice}
+            </if>
+            <if test=" lat != null and lat != '' ">
+                AND a.lat = #{lat}
+            </if>
+            <if test=" lng != null and lng != '' ">
+                AND a.lng = #{lng}
+            </if>
         </where>
     </select>
 
 
     <!-- 获取分页数据 @author fsd-->
     <select id="getPage" resultType="com.raising.modules.buildingPrice.entity.RegioninfoEntity">
-        SELECT <include refid="RegioninfoColumns"/>
-          FROM regioninfo a
+        SELECT
+        <include refid="RegioninfoColumns"/>
+        FROM regioninfo a
         <include refid="RegioninfoJoins"/>
         <where>
-        <if test=" entity.id != null and entity.id != '' ">
-           AND a.id = #{entity.id}
-        </if>
-        <if test=" entity.cityname != null and entity.cityname != '' ">
-           AND a.cityname = #{entity.cityname}
-        </if>
-        <if test=" entity.regionname != null and entity.regionname != '' ">
-           AND a.regionname = #{entity.regionname}
-        </if>
-        <if test=" entity.avgprice != null and entity.avgprice != '' ">
-           AND a.avgprice = #{entity.avgprice}
-        </if>
-        <if test=" entity.lat != null and entity.lat != '' ">
-           AND a.lat = #{entity.lat}
-        </if>
-        <if test=" entity.lng != null and entity.lng != '' ">
-           AND a.lng = #{entity.lng}
-        </if>
+            <if test=" entity.id != null and entity.id != '' ">
+                AND a.id = #{entity.id}
+            </if>
+            <if test=" entity.cityname != null and entity.cityname != '' ">
+                AND a.cityname = #{entity.cityname}
+            </if>
+            <if test=" entity.regionname != null and entity.regionname != '' ">
+                AND a.regionname = #{entity.regionname}
+            </if>
+            <if test=" entity.avgprice != null and entity.avgprice != '' ">
+                AND a.avgprice = #{entity.avgprice}
+            </if>
+            <if test=" entity.lat != null and entity.lat != '' ">
+                AND a.lat = #{entity.lat}
+            </if>
+            <if test=" entity.lng != null and entity.lng != '' ">
+                AND a.lng = #{entity.lng}
+            </if>
         </where>
         <if test="orderBy != null and orderBy!=''">
-         ORDER BY ${ orderBy}
+            ORDER BY ${ orderBy}
         </if>
     </select>
 
     <!-- 新增插入 @author fsd-->
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id" >
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO regioninfo(
                 cityname,
                 regionname,
@@ -129,13 +135,13 @@
     <!-- 更新数据 @author fsd-->
     <update id="update">
         UPDATE regioninfo SET
-               cityname = #{cityname},
-               regionname = #{regionname},
-               avgprice = #{avgprice},
-               lat = #{lat},
-               lng = #{lng}
+        cityname = #{cityname},
+        regionname = #{regionname},
+        avgprice = #{avgprice},
+        lat = #{lat},
+        lng = #{lng}
         <where>
-           AND id = #{id}
+            AND id = #{id}
         </where>
     </update>
 
@@ -143,7 +149,7 @@
     <delete id="delete">
         DELETE FROM regioninfo
         <where>
-           AND id = #{id}
+            AND id = #{id}
         </where>
     </delete>
 
@@ -151,31 +157,31 @@
     <delete id="deleteByParam">
         DELETE FROM regioninfo
         <where>
-        <if test=" id != null and id != '' ">
-           AND id = #{id}
-        </if>
-        <if test=" cityname != null and cityname != '' ">
-           AND cityname = #{cityname}
-        </if>
-        <if test=" regionname != null and regionname != '' ">
-           AND regionname = #{regionname}
-        </if>
-        <if test=" avgprice != null and avgprice != '' ">
-           AND avgprice = #{avgprice}
-        </if>
-        <if test=" lat != null and lat != '' ">
-           AND lat = #{lat}
-        </if>
-        <if test=" lng != null and lng != '' ">
-           AND lng = #{lng}
-        </if>
+            <if test=" id != null and id != '' ">
+                AND id = #{id}
+            </if>
+            <if test=" cityname != null and cityname != '' ">
+                AND cityname = #{cityname}
+            </if>
+            <if test=" regionname != null and regionname != '' ">
+                AND regionname = #{regionname}
+            </if>
+            <if test=" avgprice != null and avgprice != '' ">
+                AND avgprice = #{avgprice}
+            </if>
+            <if test=" lat != null and lat != '' ">
+                AND lat = #{lat}
+            </if>
+            <if test=" lng != null and lng != '' ">
+                AND lng = #{lng}
+            </if>
         </where>
     </delete>
 
     <!-- 获取所有城市均价 @author fsd-->
     <select id="getCityAvgPrice" resultType="com.raising.modules.buildingPrice.entity.cityAvgPriceEntity">
-        SELECT cityname, AVG (avgprice) as avgPrice
-        FROM regioninfo a group by a.cityname
+        SELECT any_value(lat),any_value(lng),cityname, AVG (avgprice) as avgPrice
+        FROM regioninfo a    group by cityname order by avgPrice DESC
     </select>
 
 </mapper>
