@@ -619,4 +619,44 @@
         </if>
     </select>
 
+
+    <!-- 按照面积价格范围 获取数据 @author fsd-->
+    <select id="getSimilarList"
+            resultType="com.raising.modules.buildingPrice.entity.QueryInfoData"
+    >
+        SELECT
+        <include refid="InfodataColumns"/>
+        FROM infodata a
+        <include refid="InfodataJoins"/>
+        <where>
+
+            <if test=" entity.city != null and entity.city != '' ">
+                AND a.city = #{entity.city}
+            </if>
+            <if test=" entity.propertytype != null and entity.propertytype != '' ">
+                AND a.propertyType = #{entity.propertytype}
+            </if>
+            <if test=" entity.startPrice != null and entity.startPrice != '' ">
+                AND AND a.price >= #{entity.startPrice}
+            </if>
+            <if test=" entity.endPrice != null and entity.endPrice != '' ">
+                AND AND a.price &lt;= #{entity.endPrice}
+            </if>
+
+            <if test=" entity.startArea != null and entity.startArea != '' ">
+                AND AND a.area >= #{entity.startArea}
+            </if>
+            <if test=" entity.endArea != null and entity.endArea != '' ">
+                AND AND a.area &lt;= #{entity.endArea}
+            </if>
+
+            <!--<if test=" entity.propertytype != null and entity.propertytype != '' ">-->
+                <!--AND a.propertyType = #{entity.propertytype}-->
+            <!--</if>-->
+            <!---->
+            <!--AND a.price >= #{entity.startPrice} AND a.price &lt;= #{entity.endPrice}-->
+            <!--AND a.area >= #{entity.startArea} AND a.area &lt;= #{entity.endArea}-->
+        </where>
+    </select>
+
 </mapper>
