@@ -215,7 +215,7 @@ public class InfodataController extends BaseController {
      * @return
      */
     @GetMapping("/getSimilarByOneLoupan")
-    public ResultVo page(InfodataEntity infodataEntity) {
+    public ResultVo getSimilarByOneLoupan(InfodataEntity infodataEntity) {
 
         //1、相似属性：获取当前小区的城市，区，房屋类别，价格，面积，特征短语
         String cityName = infodataEntity.getCity();

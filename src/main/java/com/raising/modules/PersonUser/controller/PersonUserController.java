@@ -2,7 +2,11 @@ package com.raising.modules.PersonUser.controller;
 
 import com.raising.framework.entity.ResultCode;
 import com.raising.framework.shiro.util.JWTUtil;
+import com.raising.modules.PersonUser.entity.UserBuildingEntity;
 import com.raising.modules.PersonUser.service.MailService;
+import com.raising.modules.PersonUser.service.UserBuildingService;
+import com.raising.modules.buildingPrice.entity.InfodataEntity;
+import com.raising.modules.buildingPrice.service.InfodataService;
 import com.raising.modules.operationlog.annotation.OperationLog;
 import com.raising.modules.sys.entity.User;
 import com.raising.util.CodeUtil;
@@ -24,8 +28,7 @@ import com.raising.framework.mybaits.Page;
 import com.raising.modules.PersonUser.entity.PersonUserEntity;
 import com.raising.modules.PersonUser.service.PersonUserService;
 
-import java.util.Date;
-import java.util.Random;
+import java.util.*;
 
 /**
  * 用户表 控制器
@@ -46,6 +49,11 @@ public class PersonUserController extends BaseController {
     @Autowired
     private PasswordUtils passwordUtils;
 
+    @Autowired
+    private UserBuildingService userBuildingService;
+
+    @Autowired
+    private InfodataService infodataService;
     /**
      * 分页 - 查询
      *
@@ -272,6 +280,51 @@ public class PersonUserController extends BaseController {
             resultVo.setData(checkCode);
         }
         return resultVo;
+    }
+
+    /**
+     * 向用户推荐楼盘，直接法
+     * @author fsd
+     * @return
+     */
+    @GetMapping({"rawRecommend"})
+    @OperationLog("直接向用户推荐")
+    public ResultVo rawRecommend() {
+        //1、获取用户的收藏记录
+        PersonUserEntity pue = PersonUserUtils.getCurrentUser();
+        PersonUserEntity p = (PersonUserEntity) personUserService.getByParam(pue).getData();
+        UserBuildingEntity userBuildingEntity = new UserBuildingEntity();
+        userBuildingEntity.setUserid(p.getId());
+        List<UserBuildingEntity> ublist = (List<UserBuildingEntity>)userBuildingService.getList(userBuildingEntity).getData();
+        if(ublist == null || ublist.size()==0){
+            return new ResultVo(ResultCode.EMPTY_ROW,pue.getName()+"无收藏记录");
+        }
+
+        //2、对收藏的每个楼盘获取三个相似楼盘
+        List<InfodataEntity> allRecommend = new ArrayList<>();
+        for(UserBuildingEntity e : ublist){
+            InfodataEntity infodataEntity = new InfodataEntity();
+            infodataEntity.setId(e.getBuildingid());
+            InfodataEntity searchEntity = (InfodataEntity) infodataService.getByParam(infodataEntity).getData();
+            allRecommend.addAll((List<InfodataEntity>) infodataService.getSimilarLoupan(searchEntity,3).getData());
+        }
+        Map<String,List<InfodataEntity>> map = new HashMap<>();
+        map.put(pue.getName(),allRecommend);
+        return new ResultVo(ResultCode.OK,map);
+    }
+
+
+    /**
+     * 向用户推荐楼盘，词向量法
+     * @author fsd
+     * @return
+     */
+    @GetMapping({"vecRecommend"})
+    @OperationLog("执行检查用户是否登录")
+    public ResultVo vecRecommend() {
+        this.operationlog("测试log", "{username:123}");
+        Subject subject = SecurityUtils.getSubject();
+        return subject.isAuthenticated() ? new ResultVo(ResultCode.OK) : new ResultVo(ResultCode.USER_NOT_LOGIN);
     }
 
 }

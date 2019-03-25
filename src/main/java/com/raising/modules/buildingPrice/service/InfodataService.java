@@ -117,4 +117,40 @@ public class InfodataService extends CrudService<InfodataDao, InfodataEntity> {
         }
         return new ResultVo(ResultCode.OK,resultList);
     }
+
+    /**
+     * 封装好的接口，输入任意infodata  根据城市 房屋类型 价格面积 返回 相似楼盘
+     * @param infodataEntity
+     * @return
+     */
+    public ResultVo getSimilarLoupan(InfodataEntity infodataEntity, Integer BestNum){
+        //1、相似属性：获取当前小区的城市，区，房屋类别，价格，面积，特征短语
+        String cityName = infodataEntity.getCity();
+        String regionName = infodataEntity.getRegion();
+        String propertyType = infodataEntity.getPropertytype();
+        String features = infodataEntity.getProjectfeatures();
+        String price = infodataEntity.getPrice();
+        String area = infodataEntity.getArea();
+        String[] featureList = features.split(" ");
+        //2、初筛：先按照城市,户型,价格区间，面积区间 初筛，得到一个候选楼盘list  (因为用户偏向于查看同一个城市同一类型的 楼盘)
+        QueryInfoData queryInfoData = new QueryInfoData();
+        queryInfoData.setCity(cityName);
+        queryInfoData.setPropertytype(propertyType);
+
+        if (area!=null && !area.equals("暂无信息")){
+            queryInfoData.setStartArea(Integer.valueOf(area)-50);
+            queryInfoData.setEndArea(Integer.valueOf(area)+50);
+        }
+        if (price!=null && !price.equals("暂无信息")){
+            queryInfoData.setStartPrice(Integer.valueOf(price)-10000);
+            queryInfoData.setEndPrice(Integer.valueOf(price)+10000);
+        }
+        //获取bestNum 个相似楼盘信息
+        ResultVo resultVoquery = this.getSimilarLoupanByOneLoupan(queryInfoData,featureList, BestNum);
+        //存入字典返回，格式为 小区名：相似楼盘list
+        List<InfodataEntity> resultList = (List<InfodataEntity>)resultVoquery.getData();
+
+        return new ResultVo(ResultCode.OK, resultList);
+    }
+
 }
