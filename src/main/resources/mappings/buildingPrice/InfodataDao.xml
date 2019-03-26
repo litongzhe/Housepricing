@@ -659,4 +659,48 @@
         </where>
     </select>
 
+    <!-- multiChoose @author fsd-->
+    <select id="multiChoose"
+            resultType="com.raising.modules.buildingPrice.entity.QueryInfoData"
+    >
+        SELECT
+        <include refid="InfodataColumns"/>
+        FROM infodata a
+        <include refid="InfodataJoins"/>
+        <where>
+
+            <if test=" entity.city != null and entity.city != '' ">
+                AND a.city = #{entity.city}
+            </if>
+            <if test=" entity.region != null and entity.region != '' ">
+                AND a.region = #{entity.region}
+            </if>
+            <if test=" entity.xiaoqu != null and entity.xiaoqu != '' ">
+                AND a.xiaoqu = #{entity.xiaoqu}
+            </if>
+
+            <if test="entity.propertyTypeList != null">
+                and a.propertyType in
+                <foreach collection="entity.propertyTypeList" item="type" index="index" separator="," open="(" close=")">
+                    #{entity.propertyTypeList[${index}]}
+                </foreach>
+            </if>
+
+            <if test=" entity.startPrice != null and entity.startPrice != '' ">
+                AND  a.price >= #{entity.startPrice}
+            </if>
+            <if test=" entity.endPrice != null and entity.endPrice != '' ">
+                AND  a.price &lt;= #{entity.endPrice}
+            </if>
+
+            <if test=" entity.startArea != null and entity.startArea != '' ">
+                AND  a.area >= #{entity.startArea}
+            </if>
+            <if test=" entity.endArea != null and entity.endArea != '' ">
+                AND  a.area &lt;= #{entity.endArea}
+            </if>
+
+        </where>
+    </select>
+
 </mapper>

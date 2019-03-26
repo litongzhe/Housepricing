@@ -246,4 +246,18 @@ public class InfodataController extends BaseController {
         result.put(infodataEntity.getXiaoqu(), resultList);
         return new ResultVo(ResultCode.OK, result);
     }
+
+    /**
+     * 根据多个条件查找 对应楼盘
+     * @param queryInfoData
+     * @param page
+     * @return
+     */
+    @GetMapping("/searchByMultiInfo")
+    public ResultVo searchByMultiInfo(QueryInfoData queryInfoData,Page<QueryInfoData> page) {
+        page.setEntity(queryInfoData);
+        List<String> featureList = queryInfoData.getProjectFeaturesList();
+        return infodataService.multiChoose(page, featureList);
+    }
+
 }

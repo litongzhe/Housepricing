@@ -29,5 +29,12 @@ public interface InfodataDao extends ICrudDao<InfodataEntity> {
      */
     List<QueryInfoData> getSimilarList(QueryInfoData queryInfoData);
 
+    /**
+     * 按照多个条件查找 显示 楼盘
+     * @param queryInfoData
+     * @return
+     */
+    List<QueryInfoData> multiChoose(Page<QueryInfoData> page);
+
 
 }
