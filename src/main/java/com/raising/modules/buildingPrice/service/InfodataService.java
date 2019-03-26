@@ -114,6 +114,7 @@ public class InfodataService extends CrudService<InfodataDao, InfodataEntity> {
                 break;
             }
             resultList.add(candidateEntitys.get(mapping.getKey()));
+            num += 1;
         }
         return new ResultVo(ResultCode.OK,resultList);
     }
