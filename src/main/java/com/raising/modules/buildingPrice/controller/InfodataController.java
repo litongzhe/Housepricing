@@ -1,11 +1,14 @@
 package com.raising.modules.buildingPrice.controller;
 
+import com.google.common.collect.Maps;
+import com.google.gson.Gson;
 import com.raising.framework.entity.ResultCode;
 import com.raising.modules.buildingPrice.entity.BuildColBrowEntity;
 import com.raising.modules.buildingPrice.entity.LoupanPicEntity;
 import com.raising.modules.buildingPrice.entity.QueryInfoData;
 import com.raising.modules.buildingPrice.service.BuildColBrowService;
 import com.raising.modules.buildingPrice.service.LoupanPicService;
+import net.sf.json.JSONArray;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +20,9 @@ import com.raising.framework.mybaits.Page;
 import com.raising.modules.buildingPrice.entity.InfodataEntity;
 import com.raising.modules.buildingPrice.service.InfodataService;
 
+import java.io.*;
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * 控制器
@@ -245,5 +250,161 @@ public class InfodataController extends BaseController {
         Map<String,List<InfodataEntity>> result = new HashMap<>();
         result.put(infodataEntity.getXiaoqu(), resultList);
         return new ResultVo(ResultCode.OK, result);
+    }
+    /**
+     * 给出一个城市或一个地区的收藏量前10的楼盘
+     * @author litongzhe
+     * @param city,region
+     * @return resultVo
+     */
+    @GetMapping("/getAheadLoupan")
+    public ResultVo getAheadLoupan(@RequestParam("city") String city, @RequestParam("region") String region) {
+        InfodataEntity infodataEntity = new InfodataEntity();
+        infodataEntity.setCity(city);
+        List<InfodataEntity> infodataEntities;
+        if(region.equals("无")){//城市范围
+            infodataEntities = (List<InfodataEntity>)infodataService.getAheadLoupanByCity(infodataEntity).getData();
+        }
+        else{//区范围
+            infodataEntity.setRegion(region);
+            infodataEntities = (List<InfodataEntity>)infodataService.getAheadLoupanByRegion(infodataEntity).getData();
+        }
+        Map<String,Integer> id2collectnum = Maps.newLinkedHashMap();
+        BuildColBrowEntity buildColBrowEntity = new BuildColBrowEntity();
+        BuildColBrowEntity result = new BuildColBrowEntity();
+        for(InfodataEntity e:infodataEntities){
+            String id = e.getId();
+            Integer collectnum;
+            buildColBrowEntity.setXiaoquid(id);
+            result = (BuildColBrowEntity)buildColBrowService.getByID(buildColBrowEntity).getData();
+            if(result == null){//收藏表中不存在说明收藏量为0
+                collectnum = 0;
+            }
+            else{
+                collectnum = Integer.valueOf(result.getCollectnum());
+            }
+            id2collectnum.put(id,collectnum);
+        }
+
+        Map<String,Integer> resultMap = Maps.newLinkedHashMap();//排序后的map
+        Stream<Map.Entry<String,Integer>> st = id2collectnum.entrySet().stream();
+        st.sorted(Comparator.comparing(e->-e.getValue())).forEach(e->resultMap.put(e.getKey(),e.getValue()));//加-号表示从大到小排序
+        Integer num = 0;
+        Map<String,Integer> copyMap = Maps.newLinkedHashMap();
+        copyMap.putAll(resultMap);//要展示的小区 id:收藏量
+        if(copyMap.size() > 10){
+            for(String key:resultMap.keySet()){
+                num++;
+                if(num > 10){
+                    copyMap.remove(key);
+                }
+            }
+        }
+        List<Map> resultList = new ArrayList<>();//要展示的所有小区
+        Map<String,Object> map = Maps.newLinkedHashMap();
+        LoupanPicEntity loupanPicEntity = new LoupanPicEntity();
+        for(InfodataEntity e:infodataEntities){
+            if(copyMap.containsKey(e.getId())){
+                map.put("Information",e);
+                String url = e.getUrl();
+                loupanPicEntity.setUrl(url);
+                List urlList = new ArrayList();
+                urlList.add(url);
+                loupanPicEntity = ((List<LoupanPicEntity>)loupanPicService.getOnePicByUrl(urlList).getData()).get(0);
+                map.put("Picture",loupanPicEntity);
+                resultList.add(map);
+            }
+        }
+        ResultVo resultVo = new ResultVo();
+        resultVo.setData(resultList);
+        ResultVo.entityNull(resultVo);
+        return resultVo;
+    }
+
+    /**
+     * 把infodata表的两层结构value，label，children返回到JSON文件中
+     * @author litongzhe
+     * @return resultVo
+     * @datetime 2019年3月26日21点08分
+     */
+    @GetMapping("/getAllData2Json")
+    public void getAllData2Json() {
+        InfodataEntity infodataEntity = new InfodataEntity();
+        List<InfodataEntity> infodataEntities = (List<InfodataEntity>)infodataService.getCity().getData();
+        List<Map> allData = new ArrayList<>();
+        for(InfodataEntity e:infodataEntities){
+            Map<String,Object> cityInfo = Maps.newLinkedHashMap();
+            String city = e.getCity();
+            cityInfo.put("value",city);
+            cityInfo.put("label",city);
+            infodataEntity.setCity(city);
+            List<InfodataEntity> regionEntities = (List<InfodataEntity>)infodataService.getRegion(infodataEntity).getData();
+            List<Map> regions = new ArrayList<>();
+            for(InfodataEntity regionEntity:regionEntities){
+                Map<String,Object> regionInfo = Maps.newLinkedHashMap();
+                String region = regionEntity.getRegion();
+                regionInfo.put("value",region);
+                regionInfo.put("label",region);
+                regions.add(regionInfo);
+            }
+            cityInfo.put("children",regions);
+            allData.add(cityInfo);
+        }
+        Gson gson = new Gson();
+        String str = gson.toJson(allData);
+        BufferedWriter writer = null;
+        File file = new File("d:\\allData.json");
+        if(!file.exists()){
+            try {
+                file.createNewFile();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        try{
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file,false),"UTF-8"));
+            writer.write(str);
+        }catch (IOException e){
+            e.printStackTrace();
+        }finally {
+            try{
+                if(writer!=null)
+                    writer.close();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+    }
+    /**
+     * 提供返回infodata表的两层结构value，label，children的接口
+     * @author litongzhe
+     * @return resultVo
+     */
+    @GetMapping("/getAllData")
+    public ResultVo getAllData() throws IOException{
+        File directory = new File("");
+        String courseFile = directory.getCanonicalPath();
+        String path = courseFile+"/src/main/resources/model/allData.json";
+        String jsonStr = "";
+        try{
+            File jsonFile = new File(path);
+            FileReader fileReader = new FileReader(jsonFile);
+            Reader reader = new InputStreamReader(new FileInputStream(jsonFile),"UTF-8");
+            int ch = 0;
+            StringBuffer sb = new StringBuffer();
+            while((ch = reader.read()) != -1)
+                sb.append((char)ch);
+            fileReader.close();
+            reader.close();
+            jsonStr = sb.toString();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        List<Map> maps = null;
+        maps = (List) JSONArray.fromObject(jsonStr);
+        ResultVo resultVo = new ResultVo();
+        resultVo.setData(maps);
+        ResultVo.entityNull(resultVo);
+        return resultVo;
     }
 }
