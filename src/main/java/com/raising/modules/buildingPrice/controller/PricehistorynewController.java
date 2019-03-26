@@ -28,7 +28,7 @@ import java.util.*;
  * @createTime 2019-03-05 11:09:22
  */
 @RestController
-@RequestMapping("/buildingPrice/pricehistorynew")
+    @RequestMapping("/buildingPrice/pricehistorynew")
 public class PricehistorynewController extends BaseController {
 
     @Autowired

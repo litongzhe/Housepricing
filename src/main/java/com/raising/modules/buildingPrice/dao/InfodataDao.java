@@ -28,13 +28,11 @@ public interface InfodataDao extends ICrudDao<InfodataEntity> {
      * @return
      */
     List<QueryInfoData> getSimilarList(QueryInfoData queryInfoData);
+    List<InfodataEntity> getLoupanIDByCity(InfodataEntity infodataEntity);
+    List<InfodataEntity> getLoupanIDByRegion(InfodataEntity infodataEntity);
+    List<InfodataEntity> getCity();
+    List<InfodataEntity> getRegion(InfodataEntity infodataEntity);
 
-    /**
-     * 按照多个条件查找 显示 楼盘
-     * @param queryInfoData
-     * @return
-     */
     List<QueryInfoData> multiChoose(Page<QueryInfoData> page);
-
 
 }
