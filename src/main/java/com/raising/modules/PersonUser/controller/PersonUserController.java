@@ -2,12 +2,17 @@ package com.raising.modules.PersonUser.controller;
 
 import com.raising.framework.entity.ResultCode;
 import com.raising.framework.shiro.util.JWTUtil;
+import com.raising.modules.PersonUser.entity.UserBuildingEntity;
 import com.raising.modules.PersonUser.service.MailService;
+import com.raising.modules.PersonUser.service.UserBuildingService;
+import com.raising.modules.buildingPrice.entity.InfodataEntity;
+import com.raising.modules.buildingPrice.service.InfodataService;
 import com.raising.modules.operationlog.annotation.OperationLog;
 import com.raising.modules.sys.entity.User;
 import com.raising.util.CodeUtil;
 import com.raising.util.PersonUserUtils;
 import com.raising.utils.PasswordUtils;
+import org.apache.commons.lang3.tuple.Triple;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -23,11 +28,11 @@ import com.raising.framework.mybaits.Page;
 import com.raising.modules.PersonUser.entity.PersonUserEntity;
 import com.raising.modules.PersonUser.service.PersonUserService;
 
-import java.util.Date;
-import java.util.Random;
+import java.util.*;
 
 /**
  * 用户表 控制器
+ *
  * @author fsd
  * @createTime 2019-02-28 16:06:42
  */
@@ -43,17 +48,24 @@ public class PersonUserController extends BaseController {
 
     @Autowired
     private PasswordUtils passwordUtils;
+
+    @Autowired
+    private UserBuildingService userBuildingService;
+
+    @Autowired
+    private InfodataService infodataService;
     /**
      * 分页 - 查询
-     * @author fsd
-     * @datetime 2019-02-28 16:06:42
+     *
      * @param page
      * @param personUser
      * @return ResultVo
+     * @author fsd
+     * @datetime 2019-02-28 16:06:42
      */
     // @RequiresPermissions("PersonUser:personUser:select")
     @GetMapping("/page")
-    public ResultVo page(PersonUserEntity personUser,Page<PersonUserEntity> page) {
+    public ResultVo page(PersonUserEntity personUser, Page<PersonUserEntity> page) {
         page.setEntity(personUser);
         ResultVo resultVo = personUserService.getPage(page);
         ResultVo.entityNull(resultVo);
@@ -62,23 +74,33 @@ public class PersonUserController extends BaseController {
 
     /**
      * 详情 - 查询
+     *
+     * @param username
+     * @return ResultVo
      * @author fsd
      * @datetime 2019-02-28 16:06:42
-     * @param id 主键，自增
-     * @return ResultVo
      */
     // @RequiresPermissions("PersonUser:personUser:select")
     @GetMapping("/info")
-    public ResultVo info(@RequestParam("id") String id) {
-        return personUserService.get(id);
+    public ResultVo info(@RequestParam("username") String username) {
+        PersonUserEntity personUserEntity = this.personUserService.findByUserName(username);
+        ResultVo resultVo=new ResultVo();
+        resultVo.setCode(ResultVo.SUCCESS);
+        if(personUserEntity==null) {
+            resultVo.setDesc("用户不存在");
+            resultVo.setCode(ResultCode.EMPTY_ROW.getCode());
+        }
+
+        return resultVo;
     }
 
     /**
      * 新增 - 插入
-     * @author fsd
-     * @datetime 2019-02-28 16:06:42
+     *
      * @param personUser
      * @return ResultVo
+     * @author fsd
+     * @datetime 2019-02-28 16:06:42
      */
     // @RequiresPermissions("PersonUser:personUser:insert")
     @PostMapping("/insert")
@@ -120,53 +142,32 @@ public class PersonUserController extends BaseController {
 
     /**
      * 更新
-     * @author fsd
-     * @datetime 2019-02-28 16:06:42
+     *
      * @param personUser
      * @return ResultVo
+     * @author fsd
+     * @datetime 2019-02-28 16:06:42
      */
     // @RequiresPermissions("PersonUser:personUser:update")
     @PostMapping("/update")
     public ResultVo update(PersonUserEntity personUser) {
-        PersonUserEntity update = new PersonUserEntity();
+        PersonUserEntity personUserEntity=personUserService.findByUserEmail(personUser.getEmail());
+//        PersonUserEntity update = new PersonUserEntity();
         //赋值至 update 对象
-        update.setId(personUser.getId());
-        update.setNo(personUser.getNo());
-        update.setOrganizationId(personUser.getOrganizationId());
-        update.setManageOrgIds(personUser.getManageOrgIds());
-        update.setUsername(personUser.getUsername());
-        update.setPassword(personUser.getPassword());
-        update.setSalt(personUser.getSalt());
-        update.setRoleIds(personUser.getRoleIds());
-        update.setName(personUser.getName());
-        update.setEmail(personUser.getEmail());
-        update.setPhone(personUser.getPhone());
-        update.setPhoto(personUser.getPhoto());
-        update.setStationNm(personUser.getStationNm());
-        update.setLoginIp(personUser.getLoginIp());
-        update.setLoginDate(personUser.getLoginDate());
-        update.setIsOff(personUser.getIsOff());
-        update.setLocked(personUser.getLocked());
-        update.setIsDept(personUser.getIsDept());
-        update.setPhoneDeviceId(personUser.getPhoneDeviceId());
-        update.setBalance(personUser.getBalance());
-        update.setUserTypeCd(personUser.getUserTypeCd());
-        update.setSexCd(personUser.getSexCd());
-        update.setRemarks(personUser.getRemarks());
-        update.setCreateBy(personUser.getCreateBy());
-        update.setCreateDate(personUser.getCreateDate());
-        update.setUpdateBy(personUser.getUpdateBy());
-        update.setUpdateDate(personUser.getUpdateDate());
-        update.setStatus(personUser.getStatus());
-        return personUserService.update(update);
+//        String IDFromEmail = CodeUtil.md5(personUser.getEmail());
+////        String passwordInDB = CodeUtil.md5(password_view);
+//        personUserEntity.setUsername(IDFromEmail);
+        personUserEntity.setPassword(personUser.getPassword());
+        return personUserService.updatePassword(personUserEntity);
     }
 
     /**
      * 删除
-     * @author fsd
-     * @datetime 2019-02-28 16:06:42
+     *
      * @param id 主键，自增
      * @return ResultVo
+     * @author fsd
+     * @datetime 2019-02-28 16:06:42
      */
     // @RequiresPermissions("PersonUser:personUser:delete")
     @PostMapping("/delete")
@@ -181,8 +182,8 @@ public class PersonUserController extends BaseController {
         String email = personUserEntity.getEmail();
 //        String password_view = personUserEntity.getPassword();
 
-        if(personUserService.findByUserEmail(email) != null){
-            resultVo.setData("email have been registered!");
+        if (personUserService.findByUserEmail(email) != null) {
+            resultVo.setDesc("邮箱已被注册!");
             resultVo.setCode(ResultVo.FAILURE);
             return resultVo;
         }
@@ -208,7 +209,7 @@ public class PersonUserController extends BaseController {
 
     @PostMapping({"/login"})
     @OperationLog("登录")
-    public Object login(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam(value = "site",required = false) String site) throws Exception {
+    public Object login(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam(value = "site", required = false) String site) throws Exception {
         PersonUserEntity personUserEntity = this.personUserService.findByUserName(username);
         if (personUserEntity == null) {
             return (new ResultVo(ResultCode.EMPTY_ROW)).desc("用户不存在");
@@ -216,7 +217,7 @@ public class PersonUserController extends BaseController {
             String tokenKey = username + "-" + personUserEntity.getId() + "-" + personUserEntity.getUserTypeCd();
             return new ResultVo(ResultCode.OK, JWTUtil.sign(tokenKey, personUserEntity.getPassword()));
         } else {
-            throw new UnauthorizedException();
+            return new ResultVo(ResultCode.INVALID_PASSWORD);
         }
     }
 
@@ -230,7 +231,7 @@ public class PersonUserController extends BaseController {
 
     @GetMapping({"/logout"})
     @OperationLog("退出登录")
-    @RequiresPermissions({"123"})
+//    @RequiresPermissions({"123"})
     public ResultVo logout() {
         Subject currentUser = SecurityUtils.getSubject();
         if (currentUser.isAuthenticated()) {
@@ -243,7 +244,7 @@ public class PersonUserController extends BaseController {
 
     @GetMapping({"/current_user"})
     @OperationLog("获取当前用户信息")
-    @RequiresAuthentication
+//    @RequiresAuthentication
     public Object currentUser() {
         if (!PersonUserUtils.isLogin()) {
             return null;
@@ -254,21 +255,94 @@ public class PersonUserController extends BaseController {
     }
 
 
-
     @RequestMapping("/getCheckCode")
     @ResponseBody
-    public ResultVo getCheckCode(@RequestParam("email") String email){
+    public ResultVo getCheckCode(@RequestParam("email") String email) {
         ResultVo resultVo = new ResultVo();
         String checkCode = String.valueOf(new Random().nextInt(899999) + 100000);
-        String message = "您的注册验证码为："+checkCode;
+        String message = "您的注册验证码为：" + checkCode;
+        Boolean msg = true;
         try {
-            mailService.sendSimpleMail(email, "GDK房价预测系统注册验证码", message);
-        }catch (Exception e){
+            msg = mailService.sendSimpleMail(email, "GKD房价预测系统注册验证码", message);
+
+        } catch (Exception e) {
             System.out.println(e);
-            resultVo.setCode(555);
+            resultVo.setCode(ResultCode.SMS_SEND_FAILED.getCode());
+            resultVo.desc("邮件发送错误，请稍后重试");
             return resultVo;
         }
-        return new ResultVo(ResultCode.OK, checkCode);
+        if (!msg) {
+            resultVo.setCode(ResultCode.SMS_SEND_FAILED.getCode());
+            resultVo.desc("邮件发送错误，请稍后重试");
+            return resultVo;
+        } else {
+            resultVo.setCode(ResultCode.OK.getCode());
+            resultVo.setData(checkCode);
+        }
+        return resultVo;
+    }
+
+    /**
+     * 向用户推荐楼盘，直接法
+     * @author fsd
+     * @return
+     */
+    @GetMapping({"/rawRecommend"})
+    @OperationLog("直接向用户推荐")
+    public ResultVo rawRecommend(@RequestParam("token") String token) {
+        //获取当前用户
+        String userName = JWTUtil.getUsername(token);
+        PersonUserEntity searchPue = new PersonUserEntity();
+        searchPue.setUsername(userName.split("-")[0]);
+        PersonUserEntity pue = (PersonUserEntity) personUserService.getByParam(searchPue).getData();
+        //1、获取用户的收藏记录
+        PersonUserEntity p = (PersonUserEntity) personUserService.getByParam(pue).getData();
+        UserBuildingEntity userBuildingEntity = new UserBuildingEntity();
+        userBuildingEntity.setUserid(p.getId());
+        List<UserBuildingEntity> ublist = (List<UserBuildingEntity>)userBuildingService.getList(userBuildingEntity).getData();
+        if(ublist == null || ublist.size()==0){
+            return new ResultVo(ResultCode.EMPTY_ROW,pue.getName()+"无收藏记录");
+        }
+
+        //2、对收藏的每个楼盘获取三个相似楼盘
+        List<InfodataEntity> allRecommend = new ArrayList<>();
+        for(UserBuildingEntity e : ublist){
+
+            InfodataEntity infodataEntity = new InfodataEntity();
+            infodataEntity.setId(e.getBuildingid());
+
+            InfodataEntity searchEntity = (InfodataEntity) infodataService.getByParam(infodataEntity).getData();
+            allRecommend.addAll((List<InfodataEntity>) infodataService.getSimilarLoupan(searchEntity,5).getData());
+        }
+        //3、A B C三个楼盘 可能出现 A的三个相似楼盘中 包含B C 所以需要去除
+        List<InfodataEntity> todeleteEntity = new ArrayList<>();
+        for(Integer index = 0 ; index < allRecommend.size(); index++){
+            for(UserBuildingEntity ube:ublist){
+                if(allRecommend.get(index).getId().equals(ube.getBuildingid())){
+                    todeleteEntity.add(allRecommend.get(index));
+                }
+            }
+        }
+        for(InfodataEntity index:todeleteEntity){
+            allRecommend.remove(index);
+        }
+        Map<String,List<InfodataEntity>> map = new HashMap<>();
+        map.put(pue.getEmail(),allRecommend);
+        return new ResultVo(ResultCode.OK,map);
+    }
+
+
+    /**
+     * 向用户推荐楼盘，词向量法
+     * @author fsd
+     * @return
+     */
+    @GetMapping({"vecRecommend"})
+    @OperationLog("根据词向量相似度推荐")
+    public ResultVo vecRecommend(@RequestParam("token") String token) {
+        this.operationlog("测试log", "{username:123}");
+        Subject subject = SecurityUtils.getSubject();
+        return subject.isAuthenticated() ? new ResultVo(ResultCode.OK) : new ResultVo(ResultCode.USER_NOT_LOGIN);
     }
 
 }
