@@ -84,9 +84,9 @@ public class InfodataService extends CrudService<InfodataDao, InfodataEntity> {
                 }
             }
         }
-        if(candidateEntitys.size()<=BestNum){
-            return new ResultVo(ResultCode.OK,candidateEntitys);
-        }
+//        if(candidateEntitys.size()<=BestNum){
+//            return new ResultVo(ResultCode.OK,candidateEntitys);
+//        }
         //3、进一步筛选，按照共有features的数量，进行排序
         Map<Integer,Integer> entityScore = new HashMap<>();
         for(Integer index =0 ; index < candidateEntitys.size(); index++){
@@ -107,14 +107,29 @@ public class InfodataService extends CrudService<InfodataDao, InfodataEntity> {
             }
         });
         //5、输出前BestNum个
-        List<InfodataEntity> resultList = new ArrayList<>();
+        List<QueryInfoData> resultList = new ArrayList<>();
         Integer num = 0;
         for(Map.Entry<Integer,Integer> mapping : entityScoreList){
             if(num >= BestNum){
                 break;
             }
             resultList.add(candidateEntitys.get(mapping.getKey()));
+            num += 1;
         }
+        //6、获取对应的pictureuRL
+        List<String> urls = new ArrayList<>();
+        for (int i=0;i<resultList.size();i++) {
+            urls.add(resultList.get(i).getUrl());
+        }
+        ResultVo result = loupanPicService.getOnePicByUrl(urls);
+        if (result.getCode() != ResultVo.SUCCESS)
+            return result;
+        List<LoupanPicEntity> picList = (List<LoupanPicEntity>) result.getData();
+        int i = 0;
+        for (QueryInfoData item : resultList) {
+            item.setUrl(picList.get(i++).getPic());
+        }
+
         return new ResultVo(ResultCode.OK,resultList);
     }
 
@@ -137,11 +152,15 @@ public class InfodataService extends CrudService<InfodataDao, InfodataEntity> {
         queryInfoData.setCity(cityName);
         queryInfoData.setPropertytype(propertyType);
 
-        if (area!=null && !area.equals("暂无信息")){
+        if (area!=null && !area.equals("None") && !area.equals("暂无信息")){
+            if(area.contains(".")){
+                System.out.println("当前Area:::"+area);
+                area = area.split("\\.")[0];
+            }
             queryInfoData.setStartArea(Integer.valueOf(area)-50);
             queryInfoData.setEndArea(Integer.valueOf(area)+50);
         }
-        if (price!=null && !price.equals("暂无信息")){
+        if (price!=null && !price.equals("None") && !price.equals("暂无信息")){
             queryInfoData.setStartPrice(Integer.valueOf(price)-10000);
             queryInfoData.setEndPrice(Integer.valueOf(price)+10000);
         }
@@ -153,6 +172,67 @@ public class InfodataService extends CrudService<InfodataDao, InfodataEntity> {
         return new ResultVo(ResultCode.OK, resultList);
     }
 
+
+    /**
+     * 选出 多个限制条件下的
+     * @param page
+     * @return
+     */
+    public ResultVo multiChoose(Page<QueryInfoData> page, List<String> featureList){
+        List<QueryInfoData> originalChooseResult = this.dao.multiChoose(page);
+        //1、进一步按照 features 筛选,去除不包含特征的 楼盘
+        //2、feature  为空直接返回
+        if(featureList == null || featureList.size()==0){
+            page.setResults(originalChooseResult);
+            return new ResultVo(ResultCode.OK,page);
+        }
+        //2、feature 不为空，则继续筛选出合适的结果
+        Map<Integer,Integer> resultScore = new HashMap<>();
+        for(Integer index =0 ; index < originalChooseResult.size(); index++){
+            QueryInfoData original = originalChooseResult.get(index);
+            Integer sameFeatureNum = 0;
+            for(String feature:featureList){
+                if(original.getProjectfeatures().contains(feature)){
+                    sameFeatureNum += 1;
+                }
+            }
+            resultScore.put(index,sameFeatureNum);
+        }
+        //3、排序
+        List<Map.Entry<Integer,Integer>> resultScoreList = new ArrayList<Map.Entry<Integer, Integer>>(resultScore.entrySet());
+        Collections.sort(resultScoreList, new Comparator<Map.Entry<Integer, Integer>>() {
+            @Override
+            public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2) {
+                return o2.getValue().compareTo(o1.getValue());
+            }
+        });
+        //4、输出包含属性的楼盘
+        List<QueryInfoData> resultList = new ArrayList<>();
+        for(Map.Entry<Integer,Integer> mapping : resultScoreList){
+            if(mapping.getValue() > 0){
+                resultList.add(originalChooseResult.get(mapping.getKey()));
+            }
+        }
+        //5、获取picture url
+        List<String> urls = new ArrayList<>();
+        for (int i=0;i<resultList.size();i++) {
+            urls.add(resultList.get(i).getUrl());
+        }
+        ResultVo result = loupanPicService.getOnePicByUrl(urls);
+        if (result.getCode() != ResultVo.SUCCESS)
+            return result;
+        List<LoupanPicEntity> picList = (List<LoupanPicEntity>) result.getData();
+        int i = 0;
+        for (QueryInfoData item : resultList) {
+            item.setUrl(picList.get(i++).getPic());
+        }
+
+
+        page.setResults(resultList);
+        page.setPageSize(resultList.size());
+        return new ResultVo(ResultCode.OK,page);
+
+    }
     /**
      * 返回区收藏量前10的楼盘
      * @param infodataEntity
@@ -173,8 +253,8 @@ public class InfodataService extends CrudService<InfodataDao, InfodataEntity> {
         return new ResultVo(ResultCode.OK,this.dao.getCity());
     }
 
-    public ResultVo getRegion(InfodataEntity infodataEntity){
-        return new ResultVo(ResultCode.OK,this.dao.getRegion(infodataEntity));
+    public ResultVo getRegion(InfodataEntity infodataEntity) {
+        return new ResultVo(ResultCode.OK, this.dao.getRegion(infodataEntity));
     }
 
 }

@@ -287,11 +287,15 @@ public class PersonUserController extends BaseController {
      * @author fsd
      * @return
      */
-    @GetMapping({"rawRecommend"})
+    @GetMapping({"/rawRecommend"})
     @OperationLog("直接向用户推荐")
-    public ResultVo rawRecommend() {
+    public ResultVo rawRecommend(@RequestParam("token") String token) {
+        //获取当前用户
+        String userName = JWTUtil.getUsername(token);
+        PersonUserEntity searchPue = new PersonUserEntity();
+        searchPue.setUsername(userName.split("-")[0]);
+        PersonUserEntity pue = (PersonUserEntity) personUserService.getByParam(searchPue).getData();
         //1、获取用户的收藏记录
-        PersonUserEntity pue = PersonUserUtils.getCurrentUser();
         PersonUserEntity p = (PersonUserEntity) personUserService.getByParam(pue).getData();
         UserBuildingEntity userBuildingEntity = new UserBuildingEntity();
         userBuildingEntity.setUserid(p.getId());
@@ -303,25 +307,27 @@ public class PersonUserController extends BaseController {
         //2、对收藏的每个楼盘获取三个相似楼盘
         List<InfodataEntity> allRecommend = new ArrayList<>();
         for(UserBuildingEntity e : ublist){
+
             InfodataEntity infodataEntity = new InfodataEntity();
             infodataEntity.setId(e.getBuildingid());
+
             InfodataEntity searchEntity = (InfodataEntity) infodataService.getByParam(infodataEntity).getData();
-            allRecommend.addAll((List<InfodataEntity>) infodataService.getSimilarLoupan(searchEntity,3).getData());
+            allRecommend.addAll((List<InfodataEntity>) infodataService.getSimilarLoupan(searchEntity,5).getData());
         }
         //3、A B C三个楼盘 可能出现 A的三个相似楼盘中 包含B C 所以需要去除
-        List<Integer> todeleteIndex = new ArrayList<>();
+        List<InfodataEntity> todeleteEntity = new ArrayList<>();
         for(Integer index = 0 ; index < allRecommend.size(); index++){
             for(UserBuildingEntity ube:ublist){
                 if(allRecommend.get(index).getId().equals(ube.getBuildingid())){
-                    todeleteIndex.add(index);
+                    todeleteEntity.add(allRecommend.get(index));
                 }
             }
         }
-        for(Integer index:todeleteIndex){
-            allRecommend.remove(allRecommend.get(index));
+        for(InfodataEntity index:todeleteEntity){
+            allRecommend.remove(index);
         }
         Map<String,List<InfodataEntity>> map = new HashMap<>();
-        map.put(pue.getName(),allRecommend);
+        map.put(pue.getEmail(),allRecommend);
         return new ResultVo(ResultCode.OK,map);
     }
 
@@ -333,7 +339,7 @@ public class PersonUserController extends BaseController {
      */
     @GetMapping({"vecRecommend"})
     @OperationLog("根据词向量相似度推荐")
-    public ResultVo vecRecommend() {
+    public ResultVo vecRecommend(@RequestParam("token") String token) {
         this.operationlog("测试log", "{username:123}");
         Subject subject = SecurityUtils.getSubject();
         return subject.isAuthenticated() ? new ResultVo(ResultCode.OK) : new ResultVo(ResultCode.USER_NOT_LOGIN);
