@@ -33,4 +33,6 @@ public interface InfodataDao extends ICrudDao<InfodataEntity> {
     List<InfodataEntity> getCity();
     List<InfodataEntity> getRegion(InfodataEntity infodataEntity);
 
+    List<QueryInfoData> multiChoose(Page<QueryInfoData> page);
+
 }
