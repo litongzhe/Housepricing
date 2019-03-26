@@ -11,6 +11,16 @@ public class QueryInfoData extends InfodataEntity implements Serializable {
     List<String> projectFeaturesList = new ArrayList<>();
     List<String> propertyTypeList = new ArrayList<>();
 
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
+    }
+
+    public String getPicUrl() {
+        return picUrl;
+    }
+
+    String picUrl;
+
     public List<String> getPropertyTypeList() {
         return propertyTypeList;
     }

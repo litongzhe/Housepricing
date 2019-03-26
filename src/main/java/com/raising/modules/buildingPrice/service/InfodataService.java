@@ -84,9 +84,9 @@ public class InfodataService extends CrudService<InfodataDao, InfodataEntity> {
                 }
             }
         }
-        if(candidateEntitys.size()<=BestNum){
-            return new ResultVo(ResultCode.OK,candidateEntitys);
-        }
+//        if(candidateEntitys.size()<=BestNum){
+//            return new ResultVo(ResultCode.OK,candidateEntitys);
+//        }
         //3、进一步筛选，按照共有features的数量，进行排序
         Map<Integer,Integer> entityScore = new HashMap<>();
         for(Integer index =0 ; index < candidateEntitys.size(); index++){
@@ -107,7 +107,7 @@ public class InfodataService extends CrudService<InfodataDao, InfodataEntity> {
             }
         });
         //5、输出前BestNum个
-        List<InfodataEntity> resultList = new ArrayList<>();
+        List<QueryInfoData> resultList = new ArrayList<>();
         Integer num = 0;
         for(Map.Entry<Integer,Integer> mapping : entityScoreList){
             if(num >= BestNum){
@@ -116,6 +116,20 @@ public class InfodataService extends CrudService<InfodataDao, InfodataEntity> {
             resultList.add(candidateEntitys.get(mapping.getKey()));
             num += 1;
         }
+        //6、获取对应的pictureuRL
+        List<String> urls = new ArrayList<>();
+        for (int i=0;i<resultList.size();i++) {
+            urls.add(resultList.get(i).getUrl());
+        }
+        ResultVo result = loupanPicService.getOnePicByUrl(urls);
+        if (result.getCode() != ResultVo.SUCCESS)
+            return result;
+        List<LoupanPicEntity> picList = (List<LoupanPicEntity>) result.getData();
+        int i = 0;
+        for (QueryInfoData item : resultList) {
+            item.setUrl(picList.get(i++).getPic());
+        }
+
         return new ResultVo(ResultCode.OK,resultList);
     }
 
@@ -138,11 +152,15 @@ public class InfodataService extends CrudService<InfodataDao, InfodataEntity> {
         queryInfoData.setCity(cityName);
         queryInfoData.setPropertytype(propertyType);
 
-        if (area!=null && !area.equals("暂无信息")){
+        if (area!=null && !area.equals("None") && !area.equals("暂无信息")){
+            if(area.contains(".")){
+                System.out.println("当前Area:::"+area);
+                area = area.split("\\.")[0];
+            }
             queryInfoData.setStartArea(Integer.valueOf(area)-50);
             queryInfoData.setEndArea(Integer.valueOf(area)+50);
         }
-        if (price!=null && !price.equals("暂无信息")){
+        if (price!=null && !price.equals("None") && !price.equals("暂无信息")){
             queryInfoData.setStartPrice(Integer.valueOf(price)-10000);
             queryInfoData.setEndPrice(Integer.valueOf(price)+10000);
         }
@@ -195,6 +213,21 @@ public class InfodataService extends CrudService<InfodataDao, InfodataEntity> {
                 resultList.add(originalChooseResult.get(mapping.getKey()));
             }
         }
+        //5、获取picture url
+        List<String> urls = new ArrayList<>();
+        for (int i=0;i<resultList.size();i++) {
+            urls.add(resultList.get(i).getUrl());
+        }
+        ResultVo result = loupanPicService.getOnePicByUrl(urls);
+        if (result.getCode() != ResultVo.SUCCESS)
+            return result;
+        List<LoupanPicEntity> picList = (List<LoupanPicEntity>) result.getData();
+        int i = 0;
+        for (QueryInfoData item : resultList) {
+            item.setUrl(picList.get(i++).getPic());
+        }
+
+
         page.setResults(resultList);
         page.setPageSize(resultList.size());
         return new ResultVo(ResultCode.OK,page);
