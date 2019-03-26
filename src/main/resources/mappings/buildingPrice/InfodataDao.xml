@@ -619,6 +619,32 @@
         </if>
     </select>
 
+    <!-- 获取选定城市范围楼盘ID @author litongzhe-->
+    <select id="getLoupanIDByCity" resultType="com.raising.modules.buildingPrice.entity.InfodataEntity">
+        SELECT <include refid="InfodataColumns"/>
+        FROM infodata a
+        WHERE a.city = #{city}
+    </select>
+
+    <!-- 获取选定区域范围楼盘ID @author litongzhe-->
+    <select id="getLoupanIDByRegion" resultType="com.raising.modules.buildingPrice.entity.InfodataEntity">
+        SELECT <include refid="InfodataColumns"/>
+        FROM infodata a
+        WHERE a.city = #{city} AND a.region = #{region}
+    </select>
+
+    <!--获取所有的城市 @author litongzhe-->
+    <select id="getCity" resultType="com.raising.modules.buildingPrice.entity.InfodataEntity">
+        SELECT DISTINCT city
+        FROM infodata a
+    </select>
+
+    <!--获取某市所有区 @author litongzhe-->
+    <select id="getRegion" resultType="com.raising.modules.buildingPrice.entity.InfodataEntity">
+        SELECT DISTINCT region
+        FROM infodata a
+        WHERE a.city = #{city}
+    </select>
 
     <!-- 按照面积价格范围 获取数据 @author fsd-->
     <select id="getSimilarList"

@@ -153,4 +153,28 @@ public class InfodataService extends CrudService<InfodataDao, InfodataEntity> {
         return new ResultVo(ResultCode.OK, resultList);
     }
 
+    /**
+     * 返回区收藏量前10的楼盘
+     * @param infodataEntity
+     * @return
+     */
+    public ResultVo getAheadLoupanByRegion(InfodataEntity infodataEntity){
+        List<InfodataEntity> infodataEntities = this.dao.getLoupanIDByRegion(infodataEntity);
+        return new ResultVo(ResultCode.OK,infodataEntities);
+
+    }
+    public ResultVo getAheadLoupanByCity(InfodataEntity infodataEntity){
+        List<InfodataEntity> infodataEntities = this.dao.getLoupanIDByCity(infodataEntity);
+        return new ResultVo(ResultCode.OK,infodataEntities);
+
+    }
+
+    public ResultVo getCity(){
+        return new ResultVo(ResultCode.OK,this.dao.getCity());
+    }
+
+    public ResultVo getRegion(InfodataEntity infodataEntity){
+        return new ResultVo(ResultCode.OK,this.dao.getRegion(infodataEntity));
+    }
+
 }
