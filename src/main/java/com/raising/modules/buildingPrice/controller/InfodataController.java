@@ -86,7 +86,7 @@ public class InfodataController extends BaseController {
 
             HashMap<String, Object> result2view = new HashMap<>();
             result2view.put("buildInfo", info);
-            result2view.put("picList",loupanPicEntities);
+            result2view.put("picList", loupanPicEntities);
             result2view.put("coll", buildColBrowEntity1);
             resultVo.setData(result2view);
             return resultVo;
@@ -210,11 +210,12 @@ public class InfodataController extends BaseController {
 
     /**
      * 给出一个楼盘  同一区域 的相似房源
-     * @author fsd
+     *
      * @param infodataEntity
      * @return
+     * @author fsd
      */
-    @GetMapping("/getSimilarByOneLoupan")
+    @PostMapping("/getSimilarByOneLoupan")
     public ResultVo getSimilarByOneLoupan(InfodataEntity infodataEntity) {
 
         //1、相似属性：获取当前小区的城市，区，房屋类别，价格，面积，特征短语
@@ -230,31 +231,33 @@ public class InfodataController extends BaseController {
         queryInfoData.setCity(cityName);
         queryInfoData.setPropertytype(propertyType);
 
-        if (area!=null && !area.equals("暂无信息")){
-            queryInfoData.setStartArea(Integer.valueOf(area)-50);
-            queryInfoData.setEndArea(Integer.valueOf(area)+50);
+        if (area.equals("None") && area != null && !area.equals("暂无信息")) {
+            queryInfoData.setStartArea((int) (Double.valueOf(area) - 50));
+            queryInfoData.setEndArea((int) (Double.valueOf(area) + 50));
         }
-        if (price!=null && !price.equals("暂无信息")){
-            queryInfoData.setStartPrice(Integer.valueOf(price)-10000);
-            queryInfoData.setEndPrice(Integer.valueOf(price)+10000);
+        if (price.equals("None") && price != null && !price.equals("暂无信息")) {
+            queryInfoData.setStartPrice((int) (Double.valueOf(price) - 10000));
+            queryInfoData.setEndPrice((int) (Double.valueOf(price) + 10000));
         }
         //获取bestNum 个相似楼盘信息
-        ResultVo resultVoquery = infodataService.getSimilarLoupanByOneLoupan(queryInfoData,featureList, 6);
+        ResultVo resultVoquery = infodataService.getSimilarLoupanByOneLoupan(queryInfoData, featureList, 6);
         //存入字典返回，格式为 小区名：相似楼盘list
-        List<InfodataEntity> resultList = (List<InfodataEntity>)resultVoquery.getData();
-        Map<String,List<InfodataEntity>> result = new HashMap<>();
-        result.put(infodataEntity.getXiaoqu(), resultList);
+        List<InfodataEntity> resultList = (List<InfodataEntity>) resultVoquery.getData();
+        Map<String, List<InfodataEntity>> result = new HashMap<>();
+//        result.put(infodataEntity.getXiaoqu(), resultList);
+        result.put("results", resultList);
         return new ResultVo(ResultCode.OK, result);
     }
 
     /**
      * 根据多个条件查找 对应楼盘
+     *
      * @param queryInfoData
      * @param page
      * @return
      */
-    @GetMapping("/searchByMultiInfo")
-    public ResultVo searchByMultiInfo(QueryInfoData queryInfoData,Page<QueryInfoData> page) {
+    @PostMapping("/searchByMultiInfo")
+    public ResultVo searchByMultiInfo(QueryInfoData queryInfoData, Page<QueryInfoData> page) {
         page.setEntity(queryInfoData);
         List<String> featureList = queryInfoData.getProjectFeaturesList();
         return infodataService.multiChoose(page, featureList);
