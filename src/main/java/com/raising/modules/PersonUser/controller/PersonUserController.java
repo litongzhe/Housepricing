@@ -308,6 +308,18 @@ public class PersonUserController extends BaseController {
             InfodataEntity searchEntity = (InfodataEntity) infodataService.getByParam(infodataEntity).getData();
             allRecommend.addAll((List<InfodataEntity>) infodataService.getSimilarLoupan(searchEntity,3).getData());
         }
+        //3、A B C三个楼盘 可能出现 A的三个相似楼盘中 包含B C 所以需要去除
+        List<Integer> todeleteIndex = new ArrayList<>();
+        for(Integer index = 0 ; index < allRecommend.size(); index++){
+            for(UserBuildingEntity ube:ublist){
+                if(allRecommend.get(index).getId().equals(ube.getBuildingid())){
+                    todeleteIndex.add(index);
+                }
+            }
+        }
+        for(Integer index:todeleteIndex){
+            allRecommend.remove(allRecommend.get(index));
+        }
         Map<String,List<InfodataEntity>> map = new HashMap<>();
         map.put(pue.getName(),allRecommend);
         return new ResultVo(ResultCode.OK,map);
@@ -320,7 +332,7 @@ public class PersonUserController extends BaseController {
      * @return
      */
     @GetMapping({"vecRecommend"})
-    @OperationLog("执行检查用户是否登录")
+    @OperationLog("根据词向量相似度推荐")
     public ResultVo vecRecommend() {
         this.operationlog("测试log", "{username:123}");
         Subject subject = SecurityUtils.getSubject();
