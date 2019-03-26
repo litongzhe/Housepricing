@@ -656,24 +656,24 @@
         <include refid="InfodataJoins"/>
         <where>
 
-            <if test=" entity.city != null and entity.city != '' ">
-                AND a.city = #{entity.city}
+            <if test=" city != null and city != '' ">
+                AND a.city = #{city}
             </if>
-            <if test=" entity.propertytype != null and entity.propertytype != '' ">
-                AND a.propertyType = #{entity.propertytype}
+            <if test=" propertytype != null and propertytype != '' ">
+                AND a.propertyType = #{propertytype}
             </if>
-            <if test=" entity.startPrice != null and entity.startPrice != '' ">
-                AND AND a.price >= #{entity.startPrice}
+            <if test=" startPrice != null and startPrice != '' ">
+                AND  a.price >= #{startPrice}
             </if>
-            <if test=" entity.endPrice != null and entity.endPrice != '' ">
-                AND AND a.price &lt;= #{entity.endPrice}
+            <if test=" endPrice != null and endPrice != '' ">
+                AND  a.price &lt;= #{endPrice}
             </if>
 
-            <if test=" entity.startArea != null and entity.startArea != '' ">
-                AND AND a.area >= #{entity.startArea}
+            <if test=" startArea != null and startArea != '' ">
+                AND  a.area >= #{startArea}
             </if>
-            <if test=" entity.endArea != null and entity.endArea != '' ">
-                AND AND a.area &lt;= #{entity.endArea}
+            <if test=" endArea != null and endArea != '' ">
+                AND  a.area &lt;= #{endArea}
             </if>
 
             <!--<if test=" entity.propertytype != null and entity.propertytype != '' ">-->
@@ -682,6 +682,50 @@
             <!---->
             <!--AND a.price >= #{entity.startPrice} AND a.price &lt;= #{entity.endPrice}-->
             <!--AND a.area >= #{entity.startArea} AND a.area &lt;= #{entity.endArea}-->
+        </where>
+    </select>
+
+    <!-- multiChoose @author fsd-->
+    <select id="multiChoose"
+            resultType="com.raising.modules.buildingPrice.entity.QueryInfoData"
+    >
+        SELECT
+        <include refid="InfodataColumns"/>
+        FROM infodata a
+        <include refid="InfodataJoins"/>
+        <where>
+
+            <if test=" entity.city != null and entity.city != '' ">
+                AND a.city = #{entity.city}
+            </if>
+            <if test=" entity.region != null and entity.region != '' ">
+                AND a.region = #{entity.region}
+            </if>
+            <if test=" entity.xiaoqu != null and entity.xiaoqu != '' ">
+                AND a.xiaoqu = #{entity.xiaoqu}
+            </if>
+
+            <if test="entity.propertyTypeList != null">
+                and a.propertyType in
+                <foreach collection="entity.propertyTypeList" item="type" index="index" separator="," open="(" close=")">
+                    #{entity.propertyTypeList[${index}]}
+                </foreach>
+            </if>
+
+            <if test=" entity.startPrice != null and entity.startPrice != '' ">
+                AND  a.price >= #{entity.startPrice}
+            </if>
+            <if test=" entity.endPrice != null and entity.endPrice != '' ">
+                AND  a.price &lt;= #{entity.endPrice}
+            </if>
+
+            <if test=" entity.startArea != null and entity.startArea != '' ">
+                AND  a.area >= #{entity.startArea}
+            </if>
+            <if test=" entity.endArea != null and entity.endArea != '' ">
+                AND  a.area &lt;= #{entity.endArea}
+            </if>
+
         </where>
     </select>
 

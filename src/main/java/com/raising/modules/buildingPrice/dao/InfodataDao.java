@@ -28,9 +28,6 @@ public interface InfodataDao extends ICrudDao<InfodataEntity> {
      * @return
      */
     List<QueryInfoData> getSimilarList(QueryInfoData queryInfoData);
-    List<InfodataEntity> getLoupanIDByCity(InfodataEntity infodataEntity);
-    List<InfodataEntity> getLoupanIDByRegion(InfodataEntity infodataEntity);
-    List<InfodataEntity> getCity();
-    List<InfodataEntity> getRegion(InfodataEntity infodataEntity);
+
 
 }

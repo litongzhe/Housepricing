@@ -1,11 +1,34 @@
 package com.raising.modules.buildingPrice.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class QueryInfoData extends InfodataEntity implements Serializable {
     int startPrice;
     int endPrice;
     int startArea;
+    List<String> projectFeaturesList = new ArrayList<>();
+    List<String> propertyTypeList = new ArrayList<>();
+
+    public List<String> getPropertyTypeList() {
+        return propertyTypeList;
+    }
+
+    public List<String> getProjectFeaturesList() {
+        return projectFeaturesList;
+    }
+
+    public void setPropertyTypeList(List<String> propertyTypeList) {
+        this.propertyTypeList = propertyTypeList;
+    }
+
+    public void setProjectFeaturesList(List<String> projectFeaturesList) {
+        this.projectFeaturesList = projectFeaturesList;
+    }
+
+
+
 
     public QueryInfoData() {
     }
