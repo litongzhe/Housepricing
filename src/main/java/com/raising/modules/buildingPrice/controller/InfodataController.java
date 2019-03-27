@@ -289,21 +289,42 @@ public class InfodataController extends BaseController {
             infodataEntities = (List<InfodataEntity>)infodataService.getAheadLoupanByRegion(infodataEntity).getData();
         }
         Map<String,Integer> id2collectnum = Maps.newLinkedHashMap();
+
         BuildColBrowEntity buildColBrowEntity = new BuildColBrowEntity();
-        BuildColBrowEntity result = new BuildColBrowEntity();
+        List<BuildColBrowEntity> buildColBrowEntities = (List<BuildColBrowEntity>)buildColBrowService.getList(buildColBrowEntity).getData();
+
+        Map<String,Integer> allid2collectnum = Maps.newLinkedHashMap();
+        for(BuildColBrowEntity e:buildColBrowEntities){
+            allid2collectnum.put(e.getXiaoquid(),Integer.valueOf(e.getCollectnum()));
+        }
         for(InfodataEntity e:infodataEntities){
             String id = e.getId();
             Integer collectnum;
-            buildColBrowEntity.setXiaoquid(id);
-            result = (BuildColBrowEntity)buildColBrowService.getByID(buildColBrowEntity).getData();
-            if(result == null){//收藏表中不存在说明收藏量为0
-                collectnum = 0;
+            if(allid2collectnum.containsKey(id)){
+                collectnum = allid2collectnum.get(id);
             }
             else{
-                collectnum = Integer.valueOf(result.getCollectnum());
+                collectnum = 0;
             }
             id2collectnum.put(id,collectnum);
         }
+//        BuildColBrowEntity buildColBrowEntity = new BuildColBrowEntity();
+//        BuildColBrowEntity result = new BuildColBrowEntity();
+//
+//
+//        for(InfodataEntity e:infodataEntities){
+//            String id = e.getId();
+//            Integer collectnum;
+//            buildColBrowEntity.setXiaoquid(id);
+//            result = (BuildColBrowEntity)buildColBrowService.getByID(buildColBrowEntity).getData();
+//            if(result == null){//收藏表中不存在说明收藏量为0
+//                collectnum = 0;
+//            }
+//            else{
+//                collectnum = Integer.valueOf(result.getCollectnum());
+//            }
+//            id2collectnum.put(id,collectnum);
+//        }
 
         Map<String,Integer> resultMap = Maps.newLinkedHashMap();//排序后的map
         Stream<Map.Entry<String,Integer>> st = id2collectnum.entrySet().stream();
@@ -320,10 +341,11 @@ public class InfodataController extends BaseController {
             }
         }
         List<Map> resultList = new ArrayList<>();//要展示的所有小区
-        Map<String,Object> map = Maps.newLinkedHashMap();
-        LoupanPicEntity loupanPicEntity = new LoupanPicEntity();
+
         for(InfodataEntity e:infodataEntities){
             if(copyMap.containsKey(e.getId())){
+                Map<String,Object> map = Maps.newLinkedHashMap();
+                LoupanPicEntity loupanPicEntity = new LoupanPicEntity();
                 map.put("Information",e);
                 String url = e.getUrl();
                 loupanPicEntity.setUrl(url);
