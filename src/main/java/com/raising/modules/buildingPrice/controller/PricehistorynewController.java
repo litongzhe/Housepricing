@@ -552,6 +552,33 @@ public class PricehistorynewController extends BaseController {
         return resultVo;
     }
 
+    /**
+     * 返回某市的所有区
+     *
+     * @param city
+     * @return ResultVo
+     * @author litongzhe
+     * @datetime 2019年3月28日 14点00分
+     */
+    @GetMapping("/getRegionByCity")
+    public ResultVo getRegionByCity(@RequestParam("city") String city) {
+        regionEntity region = new regionEntity();
+        region.setCity(city);
+        List<regionEntity> pricehistorynewEntities = (List<regionEntity>) pricehistorynewService.getRegionByCity(region).getData();
+        List<String> regions = new ArrayList<>();
+        for(regionEntity e:pricehistorynewEntities){
+            String r = e.getCitylevel();
+            if(!r.equals("无"))
+                regions.add(e.getCitylevel());
+        }
+
+        ResultVo resultVo = new ResultVo();
+        resultVo.setData(regions);
+        ResultVo.entityNull(resultVo);
+        return resultVo;
+    }
+
+
 //    /**
 //     * 按照城市名字 获取其历史房价信息，调用训练好的模型，按照map格式输出到前端
 //     *

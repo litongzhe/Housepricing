@@ -46,4 +46,8 @@ public class PricehistorynewService extends CrudService<PricehistorynewDao, Pric
         return new ResultVo(ResultCode.OK, this.dao.getRegion(r));
     }
 
+    public ResultVo getRegionByCity(regionEntity r){
+        return new ResultVo(ResultCode.OK,this.dao.getRegionByCity(r));
+    }
+
 }

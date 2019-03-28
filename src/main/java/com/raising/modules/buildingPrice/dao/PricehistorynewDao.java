@@ -21,6 +21,7 @@ public interface PricehistorynewDao extends ICrudDao<PricehistorynewEntity> {
     public List<provinceEntity> getProvince();
     public List<cityEntity> getCity(cityEntity c);
     public List<regionEntity> getRegion(regionEntity r);
+    List<regionEntity> getRegionByCity(regionEntity r);
     List<PricehistorynewEntity> getHistoryByProvince(PricehistorynewEntity var1);
     List<PricehistorynewEntity> getHistoryByCity(PricehistorynewEntity var1);
 }
