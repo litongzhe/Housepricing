@@ -229,7 +229,7 @@ public class InfodataService extends CrudService<InfodataDao, InfodataEntity> {
 
 
         page.setResults(resultList);
-        page.setPageSize(resultList.size());
+//        page.setPageSize(resultList.size());
         return new ResultVo(ResultCode.OK,page);
 
     }
