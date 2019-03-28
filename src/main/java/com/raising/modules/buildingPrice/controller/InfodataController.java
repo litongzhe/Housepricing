@@ -91,7 +91,7 @@ public class InfodataController extends BaseController {
 
             HashMap<String, Object> result2view = new HashMap<>();
             result2view.put("buildInfo", info);
-            result2view.put("picList",loupanPicEntities);
+            result2view.put("picList", loupanPicEntities);
             result2view.put("coll", buildColBrowEntity1);
             resultVo.setData(result2view);
             return resultVo;
@@ -215,9 +215,10 @@ public class InfodataController extends BaseController {
 
     /**
      * 给出一个楼盘  同一区域 的相似房源
-     * @author fsd
+     *
      * @param infodataEntity
      * @return
+     * @author fsd
      */
     @GetMapping("/getSimilarByOneLoupan")
     public ResultVo getSimilarByOneLoupan(InfodataEntity infodataEntity) {
@@ -235,11 +236,11 @@ public class InfodataController extends BaseController {
         queryInfoData.setCity(cityName);
         queryInfoData.setPropertytype(propertyType);
 
-        if (area.equals("None") && area != null && !area.equals("暂无信息")) {
+        if (!area.equals("None") && area != null && !area.equals("暂无信息") && !area.equals("")) {
             queryInfoData.setStartArea((int) (Double.valueOf(area) - 50));
             queryInfoData.setEndArea((int) (Double.valueOf(area) + 50));
         }
-        if (price.equals("None") && price != null && !price.equals("暂无信息")) {
+        if (!price.equals("None") && price != null && !price.equals("价格待定") && !price.equals("")) {
             queryInfoData.setStartPrice((int) (Double.valueOf(price) - 10000));
             queryInfoData.setEndPrice((int) (Double.valueOf(price) + 10000));
         }
@@ -268,45 +269,42 @@ public class InfodataController extends BaseController {
     }
 
 
-
-
     /**
      * 给出一个城市或一个地区的收藏量前10的楼盘
-     * @author litongzhe
+     *
      * @param city,region
      * @return resultVo
+     * @author litongzhe
      */
     @GetMapping("/getAheadLoupan")
     public ResultVo getAheadLoupan(@RequestParam("city") String city, @RequestParam("region") String region) {
         InfodataEntity infodataEntity = new InfodataEntity();
         infodataEntity.setCity(city);
         List<InfodataEntity> infodataEntities;
-        if(region.equals("无")){//城市范围
-            infodataEntities = (List<InfodataEntity>)infodataService.getAheadLoupanByCity(infodataEntity).getData();
-        }
-        else{//区范围
+        if (region.equals("无")) {//城市范围
+            infodataEntities = (List<InfodataEntity>) infodataService.getAheadLoupanByCity(infodataEntity).getData();
+        } else {//区范围
             infodataEntity.setRegion(region);
-            infodataEntities = (List<InfodataEntity>)infodataService.getAheadLoupanByRegion(infodataEntity).getData();
+            infodataEntities = (List<InfodataEntity>) infodataService.getAheadLoupanByRegion(infodataEntity).getData();
         }
-        Map<String,Integer> id2collectnum = Maps.newLinkedHashMap();
+        Map<String, Integer> id2collectnum = Maps.newLinkedHashMap();
 
         BuildColBrowEntity buildColBrowEntity = new BuildColBrowEntity();
-        List<BuildColBrowEntity> buildColBrowEntities = (List<BuildColBrowEntity>)buildColBrowService.getList(buildColBrowEntity).getData();
+        List<BuildColBrowEntity> buildColBrowEntities = (List<BuildColBrowEntity>) buildColBrowService.getList(buildColBrowEntity).getData();
 
-        Map<String,Integer> allid2collectnum = Maps.newLinkedHashMap();
-        for(BuildColBrowEntity e:buildColBrowEntities){
-            allid2collectnum.put(e.getXiaoquid(),Integer.valueOf(e.getCollectnum()));
+        Map<String, Integer> allid2collectnum = Maps.newLinkedHashMap();
+        for (BuildColBrowEntity e : buildColBrowEntities) {
+            allid2collectnum.put(e.getXiaoquid(), Integer.valueOf(e.getCollectnum()));
         }
-        for(InfodataEntity e:infodataEntities){
+        for (InfodataEntity e : infodataEntities) {
             String id = e.getId();
             Integer collectnum;
-            if(allid2collectnum.containsKey(id)){
+            if (allid2collectnum.containsKey(id)) {
                 collectnum = allid2collectnum.get(id);
-            }
-            else{
+            } else {
                 collectnum = 0;
             }
-            id2collectnum.put(id,collectnum);
+            id2collectnum.put(id, collectnum);
         }
 //        BuildColBrowEntity buildColBrowEntity = new BuildColBrowEntity();
 //        BuildColBrowEntity result = new BuildColBrowEntity();
@@ -326,33 +324,33 @@ public class InfodataController extends BaseController {
 //            id2collectnum.put(id,collectnum);
 //        }
 
-        Map<String,Integer> resultMap = Maps.newLinkedHashMap();//排序后的map
-        Stream<Map.Entry<String,Integer>> st = id2collectnum.entrySet().stream();
-        st.sorted(Comparator.comparing(e->-e.getValue())).forEach(e->resultMap.put(e.getKey(),e.getValue()));//加-号表示从大到小排序
+        Map<String, Integer> resultMap = Maps.newLinkedHashMap();//排序后的map
+        Stream<Map.Entry<String, Integer>> st = id2collectnum.entrySet().stream();
+        st.sorted(Comparator.comparing(e -> -e.getValue())).forEach(e -> resultMap.put(e.getKey(), e.getValue()));//加-号表示从大到小排序
         Integer num = 0;
-        Map<String,Integer> copyMap = Maps.newLinkedHashMap();
+        Map<String, Integer> copyMap = Maps.newLinkedHashMap();
         copyMap.putAll(resultMap);//要展示的小区 id:收藏量
-        if(copyMap.size() > 10){
-            for(String key:resultMap.keySet()){
+        if (copyMap.size() > 10) {
+            for (String key : resultMap.keySet()) {
                 num++;
-                if(num > 10){
+                if (num > 10) {
                     copyMap.remove(key);
                 }
             }
         }
         List<Map> resultList = new ArrayList<>();//要展示的所有小区
 
-        for(InfodataEntity e:infodataEntities){
-            if(copyMap.containsKey(e.getId())){
-                Map<String,Object> map = Maps.newLinkedHashMap();
+        for (InfodataEntity e : infodataEntities) {
+            if (copyMap.containsKey(e.getId())) {
+                Map<String, Object> map = Maps.newLinkedHashMap();
                 LoupanPicEntity loupanPicEntity = new LoupanPicEntity();
-                map.put("Information",e);
+                map.put("Information", e);
                 String url = e.getUrl();
                 loupanPicEntity.setUrl(url);
                 List urlList = new ArrayList();
                 urlList.add(url);
-                loupanPicEntity = ((List<LoupanPicEntity>)loupanPicService.getOnePicByUrl(urlList).getData()).get(0);
-                map.put("Picture",loupanPicEntity);
+                loupanPicEntity = ((List<LoupanPicEntity>) loupanPicService.getOnePicByUrl(urlList).getData()).get(0);
+                map.put("Picture", loupanPicEntity);
                 resultList.add(map);
             }
         }
@@ -364,81 +362,84 @@ public class InfodataController extends BaseController {
 
     /**
      * 把infodata表的两层结构value，label，children返回到JSON文件中
-     * @author litongzhe
+     *
      * @return resultVo
+     * @author litongzhe
      * @datetime 2019年3月26日21点08分
      */
     @GetMapping("/getAllData2Json")
     public void getAllData2Json() {
         InfodataEntity infodataEntity = new InfodataEntity();
-        List<InfodataEntity> infodataEntities = (List<InfodataEntity>)infodataService.getCity().getData();
+        List<InfodataEntity> infodataEntities = (List<InfodataEntity>) infodataService.getCity().getData();
         List<Map> allData = new ArrayList<>();
-        for(InfodataEntity e:infodataEntities){
-            Map<String,Object> cityInfo = Maps.newLinkedHashMap();
+        for (InfodataEntity e : infodataEntities) {
+            Map<String, Object> cityInfo = Maps.newLinkedHashMap();
             String city = e.getCity();
-            cityInfo.put("value",city);
-            cityInfo.put("label",city);
+            cityInfo.put("value", city);
+            cityInfo.put("label", city);
             infodataEntity.setCity(city);
-            List<InfodataEntity> regionEntities = (List<InfodataEntity>)infodataService.getRegion(infodataEntity).getData();
+            List<InfodataEntity> regionEntities = (List<InfodataEntity>) infodataService.getRegion(infodataEntity).getData();
             List<Map> regions = new ArrayList<>();
-            for(InfodataEntity regionEntity:regionEntities){
-                Map<String,Object> regionInfo = Maps.newLinkedHashMap();
+            for (InfodataEntity regionEntity : regionEntities) {
+                Map<String, Object> regionInfo = Maps.newLinkedHashMap();
                 String region = regionEntity.getRegion();
-                regionInfo.put("value",region);
-                regionInfo.put("label",region);
+                regionInfo.put("value", region);
+                regionInfo.put("label", region);
                 regions.add(regionInfo);
             }
-            cityInfo.put("children",regions);
+            cityInfo.put("children", regions);
             allData.add(cityInfo);
         }
         Gson gson = new Gson();
         String str = gson.toJson(allData);
         BufferedWriter writer = null;
         File file = new File("d:\\allData.json");
-        if(!file.exists()){
+        if (!file.exists()) {
             try {
                 file.createNewFile();
-            }catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        try{
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file,false),"UTF-8"));
+        try {
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false), "UTF-8"));
             writer.write(str);
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
-        }finally {
-            try{
-                if(writer!=null)
+        } finally {
+            try {
+                if (writer != null)
                     writer.close();
-            }catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
+
     /**
      * 提供返回infodata表的两层结构value，label，children的接口
-     * @author litongzhe
+     *
      * @return resultVo
+     * @author litongzhe
      */
     @GetMapping("/getAllData")
-    public ResultVo getAllData() throws IOException{
+    public ResultVo getAllData() throws IOException {
         File directory = new File("");
         String courseFile = directory.getCanonicalPath();
-        String path = courseFile+"/src/main/resources/model/allData.json";
+        String path = courseFile + "/src/main/resources/model/allData.json";
         String jsonStr = "";
-        try{
+        try {
             File jsonFile = new File(path);
             FileReader fileReader = new FileReader(jsonFile);
-            Reader reader = new InputStreamReader(new FileInputStream(jsonFile),"UTF-8");
+            Reader reader = new InputStreamReader(new FileInputStream(jsonFile), "UTF-8");
             int ch = 0;
             StringBuffer sb = new StringBuffer();
-            while((ch = reader.read()) != -1)
-                sb.append((char)ch);
+            while ((ch = reader.read()) != -1)
+                sb.append((char) ch);
             fileReader.close();
             reader.close();
             jsonStr = sb.toString();
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         List<Map> maps = null;

@@ -621,14 +621,16 @@
 
     <!-- 获取选定城市范围楼盘ID @author litongzhe-->
     <select id="getLoupanIDByCity" resultType="com.raising.modules.buildingPrice.entity.InfodataEntity">
-        SELECT <include refid="InfodataColumns"/>
+        SELECT
+        <include refid="InfodataColumns"/>
         FROM infodata a
         WHERE a.city = #{city}
     </select>
 
     <!-- 获取选定区域范围楼盘ID @author litongzhe-->
     <select id="getLoupanIDByRegion" resultType="com.raising.modules.buildingPrice.entity.InfodataEntity">
-        SELECT <include refid="InfodataColumns"/>
+        SELECT
+        <include refid="InfodataColumns"/>
         FROM infodata a
         WHERE a.city = #{city} AND a.region = #{region}
     </select>
@@ -663,21 +665,21 @@
                 AND a.propertyType = #{propertytype}
             </if>
             <if test=" startPrice != null and startPrice != '' ">
-                AND  a.price >= #{startPrice}
+                AND a.price >= #{startPrice}
             </if>
             <if test=" endPrice != null and endPrice != '' ">
-                AND  a.price &lt;= #{endPrice}
+                AND a.price &lt;= #{endPrice}
             </if>
 
             <if test=" startArea != null and startArea != '' ">
-                AND  a.area >= #{startArea}
+                AND a.area >= #{startArea}
             </if>
             <if test=" endArea != null and endArea != '' ">
-                AND  a.area &lt;= #{endArea}
+                AND a.area &lt;= #{endArea}
             </if>
 
             <!--<if test=" entity.propertytype != null and entity.propertytype != '' ">-->
-                <!--AND a.propertyType = #{entity.propertytype}-->
+            <!--AND a.propertyType = #{entity.propertytype}-->
             <!--</if>-->
             <!---->
             <!--AND a.price >= #{entity.startPrice} AND a.price &lt;= #{entity.endPrice}-->
@@ -707,26 +709,30 @@
 
             <if test="entity.propertyTypeList != null">
                 and a.propertyType in
-                <foreach collection="entity.propertyTypeList" item="type" index="index" separator="," open="(" close=")">
+                <foreach collection="entity.propertyTypeList" item="type" index="index" separator="," open="("
+                         close=")">
                     #{entity.propertyTypeList[${index}]}
                 </foreach>
             </if>
 
             <if test=" entity.startPrice != null and entity.startPrice != '' ">
-                AND  a.price >= #{entity.startPrice}
+                AND a.price >= #{entity.startPrice}
             </if>
             <if test=" entity.endPrice != null and entity.endPrice != '' ">
-                AND  a.price &lt;= #{entity.endPrice}
+                AND a.price &lt;= #{entity.endPrice}
             </if>
 
             <if test=" entity.startArea != null and entity.startArea != '' ">
-                AND  a.area >= #{entity.startArea}
+                AND a.area >= #{entity.startArea}
             </if>
             <if test=" entity.endArea != null and entity.endArea != '' ">
-                AND  a.area &lt;= #{entity.endArea}
+                AND a.area &lt;= #{entity.endArea}
             </if>
 
         </where>
+        <if test="orderBy != null and orderBy!=''">
+            ORDER BY ${ orderBy}
+        </if>
     </select>
 
 </mapper>

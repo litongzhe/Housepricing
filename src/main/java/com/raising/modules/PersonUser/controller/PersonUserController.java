@@ -327,7 +327,7 @@ public class PersonUserController extends BaseController {
             allRecommend.remove(index);
         }
         Map<String,List<InfodataEntity>> map = new HashMap<>();
-        map.put(pue.getEmail(),allRecommend);
+        map.put("results",allRecommend);
         return new ResultVo(ResultCode.OK,map);
     }
 
