@@ -6,8 +6,11 @@ import com.raising.modules.PersonUser.entity.PersonUserEntity;
 import com.raising.modules.PersonUser.service.PersonUserService;
 import com.raising.modules.buildingPrice.entity.BuildColBrowEntity;
 import com.raising.modules.buildingPrice.entity.InfodataEntity;
+import com.raising.modules.buildingPrice.entity.LoupanPicEntity;
+import com.raising.modules.buildingPrice.entity.QueryInfoData;
 import com.raising.modules.buildingPrice.service.BuildColBrowService;
 import com.raising.modules.buildingPrice.service.InfodataService;
+import com.raising.modules.buildingPrice.service.LoupanPicService;
 import com.raising.modules.cityInfo.entity.CityinfoEntity;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +48,8 @@ public class UserBuildingController extends BaseController {
     private InfodataService infodataService;
     @Autowired
     private BuildColBrowService buildColBrowService;
+    @Autowired
+    private LoupanPicService loupanPicService;
 
     /**
      * 分页 - 查询
@@ -212,6 +217,22 @@ public class UserBuildingController extends BaseController {
             infoe.setId(e.getBuildingid());
             userHistoryBuilds.add((InfodataEntity) infodataService.getByParam(infoe).getData());
         }
+
+        //6、获取对应的pictureuRL
+        List<String> urls = new ArrayList<>();
+        for (int i=0;i<userHistoryBuilds.size();i++) {
+            urls.add(userHistoryBuilds.get(i).getUrl());
+        }
+        ResultVo result = loupanPicService.getOnePicByUrl(urls);
+        if (result.getCode() != ResultVo.SUCCESS)
+            return result;
+        List<LoupanPicEntity> picList = (List<LoupanPicEntity>) result.getData();
+        int i = 0;
+        for (InfodataEntity item : userHistoryBuilds) {
+            item.setUrl(picList.get(i++).getPic());
+        }
+
+
         //将数据格式话 返回前台
         List<Object> structResult = new ArrayList<>();
         for (InfodataEntity e : userHistoryBuilds) {
@@ -222,7 +243,7 @@ public class UserBuildingController extends BaseController {
             oneResult.put("area", e.getArea());
             oneResult.put("projectFeatures", e.getProjectfeatures());
             oneResult.put("price", e.getPrice());
-            oneResult.put("picture", e.getDate());
+            oneResult.put("picture", e.getUrl());
             oneResult.put("region", e.getRegion());
             structResult.add(oneResult);
         }
